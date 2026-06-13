@@ -53,32 +53,38 @@ export interface SupportPackage {
   featured?: boolean;
 }
 
-/** Portfolio project category, used for the filterable grid. */
-export type ProjectCategory =
-  | "Business"
-  | "E-Commerce"
-  | "SaaS"
-  | "Landing Pages"
-  | "Internal Tools";
+/** Sector groupings used to filter the "worked with" client wall. */
+export type ClientSector =
+  | "NHS & Healthcare"
+  | "Public Health"
+  | "Legal"
+  | "Charity & Community"
+  | "Commercial";
 
-/** A portfolio project with full case-study fields. */
-export interface Project {
+/**
+ * An organisation Daniel / DCW Digital has worked with. Presented as a
+ * logo + name showcase (no fabricated metrics) rather than a case study.
+ */
+export interface Client {
   slug: string;
-  title: string;
-  client: string;
-  category: ProjectCategory;
-  year: string;
+  /** Display name, e.g. "Wirral University Teaching Hospital". */
+  name: string;
+  /** Short monogram used by the wordmark fallback, e.g. "WUTH". */
+  abbr: string;
+  sector: ClientSector;
+  /** Truthful, generic description of the engagement — no invented KPIs. */
+  description: string;
+  /** High-level services provided. */
+  services: string[];
+  /** Live site (used for an optional link; never displayed as raw text). */
+  url: string;
   featured: boolean;
-  cover: string;
-  summary: string;
-  overview: string;
-  challenge: string;
-  solution: string;
-  results: { label: string; value: string }[];
-  stack: string[];
-  gallery: { src: string; alt: string }[];
-  liveUrl?: string;
-  repoUrl?: string;
+}
+
+/** A client enriched with a resolved logo path (server-side, build time). */
+export interface ClientWithLogo extends Client {
+  /** `/logos/<slug>.(svg|png|webp)` if a real file exists, otherwise null. */
+  logoSrc: string | null;
 }
 
 /** A timeline step for the "How I Work" process. */

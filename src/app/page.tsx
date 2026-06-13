@@ -2,7 +2,7 @@ import { Hero } from "@/components/sections/hero";
 import { Metrics } from "@/components/sections/metrics";
 import { AboutPreview } from "@/components/sections/about-preview";
 import { Expertise } from "@/components/sections/expertise";
-import { FeaturedProjects } from "@/components/sections/featured-projects";
+import { TrustedBy } from "@/components/sections/trusted-by";
 import { ServicesOverview } from "@/components/sections/services-overview";
 import { ProcessTimeline } from "@/components/sections/process-timeline";
 import { Testimonials } from "@/components/sections/testimonials";
@@ -17,7 +17,7 @@ export default function HomePage() {
       <Metrics />
       <AboutPreview />
       <Expertise />
-      <FeaturedProjects />
+      <TrustedBy />
       <ServicesOverview />
       <ProcessTimeline />
       <Testimonials />
