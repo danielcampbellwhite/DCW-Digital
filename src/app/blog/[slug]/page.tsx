@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -91,9 +92,13 @@ export default async function BlogPostPage({
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
-                <span className="grid size-7 place-items-center rounded-full border border-primary/30 bg-primary/10 font-heading text-[10px] font-bold text-primary">
-                  DC
-                </span>
+                <Image
+                  src={siteConfig.headshot}
+                  alt={post.author}
+                  width={28}
+                  height={28}
+                  className="size-7 rounded-full border border-primary/30 object-cover"
+                />
                 {post.author}
               </span>
               <span className="inline-flex items-center gap-1.5">
