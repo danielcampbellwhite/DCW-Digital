@@ -21,14 +21,14 @@ export default function ServicesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Services"
+        eyebrow="What I Do"
         title={
           <>
-            Digital services built around{" "}
-            <span className="text-gradient">your business goals</span>
+            Helping your business{" "}
+            <span className="text-gradient">grow online</span>
           </>
         }
-        description="From a brand-new website to ongoing growth and support, every engagement is focused on measurable results — speed, rankings, conversions and revenue."
+        description="Whether you need a brand-new website, more customers, or simply a website that finally works the way it should — here's how I can help, in plain English."
       >
         <Button href={siteConfig.bookingUrl} variant="primary" size="lg">
           <CalendarCheck className="size-4" /> Book a Discovery Call
@@ -145,7 +145,7 @@ export default function ServicesPage() {
                     ))}
                   </ul>
                   <Button
-                    href={`/contact?service=Support+%26+Maintenance+(${pkg.name})`}
+                    href={`/contact?service=Website+care+%26+support`}
                     variant={pkg.featured ? "primary" : "outline"}
                     className="mt-7 w-full"
                   >

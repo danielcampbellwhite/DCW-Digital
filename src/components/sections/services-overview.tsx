@@ -11,9 +11,9 @@ export function ServicesOverview() {
     <section className="bg-surface/30 py-24">
       <div className="container-px">
         <SectionHeading
-          eyebrow="Services"
-          title="How DCW Digital can help your business"
-          description="Whether you need a brand-new website, better rankings or an expert pair of hands to keep things running, there's a service built around the outcome you're after."
+          eyebrow="What I Do"
+          title="Helping your business grow online"
+          description="Whatever's holding your website back — or wherever you want to take your business next — there's a straightforward way I can help. No jargon, just results you can see."
         />
 
         <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

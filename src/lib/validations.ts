@@ -1,13 +1,14 @@
 import { z } from "zod";
 
-/** Services a visitor can enquire about (kept in sync with the contact form). */
+/** Services a visitor can enquire about (kept in sync with the service CTAs).
+ *  Plain-language labels aimed at business owners, not jargon. */
 export const serviceOptions = [
-  "Website Development",
-  "SEO Optimisation",
-  "Website Auditing",
-  "Performance Optimisation",
-  "Support & Maintenance",
-  "Digital Consulting",
+  "Build a new website",
+  "Get found by more customers",
+  "Website health check",
+  "Make my website faster",
+  "Website care & support",
+  "Advice to grow online",
   "Free Website Health Check",
   "Employment Opportunity",
   "Something else",

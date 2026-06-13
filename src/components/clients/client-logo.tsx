@@ -18,9 +18,9 @@ export function ClientMark({
 
   if (client.logoSrc) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element -- logos are static
-      // assets of varying ratios; object-contain + greyscale styling is simpler
-      // than next/image here and they're tiny.
+      // Logos are tiny static assets of varying ratios; object-contain styling
+      // is simpler here than next/image, and avoids image-optimisation cost.
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={client.logoSrc}
         alt={`${client.name} logo`}

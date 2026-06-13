@@ -59,8 +59,8 @@ export function AudienceCta() {
                 <Button href={siteConfig.bookingUrl} variant="secondary">
                   <CalendarCheck className="size-4" /> Book a Discovery Call
                 </Button>
-                <Button href="/contact?service=Website+Auditing" variant="outline">
-                  <Search className="size-4" /> Request an Audit
+                <Button href="/contact?service=Website+health+check" variant="outline">
+                  <Search className="size-4" /> Get a website health check
                 </Button>
                 <Button href="/contact" variant="ghost">
                   Get a Quote

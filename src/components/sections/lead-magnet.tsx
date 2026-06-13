@@ -3,10 +3,10 @@ import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 const checks = [
-  "Performance & Core Web Vitals score",
-  "On-page & technical SEO review",
-  "Mobile & accessibility quick-check",
-  "Top 3 priority fixes, in plain English",
+  "How fast your website loads",
+  "How easily customers can find you online",
+  "How well it works on phones",
+  "Your top 3 fixes, in plain English",
 ];
 
 /** "Free Website Health Check" lead magnet — a low-commitment first step. */

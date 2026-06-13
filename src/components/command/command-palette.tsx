@@ -39,7 +39,7 @@ const COMMANDS: CommandItem[] = [
   { id: "contact", label: "Contact", group: "Pages", icon: Mail, href: "/contact", keywords: "email quote enquiry" },
   { id: "cv", label: "Download CV", group: "Actions", icon: Download, href: siteConfig.cvUrl, keywords: "resume hire" },
   { id: "call", label: "Book a Discovery Call", group: "Actions", icon: CalendarCheck, href: siteConfig.bookingUrl, external: true, keywords: "meeting consultation" },
-  { id: "audit", label: "Request a Free Website Health Check", group: "Actions", icon: Search, href: "/contact?service=Website+Auditing", keywords: "audit review free" },
+  { id: "audit", label: "Request a Free Website Health Check", group: "Actions", icon: Search, href: "/contact?service=Free+Website+Health+Check", keywords: "audit review free" },
   { id: "github", label: "GitHub", group: "Social", icon: Github, href: siteConfig.links.github, external: true },
   { id: "linkedin", label: "LinkedIn", group: "Social", icon: Linkedin, href: siteConfig.links.linkedin, external: true },
 ];
