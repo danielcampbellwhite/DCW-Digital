@@ -14,6 +14,8 @@ changes needed. The filename must match the client `slug` from
 | `stop-for-life-sandwell` | Stop For Life Sandwell |
 | `stop-for-life-devon` | Stop For Life Devon |
 | `liv-life-liverpool` | Liv Life Liverpool |
+| `stop-for-life-app` | Stop For Life App (mobile) |
+| `help-me-quit` | Help Me Quit App (mobile) |
 | `frontline-network` | The Frontline Network |
 | `smitfc` | St Martin-in-the-Fields Charity |
 | `bandm-waste` | B&M Waste Services |
@@ -22,6 +24,10 @@ changes needed. The filename must match the client `slug` from
 
 Accepted extensions (in priority order): `.svg`, `.png`, `.webp`, `.jpg`.
 Example: `public/logos/wuth.svg`.
+
+> The two mobile apps (`stop-for-life-app`, `help-me-quit`) won't be fetched
+> by the script below — grab their app icon from the Play Store listing and
+> save it manually, e.g. `public/logos/help-me-quit.png`.
 
 Until a file exists for a slug, a branded **wordmark** (the organisation's
 monogram) is shown instead — so the page always looks complete.

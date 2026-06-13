@@ -26,7 +26,7 @@ export default function ProjectsPage() {
             <span className="text-gradient">worked with</span>
           </>
         }
-        description="A selection of the NHS trusts, public-health services, law firms, charities and businesses I've helped design, build, optimise and support over the years."
+        description="A selection of the NHS trusts, public-health services, mobile apps, law firms, charities and businesses I've helped design, build, optimise and support over the years."
       />
 
       <section className="py-20">

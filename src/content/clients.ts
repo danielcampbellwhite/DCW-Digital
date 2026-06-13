@@ -117,6 +117,28 @@ export const clients: Client[] = [
     featured: true,
   },
   {
+    slug: "stop-for-life-app",
+    name: "Stop For Life App",
+    abbr: "SFL",
+    sector: "Public Health",
+    description:
+      "The companion mobile app for the Stop For Life stop-smoking services, supporting people to quit and stay smoke-free on the go.",
+    services: ["Mobile App", "Support & Maintenance"],
+    url: "https://play.google.com/store/apps/details?id=com.mediaice.journey",
+    featured: false,
+  },
+  {
+    slug: "help-me-quit",
+    name: "Help Me Quit",
+    abbr: "HMQ",
+    sector: "Public Health",
+    description:
+      "The companion mobile app for Help Me Quit, the NHS stop-smoking service for Wales, helping people quit smoking for good.",
+    services: ["Mobile App", "Support & Maintenance"],
+    url: "https://play.google.com/store/apps/details?id=com.mediaice.helpmequit",
+    featured: false,
+  },
+  {
     slug: "frontline-network",
     name: "The Frontline Network",
     abbr: "FN",
