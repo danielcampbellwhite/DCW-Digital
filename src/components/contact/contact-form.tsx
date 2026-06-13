@@ -37,6 +37,9 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
     ? (defaultService as ContactFormValues["service"])
     : undefined;
 
+  // When the form first mounted — used for the server-side time-trap.
+  const mountedAt = React.useRef<number>(Date.now());
+
   const {
     register,
     handleSubmit,
@@ -56,7 +59,10 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          elapsedMs: Date.now() - mountedAt.current,
+        }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);

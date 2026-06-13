@@ -44,8 +44,14 @@ export const contactSchema = z.object({
     .string()
     .min(20, "Please tell me a little more (at least 20 characters)")
     .max(4000, "That message is a bit long — please trim it down"),
-  // Honeypot: must stay empty. Real users never fill this.
-  website: z.string().max(0).optional(),
+  // Honeypot: must stay empty. Real users never fill this. We allow any value
+  // through validation so the route can drop it *silently* (a 422 here would
+  // tell a bot it tripped the trap).
+  website: z.string().optional(),
+  // Time-trap: milliseconds the form was on screen before submitting. Used
+  // server-side to reject bots that submit near-instantly. Optional so the
+  // schema stays tolerant if it's ever missing.
+  elapsedMs: z.number().int().nonnegative().optional(),
 });
 
 export type ContactFormValues = z.infer<typeof contactSchema>;
