@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Check, ArrowRight, Star, CalendarCheck } from "lucide-react";
+import { Check, ArrowRight, Star } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
 import { services, supportPackages } from "@/content/services";
 import { processSteps } from "@/content/expertise";
 import { PageHeader } from "@/components/sections/page-header";
@@ -30,8 +29,9 @@ export default function ServicesPage() {
         }
         description="Whether you need a brand-new website, more customers, or simply a website that finally works the way it should — here's how I can help, in plain English."
       >
-        <Button href={siteConfig.bookingUrl} variant="primary" size="lg">
-          <CalendarCheck className="size-4" /> Book a Discovery Call
+        <Button href="/contact" variant="primary" size="lg">
+          Start your project
+          <ArrowRight className="size-4" />
         </Button>
       </PageHeader>
 

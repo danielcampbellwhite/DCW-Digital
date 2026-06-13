@@ -49,7 +49,6 @@ export function buildMetadata({
       title: fullTitle,
       description,
       images: [image],
-      creator: siteConfig.twitterHandle,
     },
   };
 }
@@ -64,17 +63,12 @@ export function personSchema() {
     url: siteConfig.url,
     image: new URL(siteConfig.headshot, siteConfig.url).toString(),
     jobTitle: "Web Developer & Digital Consultant",
-    email: `mailto:${siteConfig.email}`,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Liverpool",
       addressCountry: "GB",
     },
-    sameAs: [
-      siteConfig.links.github,
-      siteConfig.links.linkedin,
-      siteConfig.links.twitter,
-    ],
+    sameAs: [siteConfig.links.facebook, siteConfig.links.instagram],
     knowsAbout: [
       "Web Development",
       "Next.js",
@@ -94,7 +88,6 @@ export function professionalServiceSchema() {
     name: siteConfig.name,
     image: new URL(siteConfig.ogImage, siteConfig.url).toString(),
     url: siteConfig.url,
-    email: siteConfig.email,
     description: siteConfig.description,
     founder: { "@type": "Person", name: siteConfig.owner },
     areaServed: { "@type": "Country", name: "United Kingdom" },
@@ -122,7 +115,6 @@ export function localBusinessSchema() {
     "@id": `${siteConfig.url}/#business`,
     name: siteConfig.name,
     url: siteConfig.url,
-    email: siteConfig.email,
     image: new URL(siteConfig.ogImage, siteConfig.url).toString(),
     address: {
       "@type": "PostalAddress",

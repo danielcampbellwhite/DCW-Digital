@@ -12,9 +12,8 @@ import {
   Newspaper,
   Mail,
   Download,
-  CalendarCheck,
-  Github,
-  Linkedin,
+  Facebook,
+  Instagram,
   ArrowRight,
 } from "lucide-react";
 import { siteConfig } from "@/lib/site";
@@ -38,10 +37,10 @@ const COMMANDS: CommandItem[] = [
   { id: "blog", label: "Blog", group: "Pages", icon: Newspaper, href: "/blog", keywords: "articles insights writing" },
   { id: "contact", label: "Contact", group: "Pages", icon: Mail, href: "/contact", keywords: "email quote enquiry" },
   { id: "cv", label: "Download CV", group: "Actions", icon: Download, href: siteConfig.cvUrl, keywords: "resume hire" },
-  { id: "call", label: "Book a Discovery Call", group: "Actions", icon: CalendarCheck, href: siteConfig.bookingUrl, external: true, keywords: "meeting consultation" },
+  { id: "get-in-touch", label: "Get in touch", group: "Actions", icon: Mail, href: "/contact", keywords: "email enquiry quote message" },
   { id: "audit", label: "Request a Free Website Health Check", group: "Actions", icon: Search, href: "/contact?service=Free+Website+Health+Check", keywords: "audit review free" },
-  { id: "github", label: "GitHub", group: "Social", icon: Github, href: siteConfig.links.github, external: true },
-  { id: "linkedin", label: "LinkedIn", group: "Social", icon: Linkedin, href: siteConfig.links.linkedin, external: true },
+  { id: "facebook", label: "Facebook", group: "Social", icon: Facebook, href: siteConfig.links.facebook, external: true },
+  { id: "instagram", label: "Instagram", group: "Social", icon: Instagram, href: siteConfig.links.instagram, external: true },
 ];
 
 interface CommandContextValue {

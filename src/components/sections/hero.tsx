@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, CalendarCheck, Download, Sparkles } from "lucide-react";
+import { ArrowRight, Mail, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Atmosphere } from "@/components/brand/atmosphere";
 import { siteConfig } from "@/lib/site";
@@ -63,9 +63,9 @@ export function Hero() {
               View My Work
               <ArrowRight className="size-4" />
             </Button>
-            <Button href={siteConfig.bookingUrl} variant="outline" size="lg">
-              <CalendarCheck className="size-4" />
-              Book a Discovery Call
+            <Button href="/contact" variant="outline" size="lg">
+              <Mail className="size-4" />
+              Get in touch
             </Button>
             <Button href={siteConfig.cvUrl} variant="ghost" size="lg">
               <Download className="size-4" />

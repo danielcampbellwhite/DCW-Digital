@@ -24,11 +24,9 @@ export const siteConfig = {
   email: "hello@dcwdigital.co.uk",
   ogImage: "/opengraph-image",
   links: {
-    github: "https://github.com/danielcampbellwhite",
-    linkedin: "https://www.linkedin.com/in/danielcampbellwhite",
-    twitter: "https://twitter.com/dcwdigital",
+    facebook: "https://www.facebook.com/share/1JCp4YL1n5/",
+    instagram: "https://www.instagram.com/danwhite_web?igsh=aG5lNHdwN3hhZnUy",
   },
-  twitterHandle: "@dcwdigital",
 } as const;
 
 export const mainNav: NavLink[] = [
@@ -63,7 +61,7 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
     title: "Company",
     links: [
       { label: "Contact", href: "/contact" },
-      { label: "Book a Discovery Call", href: siteConfig.bookingUrl },
+      { label: "Free Website Health Check", href: "/contact?service=Free+Website+Health+Check" },
       { label: "Privacy Policy", href: "/privacy" },
     ],
   },

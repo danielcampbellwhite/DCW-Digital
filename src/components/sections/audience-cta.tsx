@@ -1,4 +1,4 @@
-import { Download, FolderGit2, Briefcase, CalendarCheck, Search, FileText } from "lucide-react";
+import { Download, FolderGit2, Briefcase, Search, FileText } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site";
@@ -56,13 +56,10 @@ export function AudienceCta() {
                 let&apos;s talk about your goals — and how to reach them.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href={siteConfig.bookingUrl} variant="secondary">
-                  <CalendarCheck className="size-4" /> Book a Discovery Call
-                </Button>
-                <Button href="/contact?service=Website+health+check" variant="outline">
+                <Button href="/contact?service=Website+health+check" variant="secondary">
                   <Search className="size-4" /> Get a website health check
                 </Button>
-                <Button href="/contact" variant="ghost">
+                <Button href="/contact" variant="outline">
                   Get a Quote
                 </Button>
               </div>

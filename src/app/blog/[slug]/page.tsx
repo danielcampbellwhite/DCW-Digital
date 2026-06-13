@@ -143,11 +143,11 @@ export default async function BlogPostPage({
               Want this kind of thinking applied to your website?
             </h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-              Book a free discovery call and let&apos;s talk about your goals.
+              Get in touch and let&apos;s talk about your goals.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <Button href={siteConfig.bookingUrl} variant="primary">
-                Book a Discovery Call
+              <Button href="/contact" variant="primary">
+                Get in touch
               </Button>
               <Button href="/contact?service=Free+Website+Health+Check" variant="outline">
                 Free Website Health Check

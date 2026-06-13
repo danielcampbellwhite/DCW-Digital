@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { PageHeader } from "@/components/sections/page-header";
@@ -81,13 +82,13 @@ export default function PrivacyPage() {
               <p>
                 Under UK GDPR you have the right to access, correct, delete or
                 restrict the processing of your personal data, and to object to
-                processing. To exercise any of these rights, email{" "}
-                <a
-                  href={`mailto:${siteConfig.email}`}
+                processing. To exercise any of these rights, get in touch via the{" "}
+                <Link
+                  href="/contact"
                   className="text-primary underline-offset-4 hover:underline"
                 >
-                  {siteConfig.email}
-                </a>
+                  contact form
+                </Link>
                 .
               </p>
             </Block>
@@ -102,13 +103,13 @@ export default function PrivacyPage() {
 
             <Block title="8. Contact">
               <p>
-                Questions about this policy or your data? Email{" "}
-                <a
-                  href={`mailto:${siteConfig.email}`}
+                Questions about this policy or your data? Get in touch via the{" "}
+                <Link
+                  href="/contact"
                   className="text-primary underline-offset-4 hover:underline"
                 >
-                  {siteConfig.email}
-                </a>
+                  contact form
+                </Link>
                 . You also have the right to complain to the UK&apos;s Information
                 Commissioner&apos;s Office (ICO).
               </p>

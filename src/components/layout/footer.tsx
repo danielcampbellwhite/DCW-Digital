@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Linkedin, Twitter, Mail, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { footerNav, siteConfig } from "@/lib/site";
 import { Button } from "@/components/ui/button";
@@ -23,34 +23,26 @@ export function Footer() {
             </div>
             <div className="mt-2 flex items-center gap-2">
               <Button
-                href={siteConfig.links.github}
+                href={siteConfig.links.facebook}
                 variant="outline"
                 size="icon"
-                aria-label="GitHub"
+                aria-label="Facebook"
               >
-                <Github className="size-4" />
+                <Facebook className="size-4" />
               </Button>
               <Button
-                href={siteConfig.links.linkedin}
+                href={siteConfig.links.instagram}
                 variant="outline"
                 size="icon"
-                aria-label="LinkedIn"
+                aria-label="Instagram"
               >
-                <Linkedin className="size-4" />
+                <Instagram className="size-4" />
               </Button>
               <Button
-                href={siteConfig.links.twitter}
+                href="/contact"
                 variant="outline"
                 size="icon"
-                aria-label="Twitter / X"
-              >
-                <Twitter className="size-4" />
-              </Button>
-              <Button
-                href={`mailto:${siteConfig.email}`}
-                variant="outline"
-                size="icon"
-                aria-label="Email"
+                aria-label="Send a message"
               >
                 <Mail className="size-4" />
               </Button>
