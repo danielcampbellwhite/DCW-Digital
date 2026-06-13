@@ -45,7 +45,7 @@ export function AboutPreview() {
           </h2>
           <div className="mt-5 space-y-4 text-muted-foreground">
             <p>
-              I&apos;m Daniel — a web developer, SEO specialist and digital
+              I&apos;m Daniel — a web developer and digital
               consultant based in Liverpool. Over the last eight years I&apos;ve
               built everything from marketing sites to SaaS platforms, in
               agencies, in-house teams and now under my own banner, DCW Digital.

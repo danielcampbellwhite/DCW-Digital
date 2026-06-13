@@ -44,7 +44,6 @@ export const metadata: Metadata = {
     "web developer Liverpool",
     "Next.js developer",
     "React developer",
-    "SEO specialist",
     "freelance web developer",
     "website optimisation",
     "digital consultant",

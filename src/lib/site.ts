@@ -8,11 +8,11 @@ export const siteConfig = {
   name: "DCW Digital",
   owner: "Daniel Campbell-White",
   shortName: "DCW",
-  jobTitle: "Web Developer · SEO Specialist · Digital Consultant",
+  jobTitle: "Web Developer · Digital Consultant",
   tagline: "Building Modern Websites. Optimising Digital Growth.",
   altTagline: "Web Development, SEO & Digital Solutions.",
   description:
-    "Daniel Campbell-White (DCW Digital) is a Liverpool-based web developer, SEO specialist and digital consultant building high-performance websites and digital experiences that deliver measurable business results.",
+    "Daniel Campbell-White (DCW Digital) is a Liverpool-based web developer and digital consultant building high-performance websites and digital experiences that deliver measurable business results.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dcwdigital.co.uk",
   bookingUrl:
     process.env.NEXT_PUBLIC_BOOKING_URL ??

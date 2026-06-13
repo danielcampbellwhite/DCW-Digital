@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = buildMetadata({
   title: "About Daniel Campbell-White",
   description:
-    "Liverpool-based web developer, SEO specialist and digital consultant. Daniel's story, career timeline, technical skills, values and what drives him.",
+    "Liverpool-based web developer and digital consultant. Daniel's story, career timeline, technical skills, values and what drives him.",
   path: "/about",
 });
 
@@ -81,7 +81,7 @@ export default function AboutPage() {
             <span className="text-gradient">websites that work</span>
           </>
         }
-        description="Web developer, SEO specialist and digital consultant based in Liverpool, UK. Here's my story, how I work, and what I'm looking for next."
+        description="Web developer and digital consultant based in Liverpool, UK. Here's my story, how I work, and what I'm looking for next."
       >
         <div className="flex flex-wrap justify-center gap-3">
           <Button href={siteConfig.cvUrl} variant="primary">

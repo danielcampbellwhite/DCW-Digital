@@ -88,7 +88,7 @@ export function Hero() {
                 {siteConfig.owner}
               </div>
               <div className="font-mono text-xs text-muted-foreground">
-                Web Developer · SEO Specialist · Digital Consultant
+                Web Developer · Digital Consultant
               </div>
             </div>
           </motion.div>

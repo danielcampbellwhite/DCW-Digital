@@ -62,7 +62,7 @@ export function personSchema() {
     "@type": "Person",
     name: siteConfig.owner,
     url: siteConfig.url,
-    jobTitle: "Web Developer, SEO Specialist & Digital Consultant",
+    jobTitle: "Web Developer & Digital Consultant",
     email: `mailto:${siteConfig.email}`,
     address: {
       "@type": "PostalAddress",
