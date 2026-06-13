@@ -18,6 +18,7 @@ import { careerTimeline } from "@/content/timeline";
 import { expertise } from "@/content/expertise";
 import { PageHeader } from "@/components/sections/page-header";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { AboutTimeline } from "@/components/sections/about-timeline";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
@@ -189,36 +190,7 @@ export default function AboutPage() {
             description="A timeline of the roles, teams and experiences that shaped how I build today."
           />
 
-          <div className="relative mx-auto mt-16 max-w-3xl">
-            <div className="absolute left-[7px] top-2 h-[calc(100%-1rem)] w-px bg-gradient-to-b from-primary via-secondary to-accent" />
-            <ol className="space-y-10">
-              {careerTimeline.map((entry) => (
-                <Reveal as="li" key={`${entry.period}-${entry.title}`} className="relative pl-10">
-                  <span className="absolute left-0 top-1.5 size-4 rounded-full border-2 border-primary bg-background shadow-[0_0_16px_-4px_hsl(var(--primary))]" />
-                  <span className="font-mono text-xs text-primary">{entry.period}</span>
-                  <h3 className="mt-1 font-heading text-xl font-semibold">
-                    {entry.title}
-                  </h3>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {entry.organisation}
-                  </p>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {entry.description}
-                  </p>
-                  {entry.highlights && (
-                    <ul className="mt-3 space-y-1.5">
-                      {entry.highlights.map((h) => (
-                        <li key={h} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </Reveal>
-              ))}
-            </ol>
-          </div>
+          <AboutTimeline entries={careerTimeline} />
         </div>
       </section>
 

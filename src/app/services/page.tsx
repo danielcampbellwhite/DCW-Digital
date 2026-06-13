@@ -86,11 +86,6 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                       <div className="mt-6 border-t border-border pt-5">
-                        {service.startingPrice && (
-                          <div className="mb-3 font-mono text-lg text-foreground">
-                            {service.startingPrice}
-                          </div>
-                        )}
                         <Button href={service.cta.href} variant="primary" className="w-full">
                           {service.cta.label}
                           <ArrowRight className="size-4" />
@@ -132,9 +127,8 @@ export default function ServicesPage() {
                   )}
                   <h3 className="font-heading text-xl font-bold">{pkg.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{pkg.description}</p>
-                  <div className="mt-5 flex items-baseline gap-1">
-                    <span className="font-heading text-4xl font-bold">{pkg.price}</span>
-                    <span className="text-sm text-muted-foreground">{pkg.cadence}</span>
+                  <div className="mt-5 text-sm font-medium text-primary">
+                    Tailored monthly plan
                   </div>
                   <ul className="mt-6 flex-1 space-y-3">
                     {pkg.features.map((f) => (
@@ -156,7 +150,7 @@ export default function ServicesPage() {
             ))}
           </StaggerGroup>
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            Prices exclude VAT. Custom plans available — just ask.
+            Every plan is tailored to your website — get in touch for a quote.
           </p>
         </div>
       </section>

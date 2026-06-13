@@ -38,7 +38,6 @@ export const services: Service[] = [
       "Online shops",
       "Booking systems & custom tools",
     ],
-    startingPrice: "from £1,200",
     cta: { label: "Get a website that sells", href: "/contact?service=Build+a+new+website" },
   },
   {
@@ -62,7 +61,6 @@ export const services: Service[] = [
       "Fixing the technical bits behind the scenes",
       "Ongoing improvements over time",
     ],
-    startingPrice: "from £600",
     cta: {
       label: "Help customers find me",
       href: "/contact?service=Get+found+by+more+customers",
@@ -89,7 +87,6 @@ export const services: Service[] = [
       "Accessibility review",
       "Security review",
     ],
-    startingPrice: "from £450",
     cta: { label: "Check my website", href: "/contact?service=Website+health+check" },
   },
   {
@@ -112,7 +109,6 @@ export const services: Service[] = [
       "Image & media optimisation",
       "Hosting recommendations",
     ],
-    startingPrice: "from £500",
     cta: {
       label: "Speed up my website",
       href: "/contact?service=Make+my+website+faster",
@@ -133,7 +129,6 @@ export const services: Service[] = [
       "A predictable, fixed monthly cost",
     ],
     deliverables: ["Bronze", "Silver", "Gold"],
-    startingPrice: "from £75/mo",
     cta: { label: "Keep my site running", href: "/contact?service=Website+care+%26+support" },
   },
   {
@@ -156,7 +151,6 @@ export const services: Service[] = [
       "Planning your online growth",
       "Getting more from what you already have",
     ],
-    startingPrice: "from £90/hr",
     cta: { label: "Get expert advice", href: "/contact?service=Advice+to+grow+online" },
   },
 ];
@@ -165,8 +159,6 @@ export const services: Service[] = [
 export const supportPackages: SupportPackage[] = [
   {
     name: "Bronze",
-    price: "£75",
-    cadence: "/month",
     description: "Essential cover for small business and brochure sites.",
     features: [
       "Software & security updates",
@@ -178,8 +170,6 @@ export const supportPackages: SupportPackage[] = [
   },
   {
     name: "Silver",
-    price: "£150",
-    cadence: "/month",
     description: "For growing businesses that depend on their website.",
     features: [
       "Everything in Bronze",
@@ -192,8 +182,6 @@ export const supportPackages: SupportPackage[] = [
   },
   {
     name: "Gold",
-    price: "£300",
-    cadence: "/month",
     description: "Comprehensive care for busy, revenue-critical websites.",
     features: [
       "Everything in Silver",

@@ -36,12 +36,7 @@ export function ServiceCard({
         </ul>
       )}
 
-      <div className="mt-auto flex items-center justify-between pt-5">
-        {service.startingPrice && (
-          <span className="font-mono text-sm text-foreground">
-            {service.startingPrice}
-          </span>
-        )}
+      <div className="mt-auto flex items-center pt-5">
         <Button href={service.cta.href} variant="ghost" size="sm" className="ml-auto">
           {service.cta.label}
           <ArrowRight className="size-4" />

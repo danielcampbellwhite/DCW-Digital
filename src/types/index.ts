@@ -39,15 +39,12 @@ export interface Service {
   description: string;
   benefits: string[];
   deliverables?: string[];
-  startingPrice?: string;
   cta: CTA;
 }
 
 /** A support & maintenance package tier (Bronze / Silver / Gold). */
 export interface SupportPackage {
   name: string;
-  price: string;
-  cadence: string;
   description: string;
   features: string[];
   featured?: boolean;

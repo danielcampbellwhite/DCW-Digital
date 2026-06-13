@@ -1,51 +1,63 @@
 import type { TimelineEntry } from "@/types";
 
 /**
- * Career & development timeline for the About page. Placeholder content —
- * update with Daniel's real history before launch.
+ * Daniel's real career & development journey, ordered earliest → most recent
+ * (the About page renders it top-to-bottom in this order). Employer names are
+ * kept generic where not publicly attributed.
  */
 export const careerTimeline: TimelineEntry[] = [
   {
-    period: "2022 — Present",
-    title: "Founder & Lead Developer",
-    organisation: "DCW Digital",
+    period: "2009 – 2012",
+    title: "Where it all started",
+    organisation: "School",
     description:
-      "Running an independent web development and digital consultancy, partnering with businesses to design, build and optimise high-performance websites and applications.",
-    highlights: [
-      "Delivered 30+ client websites and web applications",
-      "Specialised in Next.js, performance and technical SEO",
-      "Built long-term support relationships with retained clients",
-    ],
+      "I wrote my first lines of code at school, around 14 years old. By 16 I knew — without a doubt — that building for the web was what I wanted to do for a living.",
   },
   {
-    period: "2019 — 2022",
-    title: "Senior Frontend Developer",
-    organisation: "Mersey Software Group",
+    period: "2013 – 2016",
+    title: "BSc Web Systems Development",
+    organisation: "University",
     description:
-      "Led frontend development on a portfolio of B2B SaaS products, owning architecture decisions, design systems and mentoring across the team.",
-    highlights: [
-      "Introduced a shared component library used across 4 products",
-      "Reduced average page load time by 45% through performance work",
-      "Mentored two junior developers to mid-level",
-    ],
+      "I went to university to study Web Systems Development, getting a proper grounding in how the web works end to end — from front-end interfaces through to servers and databases.",
   },
   {
-    period: "2016 — 2019",
-    title: "Web Developer",
-    organisation: "Vega Digital",
+    period: "2014 – 2018",
+    title: "Freelance & hands-on learning",
+    organisation: "Self-employed",
     description:
-      "Built marketing sites, e-commerce stores and internal tools for a wide range of clients, working across the full stack in a fast-paced agency environment.",
-    highlights: [
-      "Shipped 40+ client projects across multiple industries",
-      "Owned end-to-end delivery from brief to launch",
-      "Established the agency's accessibility and SEO standards",
-    ],
+      "Around my studies I took on as much freelance web work as I could — funding it with other jobs along the way — building real-world experience, a portfolio, and an understanding of what clients actually need.",
   },
   {
-    period: "2015 — 2016",
+    period: "2018",
     title: "Junior Developer",
-    organisation: "Local Studio",
+    organisation: "Digital Agency",
     description:
-      "Started my professional journey building WordPress and bespoke sites, learning the craft of clean code, client communication and shipping real work.",
+      "I landed my first professional developer role at an agency. A busy, real-world environment where I learned fast and shipped work for a wide range of clients.",
+  },
+  {
+    period: "2019",
+    title: "Front-End Developer",
+    organisation: "Digital Agency",
+    description:
+      "I moved into a front-end focused role, honing my craft building polished, responsive, accessible interfaces that people genuinely enjoy using.",
+  },
+  {
+    period: "2020 – 2024",
+    title: "Full-Stack Developer",
+    organisation: "Digital Agency",
+    description:
+      "As I learned more backend programming, I gradually grew into a full-stack role — owning features end to end, from the database right through to the interface.",
+  },
+  {
+    period: "2025 – Present",
+    title: "Digital Services Lead",
+    organisation: "Behaviour Change Organisation",
+    description:
+      "I now run the digital offer for a behaviour change organisation, working with partners to make better happen for clients, people and communities — leading a team of developers and managing projects while staying hands-on with code myself.",
+    highlights: [
+      "Leading and mentoring a team of developers",
+      "Managing projects while remaining hands-on with the build",
+      "Taking on freelance projects for small businesses as DCW Digital",
+    ],
   },
 ];
