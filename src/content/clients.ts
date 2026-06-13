@@ -125,6 +125,7 @@ export const clients: Client[] = [
       "The companion mobile app for the Stop For Life stop-smoking services, supporting people to quit and stay smoke-free on the go.",
     services: ["Mobile App", "Support & Maintenance"],
     url: "https://play.google.com/store/apps/details?id=com.mediaice.journey",
+    appStoreUrl: "https://apps.apple.com/gb/app/stop-smoking-stop-for-life/id6746129332",
     featured: false,
   },
   {
@@ -136,6 +137,7 @@ export const clients: Client[] = [
       "The companion mobile app for Help Me Quit, the NHS stop-smoking service for Wales, helping people quit smoking for good.",
     services: ["Mobile App", "Support & Maintenance"],
     url: "https://play.google.com/store/apps/details?id=com.mediaice.helpmequit",
+    appStoreUrl: "https://apps.apple.com/gb/app/helpa-fi-i-stopio-helpmequit/id6759058234",
     featured: false,
   },
   {

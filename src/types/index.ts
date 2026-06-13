@@ -73,8 +73,11 @@ export interface Client {
   description: string;
   /** High-level services provided. */
   services: string[];
-  /** Live site (used for an optional link; never displayed as raw text). */
+  /** Live site, or the primary store listing for app entries. */
   url: string;
+  /** Apple App Store listing (app entries only). When set, the card shows
+   *  Google Play + App Store buttons instead of a single whole-card link. */
+  appStoreUrl?: string;
   featured: boolean;
 }
 
