@@ -15,7 +15,7 @@ changes needed. The filename must match the client `slug` from
 | `stop-for-life-devon` | Stop For Life Devon |
 | `liv-life-liverpool` | Liv Life Liverpool |
 | `frontline-network` | The Frontline Network |
-| `smitfc` | SMITFC |
+| `smitfc` | St Martin-in-the-Fields Charity |
 | `bandm-waste` | B&M Waste Services |
 | `psr-solicitors` | PSR Solicitors |
 | `poole-alcock` | Poole Alcock Solicitors |

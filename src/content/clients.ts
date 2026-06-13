@@ -129,13 +129,13 @@ export const clients: Client[] = [
   },
   {
     slug: "smitfc",
-    name: "SMITFC",
-    abbr: "FC",
+    name: "St Martin-in-the-Fields Charity",
+    abbr: "SMF",
     sector: "Charity & Community",
     description:
-      "A community football club using sport to bring people together and support local participation.",
-    services: ["Web Development"],
-    url: "https://smitfc.org",
+      "A national charity working to support people who are facing homelessness or in vulnerable situations, including through its Frontline Network.",
+    services: ["Web Development", "Community Platform"],
+    url: "https://www.smitfc.org",
     featured: false,
   },
   {
