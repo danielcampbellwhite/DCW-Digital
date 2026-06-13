@@ -30,13 +30,13 @@ export function Metrics() {
 
         <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
           <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="size-4 text-accent" /> WCAG-aware, accessible builds
+            <ShieldCheck className="size-4 text-accent" /> Built to win you customers
           </span>
           <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="size-4 text-accent" /> 95+ Lighthouse targets
+            <ShieldCheck className="size-4 text-accent" /> Fast, secure &amp; built to last
           </span>
           <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="size-4 text-accent" /> UK-based · remote-friendly
+            <ShieldCheck className="size-4 text-accent" /> End to end — design, build &amp; launch
           </span>
         </Reveal>
       </div>
