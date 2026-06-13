@@ -36,7 +36,7 @@ export function Metrics() {
             <ShieldCheck className="size-4 text-accent" /> Fast, secure &amp; built to last
           </span>
           <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="size-4 text-accent" /> End to end — design, build &amp; launch
+            <ShieldCheck className="size-4 text-accent" /> Your go-to digital partner
           </span>
         </Reveal>
       </div>
