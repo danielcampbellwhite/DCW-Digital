@@ -227,7 +227,7 @@ export default function AboutPage() {
             title="The tools of the trade"
             description="A modern, full-stack toolkit — chosen for speed, reliability and long-term maintainability."
           />
-          <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {expertise.map((area) => {
               const Icon = area.icon;
               return (

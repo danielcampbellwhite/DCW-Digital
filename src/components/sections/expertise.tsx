@@ -13,7 +13,7 @@ export function Expertise() {
           description="From pixel-perfect frontends to the infrastructure that keeps them online — the complete toolkit to design, build, optimise and maintain modern digital products."
         />
 
-        <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {expertise.map((area) => {
             const Icon = area.icon;
             return (

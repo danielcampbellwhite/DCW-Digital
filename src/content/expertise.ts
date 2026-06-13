@@ -1,4 +1,4 @@
-import { Layout, Server, Search, Cloud } from "lucide-react";
+import { Layout, Server, Boxes, Database, GitBranch, Gauge } from "lucide-react";
 import type { ExpertiseArea, ProcessStep, Metric } from "@/types";
 import {
   Compass,
@@ -10,40 +10,87 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-/** Core expertise cards for the homepage. */
+/** Core expertise cards for the homepage and About page. A broad, full-stack
+ *  skill set spanning frontend, .NET & PHP backends, CMS platforms, databases,
+ *  tooling and performance. */
 export const expertise: ExpertiseArea[] = [
   {
     title: "Frontend",
     icon: Layout,
     description:
-      "Interfaces that are fast, accessible and a pleasure to use — built with a modern component architecture.",
-    skills: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS"],
-  },
-  {
-    title: "Backend",
-    icon: Server,
-    description:
-      "Reliable APIs, authentication and data layers that scale with your business.",
-    skills: ["Node.js", "APIs", "Authentication", "Databases"],
-  },
-  {
-    title: "SEO & Performance",
-    icon: Search,
-    description:
-      "Technical foundations that help you rank, load instantly and convert more visitors.",
+      "Accessible, responsive interfaces built on solid markup, modern frameworks and well-structured styling.",
     skills: [
-      "Technical SEO",
-      "Core Web Vitals",
-      "Content Optimisation",
-      "Structured Data",
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Sass / LESS",
+      "Responsive Design",
     ],
   },
   {
-    title: "Infrastructure",
-    icon: Cloud,
+    title: "Backend & Languages",
+    icon: Server,
     description:
-      "Deployment, hosting and pipelines that keep your site secure, online and effortless to update.",
-    skills: ["Hosting", "Deployment", "CI/CD", "Maintenance"],
+      "Robust server-side applications and APIs across the .NET, PHP and Node ecosystems.",
+    skills: [
+      "C# / .NET",
+      "ASP.NET MVC",
+      "PHP",
+      "Node.js",
+      "REST APIs",
+      "Authentication",
+    ],
+  },
+  {
+    title: "CMS & Platforms",
+    icon: Boxes,
+    description:
+      "Building, customising and migrating sites on the content platforms businesses already rely on.",
+    skills: ["WordPress", "Umbraco", "Concrete CMS", "Drupal", "Joomla"],
+  },
+  {
+    title: "Databases & ORM",
+    icon: Database,
+    description:
+      "Designing reliable data layers with relational databases and modern object-relational mappers.",
+    skills: [
+      "SQL Server",
+      "MySQL",
+      "Entity Framework",
+      "Fluent NHibernate",
+      "ORM Design",
+    ],
+  },
+  {
+    title: "Tooling, DevOps & AI",
+    icon: GitBranch,
+    description:
+      "Shipping with confidence — version control, automated pipelines, integrations and AI-assisted workflows.",
+    skills: [
+      "Git",
+      "CI/CD",
+      "DevOps",
+      "Hosting & Deployment",
+      "AI Tooling",
+      "APIs & Integrations",
+    ],
+  },
+  {
+    title: "SEO & Performance",
+    icon: Gauge,
+    description:
+      "Fast, findable, accessible websites — strong technical foundations that rank well and convert.",
+    skills: [
+      "Technical SEO",
+      "Core Web Vitals",
+      "Performance",
+      "Structured Data",
+      "Accessibility",
+    ],
   },
 ];
 
@@ -116,14 +163,8 @@ export const metrics: Metric[] = [
   },
   {
     label: "Technologies Used",
-    value: 25,
+    value: 30,
     suffix: "+",
-    description: "Across the modern web stack",
-  },
-  {
-    label: "Client Satisfaction",
-    value: 98,
-    suffix: "%",
-    description: "Would recommend DCW Digital",
+    description: "Across the full web stack",
   },
 ];

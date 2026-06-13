@@ -8,7 +8,7 @@ export function Metrics() {
   return (
     <section className="border-y border-border bg-surface/30 py-16">
       <div className="container-px">
-        <StaggerGroup className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <StaggerGroup className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {metrics.map((metric) => (
             <StaggerItem key={metric.label} className="text-center">
               <div className="font-heading text-4xl font-bold text-gradient sm:text-5xl">
