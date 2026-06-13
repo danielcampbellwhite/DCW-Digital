@@ -1,6 +1,8 @@
+import Image from "next/image";
 import { MapPin, Heart, Code2, Users, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/site";
 
 const facts = [
   { icon: MapPin, label: "Liverpool-based, working with clients UK-wide & remote" },
@@ -16,14 +18,15 @@ export function AboutPreview() {
       <div className="container-px grid items-center gap-12 lg:grid-cols-2">
         <Reveal direction="right">
           <div className="relative">
-            {/* Headshot placeholder */}
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/20 via-surface to-secondary/20">
-              <div className="absolute inset-0 bg-grid bg-grid opacity-30" />
-              <div className="absolute inset-0 grid place-items-center">
-                <span className="font-heading text-6xl font-bold text-foreground/30">
-                  DCW
-                </span>
-              </div>
+            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl border border-border bg-surface">
+              <Image
+                src={siteConfig.headshot}
+                alt={`${siteConfig.owner}, ${siteConfig.jobTitle}`}
+                fill
+                sizes="(max-width: 1024px) 100vw, 384px"
+                className="object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background/90 to-transparent" />
               <div className="absolute bottom-4 left-4 rounded-xl border border-border bg-background/80 px-4 py-2 backdrop-blur">
                 <div className="font-heading text-sm font-semibold">
                   Daniel Campbell-White

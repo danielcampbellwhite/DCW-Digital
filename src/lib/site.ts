@@ -18,6 +18,7 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_BOOKING_URL ??
     "https://cal.com/danielcampbellwhite/discovery",
   cvUrl: "/daniel-campbell-white-cv.pdf",
+  headshot: "/daniel-campbell-white.png",
   locale: "en_GB",
   location: "Liverpool, United Kingdom",
   email: "hello@dcwdigital.co.uk",

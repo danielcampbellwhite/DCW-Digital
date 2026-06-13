@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   MapPin,
   Heart,
@@ -99,13 +100,15 @@ export default function AboutPage() {
         <div className="container-px grid items-start gap-12 lg:grid-cols-[1fr_1.3fr]">
           <Reveal direction="right">
             <div className="sticky top-24">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/20 via-surface to-secondary/20">
-                <div className="absolute inset-0 bg-grid bg-grid opacity-30" />
-                <div className="absolute inset-0 grid place-items-center">
-                  <span className="font-heading text-7xl font-bold text-foreground/30">
-                    DCW
-                  </span>
-                </div>
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border border-border bg-surface">
+                <Image
+                  src={siteConfig.headshot}
+                  alt={`${siteConfig.owner} — ${siteConfig.jobTitle}`}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 420px"
+                  className="object-cover object-top"
+                />
               </div>
               <div className="mt-4 flex flex-col gap-2 rounded-2xl border border-border bg-card p-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">

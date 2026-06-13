@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, CalendarCheck, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,9 +81,14 @@ export function Hero() {
             animate="visible"
             className="mt-14 flex items-center gap-4 rounded-2xl border border-border bg-surface/50 px-5 py-4 backdrop-blur-sm"
           >
-            <span className="grid size-12 shrink-0 place-items-center rounded-full border border-primary/30 bg-gradient-to-br from-primary/20 to-secondary/20 font-heading text-lg font-bold text-primary">
-              DC
-            </span>
+            <Image
+              src={siteConfig.headshot}
+              alt={siteConfig.owner}
+              width={48}
+              height={48}
+              priority
+              className="size-12 shrink-0 rounded-full border border-primary/30 object-cover"
+            />
             <div className="text-left">
               <div className="font-heading font-semibold text-foreground">
                 {siteConfig.owner}
