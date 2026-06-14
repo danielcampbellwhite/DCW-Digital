@@ -134,7 +134,7 @@ export const supportPackages: SupportPackage[] = [
       "Everything in Silver",
       "Round-the-clock monitoring & alerts",
       "Quarterly review & planning",
-      "Up to 6 hours of changes / month",
+      "Up to 8 hours of changes / month",
       "Same-day priority support",
     ],
   },
