@@ -32,6 +32,7 @@ export const clients: Client[] = [
     slug: "wuth",
     name: "Wirral University Teaching Hospital",
     abbr: "WUTH",
+    logoOnLight: true,
     sector: "NHS & Healthcare",
     description:
       "One of the largest acute NHS trusts in the North West, serving Wirral and the surrounding region.",
@@ -166,6 +167,7 @@ export const clients: Client[] = [
     slug: "bandm-waste",
     name: "B&M Waste Services",
     abbr: "B&M",
+    logoOnLight: true,
     sector: "Commercial",
     description:
       "An established, multi-award-winning waste management and recycling company operating across the North West and Wales.",

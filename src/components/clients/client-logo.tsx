@@ -17,16 +17,35 @@ export function ClientMark({
   const color = sectorMeta[client.sector].color;
 
   if (client.logoSrc) {
+    // Logos designed for a light background sit on a white plaque so they stay
+    // legible (and on-brand) against the dark cards.
+    if (client.logoOnLight) {
+      return (
+        <span
+          className={cn(
+            "inline-flex h-12 items-center justify-center rounded-lg bg-white px-3 py-2 shadow-sm",
+            className
+          )}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={client.logoSrc}
+            alt={`${client.name} logo`}
+            loading="lazy"
+            className="h-full w-auto max-w-[140px] object-contain"
+          />
+        </span>
+      );
+    }
     return (
-      // Logos are tiny static assets of varying ratios; object-contain styling
-      // is simpler here than next/image, and avoids image-optimisation cost.
+      // White / light logos render directly on the dark card.
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={client.logoSrc}
         alt={`${client.name} logo`}
         loading="lazy"
         className={cn(
-          "h-10 w-auto max-w-[150px] object-contain opacity-80 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0",
+          "h-10 w-auto max-w-[150px] object-contain transition duration-300",
           className
         )}
       />

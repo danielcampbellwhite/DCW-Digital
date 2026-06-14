@@ -68,6 +68,9 @@ export interface Client {
   name: string;
   /** Short monogram used by the wordmark fallback, e.g. "WUTH". */
   abbr: string;
+  /** When true, the real logo is designed for a light background, so it's
+   *  rendered on a white plaque to stay legible on the dark cards. */
+  logoOnLight?: boolean;
   sector: ClientSector;
   /** Truthful, generic description of the engagement — no invented KPIs. */
   description: string;
