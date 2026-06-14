@@ -19,9 +19,9 @@ export const clientSectors: ClientSector[] = [
 ];
 
 /**
- * Organisations DCW Digital has worked with. Presented as a logo + name
- * showcase. Descriptions are deliberately generic and truthful — no
- * fabricated performance metrics for these real, named organisations.
+ * Websites and apps Daniel has built, extended, maintained or supported as a
+ * web developer across agencies. Descriptions describe his actual involvement
+ * — truthful, specific, with no fabricated performance metrics.
  *
  * To use real logos, drop files at `public/logos/<slug>.svg` (or .png/.webp).
  * They are picked up automatically — see `scripts/fetch-logos.sh` and
@@ -35,8 +35,8 @@ export const clients: Client[] = [
     logoOnLight: true,
     sector: "NHS & Healthcare",
     description:
-      "One of the largest acute NHS trusts in the North West, serving Wirral and the surrounding region.",
-    services: ["Web Development", "Accessibility", "Support & Maintenance"],
+      "One of the largest acute NHS trusts in the North West. I maintain the site and provide ongoing client support, including accessibility audits and improvements to help meet WCAG standards.",
+    services: ["Accessibility", "Support & Maintenance"],
     url: "https://www.wuth.nhs.uk",
     featured: true,
   },
@@ -46,8 +46,8 @@ export const clients: Client[] = [
     abbr: "A&G",
     sector: "NHS & Healthcare",
     description:
-      "A leading NHS Commissioning Support Unit providing services and digital tools to health and care organisations nationally.",
-    services: ["Web Development", "Digital Tools"],
+      "A leading NHS Commissioning Support Unit providing services to health and care organisations nationally. I built their website from scratch and delivered it under ongoing support and maintenance contracts.",
+    services: ["Web Development", "Support & Maintenance"],
     url: "https://www.ardengemcsu.nhs.uk",
     featured: true,
   },
@@ -57,8 +57,8 @@ export const clients: Client[] = [
     abbr: "ASAP",
     sector: "NHS & Healthcare",
     description:
-      "A Gloucestershire NHS service helping residents find the right urgent care, quickly and confidently.",
-    services: ["Web Development", "UX"],
+      "A Gloucestershire NHS service helping residents find the right urgent care. I maintain the site and provide ongoing support, including accessibility improvements.",
+    services: ["Accessibility", "Support & Maintenance"],
     url: "https://www.asapglos.nhs.uk",
     featured: false,
   },
@@ -68,8 +68,8 @@ export const clients: Client[] = [
     abbr: "HLS",
     sector: "Public Health",
     description:
-      "Coventry's free healthy-lifestyles service supporting residents to lose weight, stop smoking, move more and drink less.",
-    services: ["Web Development", "SEO", "Support & Maintenance"],
+      "Coventry's free healthy-lifestyles service supporting residents to lose weight, stop smoking, move more and drink less. I built the site and continue to maintain it.",
+    services: ["Web Development", "Support & Maintenance"],
     url: "https://hlscoventry.org",
     featured: true,
   },
@@ -79,8 +79,8 @@ export const clients: Client[] = [
     abbr: "HLS",
     sector: "Public Health",
     description:
-      "Warwickshire's free behaviour-change service helping people across the county build healthier habits.",
-    services: ["Web Development", "SEO"],
+      "Warwickshire's free behaviour-change service helping people across the county build healthier habits. I built and maintain the site.",
+    services: ["Web Development", "Support & Maintenance"],
     url: "https://hlswarwickshire.org",
     featured: false,
   },
@@ -90,7 +90,7 @@ export const clients: Client[] = [
     abbr: "SFL",
     sector: "Public Health",
     description:
-      "Sandwell's free community stop-smoking service, supporting residents to quit smoking and vaping for good.",
+      "Sandwell's free community stop-smoking service, supporting residents to quit smoking and vaping for good. I built the site and provide its ongoing support and maintenance.",
     services: ["Web Development", "Support & Maintenance"],
     url: "https://stopforlifesandwell.org",
     featured: true,
@@ -101,8 +101,8 @@ export const clients: Client[] = [
     abbr: "SFL",
     sector: "Public Health",
     description:
-      "Devon County Council's stop-smoking service, offering advice, support and guidance to residents across Devon.",
-    services: ["Web Development", "Accessibility"],
+      "Devon County Council's stop-smoking service, offering advice and guidance to residents across Devon. I built and maintain the site.",
+    services: ["Web Development", "Support & Maintenance"],
     url: "https://stopforlifedevon.org",
     featured: false,
   },
@@ -112,8 +112,8 @@ export const clients: Client[] = [
     abbr: "LIV",
     sector: "Public Health",
     description:
-      "Liverpool's free healthy-lifestyles service supporting individuals and families to eat well, move more and feel better.",
-    services: ["Web Development", "SEO", "Support & Maintenance"],
+      "Liverpool's free healthy-lifestyles service supporting individuals and families to eat well, move more and feel better. I built and maintain the site.",
+    services: ["Web Development", "Support & Maintenance"],
     url: "https://livlifeliverpool.org",
     featured: true,
   },
@@ -123,8 +123,8 @@ export const clients: Client[] = [
     abbr: "SFL",
     sector: "Public Health",
     description:
-      "The companion mobile app for the Stop For Life stop-smoking services, supporting people to quit and stay smoke-free on the go.",
-    services: ["Mobile App", "Support & Maintenance"],
+      "The companion mobile app for the Stop For Life stop-smoking services. Originally built by a colleague, I've extended it with new features.",
+    services: ["Mobile App", "Feature Development"],
     url: "https://play.google.com/store/apps/details?id=com.mediaice.journey",
     appStoreUrl: "https://apps.apple.com/gb/app/stop-smoking-stop-for-life/id6746129332",
     featured: false,
@@ -135,8 +135,8 @@ export const clients: Client[] = [
     abbr: "HMQ",
     sector: "Public Health",
     description:
-      "The companion mobile app for Help Me Quit, the NHS stop-smoking service for Wales, helping people quit smoking for good.",
-    services: ["Mobile App", "Support & Maintenance"],
+      "Public Health Wales' counterpart to the Stop For Life app, helping people across Wales quit smoking. I've worked on and extended the app alongside its sister product.",
+    services: ["Mobile App", "Feature Development"],
     url: "https://play.google.com/store/apps/details?id=com.mediaice.helpmequit",
     appStoreUrl: "https://apps.apple.com/gb/app/helpa-fi-i-stopio-helpmequit/id6759058234",
     featured: false,
@@ -147,8 +147,8 @@ export const clients: Client[] = [
     abbr: "FN",
     sector: "Charity & Community",
     description:
-      "A national network, supported by St Martin-in-the-Fields, connecting and empowering frontline workers who support people facing homelessness.",
-    services: ["Web Development", "Community Platform"],
+      "A national network, supported by St Martin-in-the-Fields, connecting frontline workers who support people facing homelessness. I maintain the site and have added pages and features over time.",
+    services: ["Feature Development", "Support & Maintenance"],
     url: "https://www.frontlinenetwork.org.uk",
     featured: true,
   },
@@ -158,8 +158,8 @@ export const clients: Client[] = [
     abbr: "SMF",
     sector: "Charity & Community",
     description:
-      "A national charity working to support people who are facing homelessness or in vulnerable situations, including through its Frontline Network.",
-    services: ["Web Development", "Community Platform"],
+      "A national charity supporting people facing homelessness, and home of the Frontline Network. We took the site on from another agency, and I provide its ongoing support and maintenance.",
+    services: ["Support & Maintenance"],
     url: "https://www.smitfc.org",
     featured: false,
   },
@@ -170,8 +170,8 @@ export const clients: Client[] = [
     logoOnLight: true,
     sector: "Commercial",
     description:
-      "An established, multi-award-winning waste management and recycling company operating across the North West and Wales.",
-    services: ["Web Development", "SEO", "Performance"],
+      "An established, multi-award-winning waste management and recycling company in the North West. I provided proactive website support and maintenance during my time at a previous agency.",
+    services: ["Support & Maintenance"],
     url: "https://www.bandmwaste.com",
     featured: true,
   },
@@ -181,8 +181,8 @@ export const clients: Client[] = [
     abbr: "PSR",
     sector: "Legal",
     description:
-      "A modern, client-focused law firm providing legal services across a broad range of practice areas.",
-    services: ["Web Development", "SEO"],
+      "A modern, client-focused law firm. I provided proactive website support and maintenance while at a previous agency.",
+    services: ["Support & Maintenance"],
     url: "https://www.psrsolicitors.co.uk",
     featured: true,
   },
@@ -192,8 +192,8 @@ export const clients: Client[] = [
     abbr: "PA",
     sector: "Legal",
     description:
-      "A long-established solicitors' practice with offices across Cheshire, serving individuals and businesses.",
-    services: ["Web Development", "Support & Maintenance"],
+      "A long-established Cheshire solicitors' practice serving individuals and businesses. I provided proactive website support and maintenance during my time at a previous agency.",
+    services: ["Support & Maintenance"],
     url: "https://www.poolealcock.co.uk",
     featured: false,
   },

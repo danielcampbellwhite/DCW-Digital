@@ -32,10 +32,17 @@ export default function ProjectsPage() {
       <section className="py-20">
         <div className="container-px">
           <ClientsWall clients={clientsWithLogos} />
-          <p className="mt-12 text-center text-sm text-muted-foreground">
-            Logos and names are the property of their respective organisations and
-            shown to indicate prior work.
-          </p>
+          <div className="mt-12 text-center">
+            <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
+              This is only a selection. Across my roles at agencies I&apos;ve built,
+              extended, maintained and supported many more websites and applications
+              than I can show here.
+            </p>
+            <p className="mt-3 text-xs text-muted-foreground/70">
+              Logos and names are the property of their respective organisations and
+              shown to indicate prior work.
+            </p>
+          </div>
         </div>
       </section>
 
