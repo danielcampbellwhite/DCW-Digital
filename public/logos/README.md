@@ -18,9 +18,6 @@ changes needed. The filename must match the client `slug` from
 | `help-me-quit` | Help Me Quit App (mobile) |
 | `frontline-network` | The Frontline Network |
 | `smitfc` | St Martin-in-the-Fields Charity |
-| `bandm-waste` | B&M Waste Services |
-| `psr-solicitors` | PSR Solicitors |
-| `poole-alcock` | Poole Alcock Solicitors |
 
 Accepted extensions (in priority order): `.svg`, `.png`, `.webp`, `.jpg`.
 Example: `public/logos/wuth.svg`.

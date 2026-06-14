@@ -54,9 +54,7 @@ export interface SupportPackage {
 export type ClientSector =
   | "NHS & Healthcare"
   | "Public Health"
-  | "Legal"
-  | "Charity & Community"
-  | "Commercial";
+  | "Charity & Community";
 
 /**
  * An organisation Daniel / DCW Digital has worked with. Presented as a

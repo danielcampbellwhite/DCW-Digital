@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, Download, Sparkles } from "lucide-react";
+import { ArrowRight, Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Atmosphere } from "@/components/brand/atmosphere";
 import { siteConfig } from "@/lib/site";
@@ -66,10 +66,6 @@ export function Hero() {
             <Button href="/contact" variant="outline" size="lg">
               <Mail className="size-4" />
               Get in touch
-            </Button>
-            <Button href={siteConfig.cvUrl} variant="ghost" size="lg">
-              <Download className="size-4" />
-              Download CV
             </Button>
           </motion.div>
 

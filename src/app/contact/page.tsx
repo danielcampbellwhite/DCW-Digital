@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
 import { PageHeader } from "@/components/sections/page-header";
 import { ContactForm } from "@/components/contact/contact-form";
 import { Button } from "@/components/ui/button";
@@ -51,10 +50,10 @@ export default async function ContactPage({
               <h3 className="font-heading font-semibold">Hiring?</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 If you&apos;re a recruiter or hiring manager, mention the role in
-                your message and grab my CV.
+                your message and I&apos;ll get straight back to you.
               </p>
-              <Button href={siteConfig.cvUrl} variant="accent" className="mt-4 w-full">
-                Download CV
+              <Button href="/about" variant="accent" className="mt-4 w-full">
+                View my experience
               </Button>
             </div>
           </aside>

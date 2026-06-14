@@ -1,7 +1,6 @@
-import { Download, FolderGit2, Briefcase, Search, FileText } from "lucide-react";
+import { FolderGit2, Briefcase, Search, FileText } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/lib/site";
 
 /**
  * Split "two audiences" CTA — recruiters/employers on the left, prospective
@@ -28,13 +27,10 @@ export function AudienceCta() {
                 shipped.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href={siteConfig.cvUrl} variant="primary">
-                  <Download className="size-4" /> Download CV
-                </Button>
-                <Button href="/about" variant="outline">
+                <Button href="/about" variant="primary">
                   <FileText className="size-4" /> View Experience
                 </Button>
-                <Button href="/projects" variant="ghost">
+                <Button href="/projects" variant="outline">
                   <FolderGit2 className="size-4" /> View Projects
                 </Button>
               </div>

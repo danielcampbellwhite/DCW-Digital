@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Command, Download, Mail } from "lucide-react";
+import { Menu, X, Command, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { mainNav, siteConfig } from "@/lib/site";
+import { mainNav } from "@/lib/site";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { useCommandPalette } from "@/components/command/command-palette";
@@ -88,9 +88,6 @@ export function Navbar() {
               <Command className="size-3.5" />
               <kbd className="font-mono">⌘K</kbd>
             </button>
-            <Button href={siteConfig.cvUrl} variant="outline" size="sm">
-              <Download className="size-4" /> CV
-            </Button>
             <Button href="/contact" variant="primary" size="sm">
               <Mail className="size-4" /> Get in touch
             </Button>
@@ -149,9 +146,6 @@ export function Navbar() {
                 })}
               </ul>
               <div className="mt-4 flex flex-col gap-2">
-                <Button href={siteConfig.cvUrl} variant="outline" size="md">
-                  <Download className="size-4" /> Download CV
-                </Button>
                 <Button href="/contact" variant="primary" size="md">
                   <Mail className="size-4" /> Get in touch
                 </Button>

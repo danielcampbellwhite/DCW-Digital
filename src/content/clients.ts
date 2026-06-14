@@ -5,17 +5,13 @@ import type { Client, ClientSector } from "@/types";
 export const sectorMeta: Record<ClientSector, { color: string }> = {
   "NHS & Healthcare": { color: "#0EA5E9" },
   "Public Health": { color: "#10B981" },
-  Legal: { color: "#8B5CF6" },
   "Charity & Community": { color: "#F59E0B" },
-  Commercial: { color: "#22D3EE" },
 };
 
 export const clientSectors: ClientSector[] = [
   "NHS & Healthcare",
   "Public Health",
-  "Legal",
   "Charity & Community",
-  "Commercial",
 ];
 
 /**
@@ -107,7 +103,7 @@ export const clients: Client[] = [
       "Devon County Council's stop-smoking service, offering advice and guidance to residents across Devon. I built and maintain the site.",
     services: ["Web Development", "Support & Maintenance"],
     url: "https://stopforlifedevon.org",
-    featured: false,
+    featured: true,
   },
   {
     slug: "liv-life-liverpool",
@@ -166,41 +162,7 @@ export const clients: Client[] = [
       "A national charity supporting people facing homelessness, and home of the Frontline Network. We took the site on from another agency, and I provide its ongoing support and maintenance.",
     services: ["Support & Maintenance"],
     url: "https://www.smitfc.org",
-    featured: false,
-  },
-  {
-    slug: "bandm-waste",
-    name: "B&M Waste Services",
-    abbr: "B&M",
-    logoOnLight: true,
-    sector: "Commercial",
-    description:
-      "An established, multi-award-winning waste management and recycling company in the North West. I provided proactive website support and maintenance during my time at a previous agency.",
-    services: ["Support & Maintenance"],
-    url: "https://www.bandmwaste.com",
     featured: true,
-  },
-  {
-    slug: "psr-solicitors",
-    name: "PSR Solicitors",
-    abbr: "PSR",
-    sector: "Legal",
-    description:
-      "A modern, client-focused law firm. I provided proactive website support and maintenance while at a previous agency.",
-    services: ["Support & Maintenance"],
-    url: "https://www.psrsolicitors.co.uk",
-    featured: true,
-  },
-  {
-    slug: "poole-alcock",
-    name: "Poole Alcock Solicitors",
-    abbr: "PA",
-    sector: "Legal",
-    description:
-      "A long-established Cheshire solicitors' practice serving individuals and businesses. I provided proactive website support and maintenance during my time at a previous agency.",
-    services: ["Support & Maintenance"],
-    url: "https://www.poolealcock.co.uk",
-    featured: false,
   },
 ];
 

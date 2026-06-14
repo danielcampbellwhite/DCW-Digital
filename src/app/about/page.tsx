@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Lightbulb,
   Rocket,
-  Download,
   ArrowRight,
 } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
@@ -86,10 +85,7 @@ export default function AboutPage() {
         description="Web developer and digital consultant based in Liverpool, UK. Here's my story, how I work, and what I'm looking for next."
       >
         <div className="flex flex-wrap justify-center gap-3">
-          <Button href={siteConfig.cvUrl} variant="primary">
-            <Download className="size-4" /> Download CV
-          </Button>
-          <Button href="/contact" variant="outline">
+          <Button href="/contact" variant="primary">
             Get in touch
             <ArrowRight className="size-4" />
           </Button>

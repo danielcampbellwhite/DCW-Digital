@@ -29,9 +29,6 @@ CLIENTS=(
   "liv-life-liverpool|livlifeliverpool.org"
   "frontline-network|frontlinenetwork.org.uk"
   "smitfc|smitfc.org"
-  "bandm-waste|bandmwaste.com"
-  "psr-solicitors|psrsolicitors.co.uk"
-  "poole-alcock|poolealcock.co.uk"
 )
 
 UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
