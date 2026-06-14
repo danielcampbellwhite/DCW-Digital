@@ -5,7 +5,6 @@ import { Expertise } from "@/components/sections/expertise";
 import { TrustedBy } from "@/components/sections/trusted-by";
 import { ServicesOverview } from "@/components/sections/services-overview";
 import { ProcessTimeline } from "@/components/sections/process-timeline";
-import { Testimonials } from "@/components/sections/testimonials";
 import { AudienceCta } from "@/components/sections/audience-cta";
 import { LeadMagnet } from "@/components/sections/lead-magnet";
 import { FinalCta } from "@/components/sections/final-cta";
@@ -20,7 +19,6 @@ export default function HomePage() {
       <TrustedBy />
       <ServicesOverview />
       <ProcessTimeline />
-      <Testimonials />
       <AudienceCta />
       <LeadMagnet />
       <FinalCta />
