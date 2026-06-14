@@ -16,7 +16,7 @@ export function ServicesOverview() {
           description="Whatever's holding your website back — or wherever you want to take your business next — there's a straightforward way I can help. No jargon, just results you can see."
         />
 
-        <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service) => (
             <StaggerItem key={service.slug} className="h-full">
               <ServiceCard service={service} />

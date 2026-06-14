@@ -45,6 +45,8 @@ export interface Service {
 /** A support & maintenance package tier (Bronze / Silver / Gold). */
 export interface SupportPackage {
   name: string;
+  price: string;
+  cadence: string;
   description: string;
   features: string[];
   featured?: boolean;

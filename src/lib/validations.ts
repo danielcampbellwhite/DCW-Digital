@@ -3,12 +3,10 @@ import { z } from "zod";
 /** Services a visitor can enquire about (kept in sync with the service CTAs).
  *  Plain-language labels aimed at business owners, not jargon. */
 export const serviceOptions = [
-  "Build a new website",
-  "Get found by more customers",
-  "Website health check",
-  "Make my website faster",
-  "Website care & support",
-  "Advice to grow online",
+  "Website development",
+  "Website audit",
+  "Support & maintenance",
+  "Digital partner",
   "Free Website Health Check",
   "Employment Opportunity",
   "Something else",

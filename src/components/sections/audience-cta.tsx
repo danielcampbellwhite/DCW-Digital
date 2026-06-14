@@ -52,7 +52,7 @@ export function AudienceCta() {
                 let&apos;s talk about your goals — and how to reach them.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href="/contact?service=Website+health+check" variant="secondary">
+                <Button href="/contact?service=Free+Website+Health+Check" variant="secondary">
                   <Search className="size-4" /> Get a website health check
                 </Button>
                 <Button href="/contact" variant="outline">
