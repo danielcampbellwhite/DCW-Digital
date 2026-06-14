@@ -34,7 +34,13 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-export function ContactForm({ defaultService }: { defaultService?: string }) {
+export function ContactForm({
+  defaultService,
+  defaultMessage,
+}: {
+  defaultService?: string;
+  defaultMessage?: string;
+}) {
   const [status, setStatus] = React.useState<Status>("idle");
   const [serverError, setServerError] = React.useState<string | null>(null);
 
@@ -54,6 +60,7 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
     resolver: zodResolver(contactSchema),
     defaultValues: {
       service: presetService ?? ("" as ContactFormValues["service"]),
+      message: defaultMessage ?? "",
     },
   });
 

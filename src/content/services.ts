@@ -100,8 +100,7 @@ export const services: Service[] = [
 export const supportPackages: SupportPackage[] = [
   {
     name: "Bronze",
-    price: "£75",
-    cadence: "/month",
+    priceMonthly: 75,
     description: "Essential cover for small business and brochure sites.",
     features: [
       "Software & security updates",
@@ -113,8 +112,7 @@ export const supportPackages: SupportPackage[] = [
   },
   {
     name: "Silver",
-    price: "£150",
-    cadence: "/month",
+    priceMonthly: 150,
     description: "For growing businesses that depend on their website.",
     features: [
       "Everything in Bronze",
@@ -127,8 +125,7 @@ export const supportPackages: SupportPackage[] = [
   },
   {
     name: "Gold",
-    price: "£250",
-    cadence: "/month",
+    priceMonthly: 250,
     description: "Comprehensive care for busy, business-critical websites.",
     features: [
       "Everything in Silver",

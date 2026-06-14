@@ -45,8 +45,8 @@ export interface Service {
 /** A support & maintenance package tier (Bronze / Silver / Gold). */
 export interface SupportPackage {
   name: string;
-  price: string;
-  cadence: string;
+  /** Price per month in GBP. Annual = 10x (pay for 10, get 12 — 2 months free). */
+  priceMonthly: number;
   description: string;
   features: string[];
   featured?: boolean;

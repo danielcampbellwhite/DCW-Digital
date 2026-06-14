@@ -14,9 +14,12 @@ export const metadata: Metadata = buildMetadata({
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: Promise<{ service?: string }>;
+  searchParams: Promise<{ service?: string; plan?: string }>;
 }) {
-  const { service } = await searchParams;
+  const { service, plan } = await searchParams;
+  const defaultMessage = plan
+    ? `Hi Daniel, I'm interested in the ${plan} support & maintenance plan. `
+    : undefined;
 
   return (
     <>
@@ -40,7 +43,7 @@ export default async function ContactPage({
               I&apos;ll reply within one working day.
             </p>
             <div className="mt-6">
-              <ContactForm defaultService={service} />
+              <ContactForm defaultService={service} defaultMessage={defaultMessage} />
             </div>
           </div>
 
