@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/brand/atmosphere";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,6 @@ export function FinalCta() {
             <Button href="/contact" variant="primary" size="lg">
               Start Your Project
               <ArrowRight className="size-4" />
-            </Button>
-            <Button href="/contact" variant="outline" size="lg">
-              <MessageCircle className="size-4" />
-              Let&apos;s Talk
             </Button>
           </div>
         </Reveal>
