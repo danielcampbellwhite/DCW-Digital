@@ -38,7 +38,7 @@ export default function ProjectsPage() {
               extended, maintained and supported many more websites and applications
               than I can show here.
             </p>
-            <p className="mt-3 text-xs text-muted-foreground/70">
+            <p className="mt-3 text-xs text-muted-foreground">
               Logos and names are the property of their respective organisations and
               shown to indicate prior work.
             </p>

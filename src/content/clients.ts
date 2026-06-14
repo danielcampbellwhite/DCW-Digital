@@ -44,6 +44,7 @@ export const clients: Client[] = [
     slug: "arden-gem",
     name: "NHS Arden & GEM CSU",
     abbr: "A&G",
+    logoOnLight: true,
     sector: "NHS & Healthcare",
     description:
       "A leading NHS Commissioning Support Unit providing services to health and care organisations nationally. I built their website from scratch and delivered it under ongoing support and maintenance contracts.",
@@ -55,6 +56,7 @@ export const clients: Client[] = [
     slug: "asap-glos",
     name: "ASAP Glos NHS",
     abbr: "ASAP",
+    logoOnLight: true,
     sector: "NHS & Healthcare",
     description:
       "A Gloucestershire NHS service helping residents find the right urgent care. I maintain the site and provide ongoing support, including accessibility improvements.",
@@ -66,6 +68,7 @@ export const clients: Client[] = [
     slug: "hls-coventry",
     name: "Healthy Lifestyles Coventry",
     abbr: "HLS",
+    logoOnLight: true,
     sector: "Public Health",
     description:
       "Coventry's free healthy-lifestyles service supporting residents to lose weight, stop smoking, move more and drink less. I built the site and continue to maintain it.",
@@ -145,6 +148,7 @@ export const clients: Client[] = [
     slug: "frontline-network",
     name: "The Frontline Network",
     abbr: "FN",
+    logoOnLight: true,
     sector: "Charity & Community",
     description:
       "A national network, supported by St Martin-in-the-Fields, connecting frontline workers who support people facing homelessness. I maintain the site and have added pages and features over time.",
@@ -156,6 +160,7 @@ export const clients: Client[] = [
     slug: "smitfc",
     name: "St Martin-in-the-Fields Charity",
     abbr: "SMF",
+    logoOnLight: true,
     sector: "Charity & Community",
     description:
       "A national charity supporting people facing homelessness, and home of the Frontline Network. We took the site on from another agency, and I provide its ongoing support and maintenance.",

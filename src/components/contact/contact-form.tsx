@@ -19,11 +19,16 @@ import { Select } from "@/components/ui/select";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-/** Field-level error text. */
-function FieldError({ message }: { message?: string }) {
+/** Field-level error text. Given an `id` so inputs can reference it via
+ *  aria-describedby, and announced politely to screen readers. */
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
-    <p className="mt-1.5 flex items-center gap-1 text-xs text-red-400">
+    <p
+      id={id}
+      role="alert"
+      className="mt-1.5 flex items-center gap-1 text-xs text-red-400"
+    >
       <AlertCircle className="size-3" /> {message}
     </p>
   );
@@ -120,10 +125,12 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
             id="name"
             className="mt-1.5"
             placeholder="Your name"
+            aria-required="true"
             aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? "name-error" : undefined}
             {...register("name")}
           />
-          <FieldError message={errors.name?.message} />
+          <FieldError id="name-error" message={errors.name?.message} />
         </div>
         <div>
           <Label htmlFor="email">
@@ -134,10 +141,12 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
             type="email"
             className="mt-1.5"
             placeholder="you@company.com"
+            aria-required="true"
             aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
             {...register("email")}
           />
-          <FieldError message={errors.email?.message} />
+          <FieldError id="email-error" message={errors.email?.message} />
         </div>
         <div>
           <Label htmlFor="company">Company</Label>
@@ -165,7 +174,9 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
           <Select
             id="service"
             className="mt-1.5"
+            aria-required="true"
             aria-invalid={!!errors.service}
+            aria-describedby={errors.service ? "service-error" : undefined}
             defaultValue={presetService ?? ""}
             {...register("service")}
           >
@@ -178,7 +189,7 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
               </option>
             ))}
           </Select>
-          <FieldError message={errors.service?.message} />
+          <FieldError id="service-error" message={errors.service?.message} />
         </div>
         <div>
           <Label htmlFor="budget">Budget</Label>
@@ -201,10 +212,12 @@ export function ContactForm({ defaultService }: { defaultService?: string }) {
           id="message"
           className="mt-1.5"
           placeholder="Tell me about your project, goals, timeline — or the role you're hiring for."
+          aria-required="true"
           aria-invalid={!!errors.message}
+          aria-describedby={errors.message ? "message-error" : undefined}
           {...register("message")}
         />
-        <FieldError message={errors.message?.message} />
+        <FieldError id="message-error" message={errors.message?.message} />
       </div>
 
       {/* Error state */}

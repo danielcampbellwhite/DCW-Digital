@@ -45,7 +45,7 @@ export function AudienceCta() {
           <Reveal>
             <div className="relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-secondary/10 via-card to-card p-8 sm:p-10">
               <div className="absolute -right-12 -top-12 size-40 rounded-full bg-secondary/20 blur-3xl" />
-              <span className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium text-violet-300">
                 <Search className="size-3.5" /> For businesses
               </span>
               <h3 className="mt-5 font-heading text-2xl font-bold sm:text-3xl">
