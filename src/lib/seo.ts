@@ -19,7 +19,7 @@ export function buildMetadata({
   title,
   description = siteConfig.description,
   path = "/",
-  image = siteConfig.ogImage,
+  image,
   type = "website",
   publishedTime,
   tags,
@@ -28,6 +28,13 @@ export function buildMetadata({
   const fullTitle = title
     ? `${title} · ${siteConfig.name}`
     : `${siteConfig.name} - ${siteConfig.altTagline}`;
+
+  // Only set images explicitly when one is provided. Otherwise we let Next's
+  // file-based `opengraph-image` conventions supply them - the site-wide card
+  // globally, and the per-post card for /blog/[slug].
+  const images = image
+    ? [{ url: image, width: 1200, height: 630, alt: siteConfig.name }]
+    : undefined;
 
   return {
     title: fullTitle,
@@ -40,7 +47,7 @@ export function buildMetadata({
       description,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
-      images: [{ url: image, width: 1200, height: 630, alt: siteConfig.name }],
+      ...(images ? { images } : {}),
       ...(publishedTime ? { publishedTime } : {}),
       ...(tags ? { tags } : {}),
     },
@@ -48,7 +55,7 @@ export function buildMetadata({
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [image],
+      ...(image ? { images: [image] } : {}),
     },
   };
 }
@@ -150,9 +157,12 @@ export function blogPostingSchema(post: {
         url: new URL(siteConfig.ogImage, siteConfig.url).toString(),
       },
     },
-    image: post.cover
-      ? new URL(post.cover, siteConfig.url).toString()
-      : new URL(siteConfig.ogImage, siteConfig.url).toString(),
+    // Use the post's real cover image when it's an actual path; otherwise the
+    // per-post generated Open Graph card (gradient presets aren't real images).
+    image:
+      post.cover && post.cover.startsWith("/")
+        ? new URL(post.cover, siteConfig.url).toString()
+        : new URL(`/blog/${post.slug}/opengraph-image`, siteConfig.url).toString(),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteConfig.url}/blog/${post.slug}`,
