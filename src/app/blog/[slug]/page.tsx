@@ -15,6 +15,7 @@ import { formatDate } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
 import { Atmosphere } from "@/components/brand/atmosphere";
 import { PostCover } from "@/components/blog/post-cover";
+import { SharePost } from "@/components/blog/share-post";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -53,6 +54,7 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const related = getRelatedPosts(post.slug, post.category);
+  const shareUrl = new URL(`/blog/${post.slug}`, siteConfig.url).toString();
 
   return (
     <>
@@ -108,6 +110,9 @@ export default async function BlogPostPage({
                 <Clock className="size-4" /> {post.readingTime} min read
               </span>
             </div>
+            <div className="mt-6">
+              <SharePost url={shareUrl} title={post.title} />
+            </div>
           </div>
         </div>
       </header>
@@ -136,6 +141,14 @@ export default async function BlogPostPage({
               ))}
             </div>
           )}
+
+          {/* Share */}
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5">
+            <p className="text-sm text-muted-foreground">
+              Found this useful? Pass it on.
+            </p>
+            <SharePost url={shareUrl} title={post.title} />
+          </div>
 
           {/* CTA */}
           <div className="mt-12 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-card p-8 text-center">
