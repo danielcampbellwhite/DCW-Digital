@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { PostMeta, PostCategory } from "@/types";
 import { postCategories } from "@/lib/constants";
 import { formatDate, cn } from "@/lib/utils";
-import { ProjectVisual } from "@/components/projects/project-visual";
+import { PostCover } from "@/components/blog/post-cover";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
@@ -47,7 +47,7 @@ export function BlogIndex({
           href={`/blog/${lead.slug}`}
           className="group grid gap-6 overflow-hidden rounded-3xl border border-border bg-card p-3 transition-colors hover:border-primary/40 md:grid-cols-2 md:p-4"
         >
-          <ProjectVisual preset={lead.cover ?? "cyan"} />
+          <PostCover cover={lead.cover} alt={lead.title} priority />
           <div className="flex flex-col justify-center p-4 md:p-8">
             <div className="flex items-center gap-3">
               <Badge variant="accent">Featured</Badge>
@@ -130,7 +130,7 @@ export function BlogIndex({
                   href={`/blog/${post.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-3 transition-colors hover:border-primary/40"
                 >
-                  <ProjectVisual preset={post.cover ?? "cyan"} />
+                  <PostCover cover={post.cover} alt={post.title} />
                   <div className="flex flex-1 flex-col p-4">
                     <Badge variant="primary" className="w-fit">
                       {post.category}

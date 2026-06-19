@@ -14,7 +14,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
 import { Atmosphere } from "@/components/brand/atmosphere";
-import { ProjectVisual } from "@/components/projects/project-visual";
+import { PostCover } from "@/components/blog/post-cover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -114,7 +114,7 @@ export default async function BlogPostPage({
 
       <div className="container-px py-16">
         <article className="mx-auto max-w-2xl">
-          <ProjectVisual preset={post.cover ?? "cyan"} />
+          <PostCover cover={post.cover} alt={post.title} priority />
           <div className="mt-10">
             <MDXRemote
               source={post.content}
@@ -167,7 +167,7 @@ export default async function BlogPostPage({
                   href={`/blog/${r.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-3 transition-colors hover:border-primary/40"
                 >
-                  <ProjectVisual preset={r.cover ?? "cyan"} />
+                  <PostCover cover={r.cover} alt={r.title} />
                   <div className="p-4">
                     <h3 className="font-heading font-semibold leading-snug">{r.title}</h3>
                     <span className="mt-3 inline-flex items-center gap-1 text-sm text-primary">
