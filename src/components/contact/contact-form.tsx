@@ -48,7 +48,7 @@ export function ContactForm({
     ? (defaultService as ContactFormValues["service"])
     : undefined;
 
-  // When the form first mounted — used for the server-side time-trap.
+  // When the form first mounted - used for the server-side time-trap.
   const mountedAt = React.useRef<number>(Date.now());
 
   const {
@@ -99,7 +99,7 @@ export function ContactForm({
         aria-live="polite"
       >
         <CheckCircle2 className="size-12 text-accent" />
-        <h3 className="mt-4 font-heading text-2xl font-bold">Message sent — thank you!</h3>
+        <h3 className="mt-4 font-heading text-2xl font-bold">Message sent - thank you!</h3>
         <p className="mt-2 max-w-md text-muted-foreground">
           Your enquiry has landed safely. I&apos;ll be in touch within one working
           day. For anything urgent, feel free to email me directly.
@@ -218,7 +218,7 @@ export function ContactForm({
         <Textarea
           id="message"
           className="mt-1.5"
-          placeholder="Tell me about your project, goals, timeline — or the role you're hiring for."
+          placeholder="Tell me about your project, goals, timeline - or the role you're hiring for."
           aria-required="true"
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}

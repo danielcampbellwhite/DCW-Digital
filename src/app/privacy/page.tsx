@@ -33,7 +33,7 @@ export default function PrivacyPage() {
 
             <Block title="1. Information I collect">
               <p>
-                I only collect data you choose to provide — primarily through the
+                I only collect data you choose to provide - primarily through the
                 contact form: your name, email address, and optionally your company,
                 phone number, budget, the service you&apos;re interested in, and your
                 message. Basic, anonymised analytics may also be collected to

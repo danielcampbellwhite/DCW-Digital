@@ -6,7 +6,7 @@ import { ClientLogo } from "@/components/clients/client-logo";
 import { StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
-/** Homepage "trusted by" logo strip — real organisations DCW Digital has
+/** Homepage "trusted by" logo strip - real organisations DCW Digital has
  *  worked with, across the NHS, public health, legal and commercial sectors. */
 export function TrustedBy() {
   const featured = withLogos(getFeaturedClients());
@@ -17,7 +17,7 @@ export function TrustedBy() {
         <SectionHeading
           eyebrow="Selected Work"
           title="Trusted by organisations that matter"
-          description="From NHS trusts and public-health services to law firms and national charities, I've helped a wide range of organisations build and run effective websites."
+          description="A mix of NHS trusts, public-health services and national charities - some of the organisations whose sites and apps I've built or looked after over the years."
         />
 
         <StaggerGroup className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

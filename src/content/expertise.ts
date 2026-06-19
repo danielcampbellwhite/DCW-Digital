@@ -69,7 +69,7 @@ export const expertise: ExpertiseArea[] = [
     title: "Tooling, DevOps & AI",
     icon: GitBranch,
     description:
-      "Shipping with confidence — version control, automated pipelines, integrations and AI-assisted workflows.",
+      "Shipping with confidence - version control, automated pipelines, integrations and AI-assisted workflows.",
     skills: [
       "Git",
       "CI/CD",
@@ -83,7 +83,7 @@ export const expertise: ExpertiseArea[] = [
     title: "SEO & Performance",
     icon: Gauge,
     description:
-      "Fast, findable, accessible websites — strong technical foundations that rank well and convert.",
+      "Fast, findable, accessible websites - strong technical foundations that rank well and convert.",
     skills: [
       "Technical SEO",
       "Core Web Vitals",
@@ -100,7 +100,7 @@ export const processSteps: ProcessStep[] = [
     step: 1,
     title: "Discovery",
     description:
-      "We start by understanding your goals, audience and constraints. No assumptions — just the right questions.",
+      "We start by understanding your goals, audience and constraints. No assumptions - just the right questions.",
     icon: Compass,
   },
   {
@@ -114,7 +114,7 @@ export const processSteps: ProcessStep[] = [
     step: 3,
     title: "Design",
     description:
-      "Clean, on-brand interface design focused on clarity, trust and conversion — reviewed together before a line of code.",
+      "Clean, on-brand interface design focused on clarity, trust and conversion - reviewed together before a line of code.",
     icon: Palette,
   },
   {

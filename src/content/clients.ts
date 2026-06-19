@@ -17,10 +17,10 @@ export const clientSectors: ClientSector[] = [
 /**
  * Websites and apps Daniel has built, extended, maintained or supported as a
  * web developer across agencies. Descriptions describe his actual involvement
- * — truthful, specific, with no fabricated performance metrics.
+ * - truthful, specific, with no fabricated performance metrics.
  *
  * To use real logos, drop files at `public/logos/<slug>.svg` (or .png/.webp).
- * They are picked up automatically — see `scripts/fetch-logos.sh` and
+ * They are picked up automatically - see `scripts/fetch-logos.sh` and
  * `src/lib/logos.ts`. Until then, a branded wordmark is shown.
  */
 export const clients: Client[] = [

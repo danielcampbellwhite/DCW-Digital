@@ -39,7 +39,7 @@ const values = [
     icon: ShieldCheck,
     title: "Built to last",
     description:
-      "Clean, documented, accessible code that your team — or the next developer — can confidently build on.",
+      "Clean, documented, accessible code that your team - or the next developer - can confidently build on.",
   },
   {
     icon: Compass,
@@ -78,7 +78,7 @@ export default function AboutPage() {
         eyebrow="About"
         title={
           <>
-            Hi, I&apos;m Daniel — I build{" "}
+            Hi, I&apos;m Daniel - I build{" "}
             <span className="text-gradient">websites that work</span>
           </>
         }
@@ -100,7 +100,7 @@ export default function AboutPage() {
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border border-border bg-surface">
                 <Image
                   src={siteConfig.headshot}
-                  alt={`${siteConfig.owner} — ${siteConfig.jobTitle}`}
+                  alt={`${siteConfig.owner} - ${siteConfig.jobTitle}`}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 420px"
@@ -128,32 +128,31 @@ export default function AboutPage() {
             </h2>
             <div className="mt-5 space-y-4 text-muted-foreground">
               <p>
-                My journey into technology started the way it does for a lot of
-                developers — taking things apart to see how they worked, then
-                figuring out how to build something better. That curiosity turned
-                into a career I genuinely love.
+                I got into this the way a lot of developers do - poking at things
+                to see how they worked, then trying to build something better. I
+                started writing code at school around 14, and by 16 I&apos;d pretty
+                much decided this was the job I wanted.
               </p>
               <p>
-                Over the past eight years I&apos;ve worked across agencies,
-                in-house product teams and as an independent consultant. I&apos;ve
-                built marketing sites that doubled enquiries, e-commerce stores
-                that load in under two seconds, internal tools that saved teams
-                hours every week, and SaaS platforms used daily by real
-                businesses.
+                Since then I&apos;ve spent my career at agencies, building new sites
+                from scratch and looking after plenty of existing ones. A lot of my
+                work has been in public health and the NHS, plus the usual mix of
+                business sites, web apps and the occasional mobile app. I&apos;ve
+                worked across a fair few stacks along the way, from .NET and PHP to
+                React and Next.js.
               </p>
               <p>
-                What ties it all together is a focus on <strong className="text-foreground">solving
-                real problems</strong>. I&apos;m happiest when I&apos;m
-                understanding a business, finding where technology can make a
-                genuine difference, and shipping something fast, reliable and
-                measurable.
+                The thread through all of it is <strong className="text-foreground">solving
+                actual problems</strong>. I&apos;d rather understand what a business
+                needs and build the right thing than reach for whatever&apos;s
+                trendy. Unglamorous, reliable and done properly beats clever every
+                time.
               </p>
               <p>
-                Outside of work, I&apos;m a family man based in Liverpool. Time
-                with my family keeps me grounded, and a healthy obsession with new
-                technology keeps me sharp. I believe the best developers bring
-                their whole selves to their work — and I think that balance makes
-                me better at what I do.
+                Outside work I&apos;m a husband and dad here in Liverpool. Family
+                keeps me grounded, and a bit of an obsession with new tech keeps me
+                sharp. I don&apos;t think those two things pull against each other -
+                if anything the balance makes me better at the job.
               </p>
             </div>
 
@@ -196,7 +195,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Technical Skills"
             title="The tools of the trade"
-            description="A modern, full-stack toolkit — chosen for speed, reliability and long-term maintainability."
+            description="A modern, full-stack toolkit - chosen for speed, reliability and long-term maintainability."
           />
           <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {expertise.map((area) => {

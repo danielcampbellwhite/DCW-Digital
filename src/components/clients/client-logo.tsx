@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 /**
  * The visual "mark" for a client: the real logo image when one exists at
  * `public/logos/<slug>.*`, otherwise an on-brand wordmark monogram. Pure
- * presentational component — safe inside both server and client trees.
+ * presentational component - safe inside both server and client trees.
  */
 export function ClientMark({
   client,

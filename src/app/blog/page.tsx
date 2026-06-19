@@ -7,7 +7,7 @@ import { BlogIndex } from "@/components/blog/blog-index";
 export const metadata: Metadata = buildMetadata({
   title: "Blog",
   description:
-    "Practical insights on web development, SEO, performance, technology and business growth — written for both technical and non-technical readers.",
+    "Practical insights on web development, SEO, performance, technology and business growth - written for both technical and non-technical readers.",
   path: "/blog",
 });
 
@@ -24,7 +24,7 @@ export default function BlogPage() {
             The DCW Digital <span className="text-gradient">blog</span>
           </>
         }
-        description="Practical, no-fluff writing on building, optimising and growing modern websites — for business owners and developers alike."
+        description="Practical, no-fluff writing on building, optimising and growing modern websites - for business owners and developers alike."
       />
 
       <section className="py-16">

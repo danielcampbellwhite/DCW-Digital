@@ -10,7 +10,7 @@ interface LogoProps {
 
 /**
  * DCW Digital text-based logo. A monogram mark ("DCW") sits beside the
- * wordmark. Pure typography + spacing — no raster assets, so it stays crisp
+ * wordmark. Pure typography + spacing - no raster assets, so it stays crisp
  * at any size and theme.
  */
 export function Logo({ className, variant = "inline", href = "/" }: LogoProps) {
@@ -45,7 +45,7 @@ export function Logo({ className, variant = "inline", href = "/" }: LogoProps) {
   if (href === null) return mark;
 
   return (
-    <Link href={href} aria-label="DCW Digital — home" className="inline-flex">
+    <Link href={href} aria-label="DCW Digital - home" className="inline-flex">
       {mark}
     </Link>
   );

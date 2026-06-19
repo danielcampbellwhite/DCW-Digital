@@ -2,7 +2,7 @@ import { Code2, ClipboardCheck, LifeBuoy, Handshake } from "lucide-react";
 import type { Service, SupportPackage } from "@/types";
 
 /**
- * Service catalogue — four core things Daniel can help with. These are framed
+ * Service catalogue - four core things Daniel can help with. These are framed
  * as pointers to what's possible rather than rigid, priced products: the call
  * to action is always "let's have a chat". The only place pricing is shown is
  * the Support & Maintenance packages below.
@@ -15,7 +15,7 @@ export const services: Service[] = [
     summary:
       "Fast, modern websites and web apps, designed and built from scratch around your goals.",
     description:
-      "I design and build websites and web applications from the ground up — fast, accessible, easy to manage and built to convert. Strong SEO foundations and performance come as standard, not as an afterthought.",
+      "I design and build websites and web applications from the ground up - fast, accessible, easy to manage and built to convert. Strong SEO foundations and performance come as standard, not as an afterthought.",
     benefits: [
       "Bespoke design and build, tailored to you",
       "Fast, accessible and built to convert",
@@ -36,7 +36,7 @@ export const services: Service[] = [
     title: "Website Auditing",
     icon: ClipboardCheck,
     summary:
-      "A clear, prioritised review of an existing site — what's working, what isn't, and what to fix first.",
+      "A clear, prioritised review of an existing site - what's working, what isn't, and what to fix first.",
     description:
       "Already have a website but it's not pulling its weight? I'll review it across performance, SEO, user experience, accessibility and security, then give you a plain-English, prioritised action plan you can act on.",
     benefits: [
@@ -59,9 +59,9 @@ export const services: Service[] = [
     title: "Support & Maintenance",
     icon: LifeBuoy,
     summary:
-      "Keep your site secure, updated and online with a simple monthly care plan — pick the level that suits.",
+      "Keep your site secure, updated and online with a simple monthly care plan - pick the level that suits.",
     description:
-      "Websites need looking after. My care plans keep yours secure, backed up and running smoothly, with a real person on hand for changes and questions. Available as straightforward monthly subscription packages — see the tiers below.",
+      "Websites need looking after. My care plans keep yours secure, backed up and running smoothly, with a real person on hand for changes and questions. Available as straightforward monthly subscription packages - see the tiers below.",
     benefits: [
       "Updates, backups and monitoring",
       "A real person for changes & questions",
@@ -76,7 +76,7 @@ export const services: Service[] = [
     title: "Digital Partner",
     icon: Handshake,
     summary:
-      "Your go-to person for digital — on hand for advice or ad-hoc work, charged as used and invoiced monthly.",
+      "Your go-to person for digital - on hand for advice or ad-hoc work, charged as used and invoiced monthly.",
     description:
       "Don't need a big project, just someone reliable in your corner? As your digital partner I'm on hand for advice, small jobs and the occasional 'can you just…'. Work is charged ad hoc and invoiced monthly, so you only ever pay for what you use.",
     benefits: [
@@ -89,7 +89,7 @@ export const services: Service[] = [
       "Ongoing advice & guidance",
       "Small fixes & changes",
       "Tech & tooling decisions",
-      "Whatever comes up — just ask",
+      "Whatever comes up - just ask",
     ],
     cta: { label: "Get in touch for a chat", href: "/contact?service=Digital+partner" },
   },

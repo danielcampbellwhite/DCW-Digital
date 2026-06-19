@@ -1,6 +1,6 @@
 ---
-title: "Why Your Business Website Should Be Fast (and What 'Fast' Actually Means)"
-description: "Speed isn't a vanity metric — it's revenue. Here's what site speed really means in 2026, why it matters for your bottom line, and how to think about Core Web Vitals."
+title: "Why Your Business Website Should Be Fast"
+description: "Slow websites quietly lose you customers. Here's what site speed actually means, why it matters for your bottom line, and the stuff that usually causes the slowdown."
 date: "2026-05-28"
 category: "Performance"
 tags: ["Core Web Vitals", "Performance", "Conversion"]
@@ -9,40 +9,54 @@ featured: true
 cover: "cyan"
 ---
 
-If your website takes longer than a couple of seconds to load, you're losing
-customers before they ever see what you offer. That's not an opinion — it's
-what the data consistently shows. Speed is one of the few things on your
-website that affects **rankings, conversions and brand perception all at once**.
+Slow sites lose you money. That's the short version.
+
+I've been handed plenty of websites over the years that took five or six seconds
+to load on a phone, and every one of them was quietly leaking customers the
+owner never knew about. People don't hang around. If your site makes them wait,
+they hit back and go to whoever's faster - usually a competitor.
+
+So let's talk about what "fast" actually means and why you should care.
 
 ## What "fast" actually means
 
-When developers talk about speed, we're usually talking about **Core Web
-Vitals** — a set of real-world metrics Google uses to measure user experience:
+When developers go on about speed, we're usually talking about Core Web Vitals.
+It sounds technical but it's really just three things Google measures about how
+your page feels to use:
 
-- **Largest Contentful Paint (LCP)** — how quickly the main content appears. Aim for under 2.5 seconds.
-- **Interaction to Next Paint (INP)** — how responsive the page feels when you interact with it. Aim for under 200ms.
-- **Cumulative Layout Shift (CLS)** — how much the page jumps around as it loads. Aim for under 0.1.
+- **LCP** - how long until the main content shows up. You want under 2.5 seconds.
+- **INP** - how quickly the page reacts when someone taps or clicks. Under 200ms.
+- **CLS** - how much stuff shifts around as the page loads. Under 0.1.
 
-These aren't abstract numbers. They map directly onto how *frustrating* or
-*effortless* your website feels.
+You've felt all three. That page where the button jumps down just as you go to
+tap it, so you hit the wrong thing? That's bad CLS, and it drives people mad.
 
-## Why it matters for your business
+## Why it costs you
 
-> A one-second delay in load time can reduce conversions by around 7%.
+The numbers are pretty blunt. Roughly speaking, every extra second of load time
+knocks your conversions down by about 7%.
 
-For an e-commerce store doing £100,000 a year, that's potentially £7,000 walking
-out the door — for a problem that's entirely fixable.
+Put that against a shop turning over £100k a year and you're potentially waving
+goodbye to several thousand pounds - over a problem that's fixable.
 
-Fast sites also rank better. Google has used page experience as a ranking
-signal for years, and faster pages get crawled more efficiently too.
+Speed feeds into rankings too. Google's used page experience as a ranking signal
+for years now, and faster pages get crawled more efficiently into the bargain.
 
-## How to get there
+## What usually causes the slowdown
 
-1. **Optimise images** — serve modern formats (AVIF/WebP) at the right size.
-2. **Reduce JavaScript** — ship less code, and split what you do ship.
-3. **Use a modern framework** — tools like Next.js render fast by default.
-4. **Cache aggressively** — at the edge, close to your users.
-5. **Audit third-party scripts** — analytics and chat widgets are often the worst offenders.
+In my experience it's almost always one of these:
 
-If you're not sure where your site stands, a [performance audit](/services#performance-optimisation)
-is the fastest way to find out — and the gains are usually dramatic.
+1. **Massive images.** Someone's uploaded a 4000px photo straight off a phone and
+   it's being shrunk in the browser. Serve the right size in a modern format
+   (WebP or AVIF) and you'll often halve your load time on its own.
+2. **Too much JavaScript.** Every plugin, slider and tracking script adds weight.
+3. **A bloated theme or page builder.** Convenient to build with, brutal on speed.
+4. **Cheap, slow hosting.** Sometimes the code's fine and the server's the problem.
+5. **Third-party scripts.** Chat widgets and analytics are usually the worst
+   offenders, and they're easy to forget about.
+
+None of this is exotic. It's the same handful of culprits on most sites I look at.
+
+If you're not sure where yours stands, that's exactly what a
+[website audit](/services#website-auditing) is for - I'll tell you what's slow,
+why, and what's worth fixing first.

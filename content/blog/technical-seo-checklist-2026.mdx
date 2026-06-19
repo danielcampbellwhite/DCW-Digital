@@ -1,6 +1,6 @@
 ---
-title: "The Technical SEO Checklist Every Website Needs in 2026"
-description: "Most SEO problems aren't about keywords — they're technical. This is the practical, no-fluff checklist I run on every site I audit."
+title: "The Technical SEO Checklist I Run on Every Site"
+description: "Most SEO problems aren't about keywords - they're technical. This is the practical checklist I work through whenever I audit a site, minus the fluff."
 date: "2026-05-12"
 category: "SEO"
 tags: ["Technical SEO", "Structured Data", "Indexing"]
@@ -9,44 +9,59 @@ featured: true
 cover: "violet"
 ---
 
-You can write the best content in your industry and still be invisible on
-Google if the technical foundations are broken. Here's the checklist I run on
-every site I audit — work through it and you'll be ahead of most of your
-competitors.
+You can write the best content in your industry and still be invisible on Google
+if the technical foundations are broken. I see it constantly. The good news is
+most of it is fixable, and a lot of it is quick.
 
-## Crawlability & indexing
+Here's the checklist I actually work through on an audit. Nothing groundbreaking,
+just the stuff that matters and that people keep getting wrong.
 
-- **robots.txt** isn't accidentally blocking important pages.
-- An **XML sitemap** exists, is current, and is submitted to Search Console.
-- Important pages return **200**, redirects are **301** (not 302), and there are no redirect chains.
-- **Canonical tags** point to the correct, single version of each page.
+## Can Google find and read your pages?
 
-## On-page fundamentals
+Start here, because if this is broken nothing else matters:
 
-- Every page has a unique, descriptive **title** and **meta description**.
-- A single, clear **`<h1>`** per page with a logical heading hierarchy.
-- Descriptive, keyword-aware **URLs** (no `?id=8842`).
-- **Alt text** on meaningful images.
+- Your **robots.txt** isn't accidentally blocking pages you want indexed (I've
+  seen entire sites blocked by one stray line after a redesign).
+- You've got an **XML sitemap**, it's current, and it's submitted in Search Console.
+- Important pages return a **200**. Redirects are **301**, not 302, and you're
+  not chaining five of them together.
+- **Canonical tags** point at the right version of each page so you're not
+  competing with yourself.
+
+## On-page basics
+
+- Every page has its own **title** and **meta description**. Not duplicated, not
+  auto-generated mush.
+- One clear **`<h1>`** per page, with headings that actually describe the content.
+- **URLs** that read like words, not `?id=8842&cat=12`.
+- **Alt text** on images that mean something.
 
 ## Structured data
 
-Structured data (schema.org) helps search engines understand your content and
-can earn you **rich results**:
+This is the bit people skip, and it's free wins. Structured data (schema.org)
+tells search engines what your content actually is, and it's what gets you those
+rich results - star ratings, FAQs, breadcrumbs in the listing.
 
-- `Organization` / `LocalBusiness` for your brand.
-- `BreadcrumbList` for navigation.
-- `Article` / `BlogPosting` for content.
-- `Product` and `FAQPage` where relevant.
+Worth adding:
 
-## Performance & mobile
+- `Organization` or `LocalBusiness` for the brand
+- `BreadcrumbList` for navigation
+- `Article` / `BlogPosting` on posts
+- `Product` and `FAQPage` where they fit
 
-- Passing **Core Web Vitals** on mobile (see my [performance post](/blog/why-your-business-website-should-be-fast)).
-- Genuinely **responsive**, not just "shrunk down".
-- **HTTPS** everywhere, with HSTS.
+## Speed and mobile
 
-## The honest truth
+- Passing **Core Web Vitals** on mobile (I wrote about why that matters
+  [here](/blog/why-your-business-website-should-be-fast)).
+- Genuinely **responsive**, not a desktop site squashed onto a phone.
+- **HTTPS** everywhere.
 
-Technical SEO isn't a one-off. Sites drift — pages get added, plugins break
-things, redirects pile up. The businesses that win treat SEO as ongoing
-maintenance, not a single project. That's exactly what a
-[website audit](/services#website-auditing) is designed to catch.
+## The bit nobody tells you
+
+Technical SEO isn't a one-and-done job. Sites drift. Someone adds a plugin, a
+redirect gets missed, a dev pushes a `noindex` to staging and forgets to remove
+it (we've all done it). The sites that hold their rankings are the ones that get
+checked now and then, not set up once and forgotten.
+
+That's the whole point of a [website audit](/services#website-auditing) - catch
+this stuff before it quietly costs you traffic.

@@ -9,7 +9,7 @@ import { FinalCta } from "@/components/sections/final-cta";
 export const metadata: Metadata = buildMetadata({
   title: "Work & Clients",
   description:
-    "Organisations DCW Digital has worked with — across the NHS, public health, legal, charity and commercial sectors. Web development, SEO, performance and support.",
+    "Organisations DCW Digital has worked with - across the NHS, public health, legal, charity and commercial sectors. Web development, SEO, performance and support.",
   path: "/projects",
 });
 

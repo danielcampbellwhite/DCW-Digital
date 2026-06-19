@@ -18,7 +18,7 @@ function gbp(value: number): string {
 
 /**
  * Support & maintenance pricing with a monthly / yearly toggle. Yearly is
- * billed at 10x the monthly rate — two months free.
+ * billed at 10x the monthly rate - two months free.
  */
 export function PricingPackages({ packages }: { packages: SupportPackage[] }) {
   const [billing, setBilling] = React.useState<Billing>("monthly");
@@ -124,7 +124,7 @@ export function PricingPackages({ packages }: { packages: SupportPackage[] }) {
       </StaggerGroup>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-        Prices exclude VAT. Yearly plans are billed at 10 months&apos; cost — two
+        Prices exclude VAT. Yearly plans are billed at 10 months&apos; cost - two
         months free. Need something more bespoke? Just ask.
       </p>
     </div>

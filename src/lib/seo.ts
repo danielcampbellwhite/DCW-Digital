@@ -27,7 +27,7 @@ export function buildMetadata({
   const url = new URL(path, siteConfig.url).toString();
   const fullTitle = title
     ? `${title} · ${siteConfig.name}`
-    : `${siteConfig.name} — ${siteConfig.altTagline}`;
+    : `${siteConfig.name} - ${siteConfig.altTagline}`;
 
   return {
     title: fullTitle,

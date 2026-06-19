@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────────────────────
-   DCW Digital — Design Tokens
+   DCW Digital - Design Tokens
    Brand palette translated to HSL CSS variables so they compose with
    Tailwind's opacity modifiers. The site is dark-first by design.
    bg #050816 · surface #0B1020 · primary #00E5FF · secondary #7C3AED

@@ -30,7 +30,7 @@ export default async function ContactPage({
             Let&apos;s start a <span className="text-gradient">conversation</span>
           </>
         }
-        description="Have a project, a role, or a question? Fill in the form and I'll get back to you personally — usually within a working day."
+        description="Have a project, a role, or a question? Fill in the form and I'll get back to you personally - usually within a working day."
       />
 
       <section className="py-16">

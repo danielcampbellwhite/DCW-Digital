@@ -1,6 +1,6 @@
 ---
-title: "The Tools I Actually Use to Build and Ship Websites"
-description: "A look behind the scenes at the stack and tooling I rely on day to day — and why each one earns its place."
+title: "The Tools I Actually Use to Build and Ship Sites"
+description: "A quick look behind the curtain at the stack I lean on day to day, and why each thing earns its place rather than just being on a trend list."
 date: "2026-03-08"
 category: "Technology"
 tags: ["Tooling", "Workflow", "Stack"]
@@ -9,34 +9,45 @@ featured: false
 cover: "violet"
 ---
 
-People often ask what I build with. Here's the honest, current answer — the
-tools I reach for on real client work, and why each one earns its place.
+People ask now and then what I build with. So here's the actual answer - the
+stuff I reach for on real work, not a wishlist of whatever's trending this month.
 
-## The core stack
+## The core
 
-- **Next.js + React** — fast, SEO-friendly, scales from landing pages to apps.
-- **TypeScript** — catches whole classes of bugs before they ship. Non-negotiable on anything I'll maintain.
-- **Tailwind CSS** — fast, consistent styling that's easy to hand over.
-- **Framer Motion** — purposeful animation without the performance cost.
+- **Next.js and React** - fast, SEO-friendly, scales from a landing page up to a
+  full app. Most of my front-end work lives here.
+- **TypeScript** - catches a whole category of dumb mistakes before they ship.
+  Non-negotiable on anything I'll have to maintain later.
+- **Tailwind CSS** - quick to write, consistent, and easy to hand over to the
+  next person.
+- A bit of **Framer Motion** when something needs to move, used sparingly. Nobody
+  wants a site that animates at them.
 
-## Data & backend
+I've also spent a lot of years in **.NET / C#** and **PHP** land, and across CMS
+platforms like **Umbraco**, **WordPress** and a few others. Different jobs, right
+tool, etc.
 
-- **PostgreSQL** — a boring, reliable database, and that's a compliment.
-- **Prisma** — type-safe database access that pairs beautifully with TypeScript.
-- **Auth.js / Clerk** — authentication done properly, so I don't roll my own.
+## Data and the back end
 
-## Shipping & infrastructure
+- **SQL Server** and **MySQL** - boring, reliable databases, which is a compliment.
+- **Entity Framework** and **NHibernate** on the .NET side; whatever fits on the
+  Node side.
+- Auth I don't roll myself anymore. Use something that's been battle-tested and
+  move on.
 
-- **Vercel** — deploys on every push, with previews and edge performance built in.
-- **GitHub Actions** — CI to run checks before anything reaches production.
-- **Sentry & analytics** — so I know how a site behaves in the real world.
+## Shipping it
 
-## The meta-point
+- **Vercel** for deploys when the project suits it - push, preview, done.
+- **Git** and **GitHub Actions** so nothing reaches production without passing checks.
+- Some basic monitoring and analytics, because "it works on my machine" isn't a
+  deployment strategy.
 
-Tools change. The principles don't: **type safety, fast feedback loops,
-boring reliable infrastructure, and shipping often.** I'm happy to learn a new
-tool when it genuinely makes a project better — and equally happy to ignore the
-hype when it doesn't.
+## The actual point
 
-That judgement — knowing what to use and, just as importantly, what to skip —
-is most of what experience buys you.
+Tools come and go. The stuff underneath doesn't: type safety, fast feedback,
+boring reliable infrastructure, and shipping often instead of perfectly.
+
+I'm happy to pick up something new when it genuinely makes a project better, and
+just as happy to ignore the hype when it doesn't. Knowing the difference - what to
+use and, more importantly, what to skip - is most of what experience actually buys
+you.

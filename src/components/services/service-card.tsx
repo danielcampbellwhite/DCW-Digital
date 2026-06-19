@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 /**
  * Service card used on the homepage overview and services page. A server
  * component (the hover lift is pure CSS) so it can receive the `Service`
- * object — including its Lucide icon component — without crossing a client
+ * object - including its Lucide icon component - without crossing a client
  * serialization boundary.
  */
 export function ServiceCard({

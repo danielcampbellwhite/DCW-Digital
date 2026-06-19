@@ -9,7 +9,7 @@ const checks = [
   "Your top 3 fixes, in plain English",
 ];
 
-/** "Free Website Health Check" lead magnet — a low-commitment first step. */
+/** "Free Website Health Check" lead magnet - a low-commitment first step. */
 export function LeadMagnet() {
   return (
     <section className="py-12">
@@ -28,7 +28,7 @@ export function LeadMagnet() {
                 <p className="mt-3 max-w-xl text-muted-foreground">
                   Not sure why your website isn&apos;t pulling its weight? I&apos;ll
                   review your site and send you a no-obligation snapshot of what&apos;s
-                  working, what isn&apos;t, and the three highest-impact fixes — completely free.
+                  working, what isn&apos;t, and the three highest-impact fixes - completely free.
                 </p>
                 <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                   {checks.map((c) => (

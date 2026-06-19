@@ -45,7 +45,7 @@ export interface Service {
 /** A support & maintenance package tier (Bronze / Silver / Gold). */
 export interface SupportPackage {
   name: string;
-  /** Price per month in GBP. Annual = 10x (pay for 10, get 12 — 2 months free). */
+  /** Price per month in GBP. Annual = 10x (pay for 10, get 12 - 2 months free). */
   priceMonthly: number;
   description: string;
   features: string[];
@@ -72,7 +72,7 @@ export interface Client {
    *  rendered on a white plaque to stay legible on the dark cards. */
   logoOnLight?: boolean;
   sector: ClientSector;
-  /** Truthful, generic description of the engagement — no invented KPIs. */
+  /** Truthful, generic description of the engagement - no invented KPIs. */
   description: string;
   /** High-level services provided. */
   services: string[];

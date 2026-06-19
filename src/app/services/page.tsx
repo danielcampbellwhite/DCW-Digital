@@ -12,7 +12,7 @@ import { PricingPackages } from "@/components/services/pricing-packages";
 export const metadata: Metadata = buildMetadata({
   title: "Services",
   description:
-    "Website development, SEO optimisation, website auditing, performance optimisation, support & maintenance and digital consulting — services built around measurable business outcomes.",
+    "Website development, SEO optimisation, website auditing, performance optimisation, support & maintenance and digital consulting - services built around measurable business outcomes.",
   path: "/services",
 });
 
@@ -27,7 +27,7 @@ export default function ServicesPage() {
             <span className="text-gradient">grow online</span>
           </>
         }
-        description="A guide to what I can help with — from building a new website to keeping an existing one in great shape. Every project's a little different, so the best next step is a quick chat."
+        description="A guide to what I can help with - from building a new website to keeping an existing one in great shape. Every project's a little different, so the best next step is a quick chat."
       >
         <Button href="/contact" variant="primary" size="lg">
           Get in touch for a chat

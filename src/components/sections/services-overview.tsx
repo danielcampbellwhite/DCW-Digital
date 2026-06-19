@@ -13,7 +13,7 @@ export function ServicesOverview() {
         <SectionHeading
           eyebrow="What I Do"
           title="Helping your business grow online"
-          description="Whatever's holding your website back — or wherever you want to take your business next — there's a straightforward way I can help. No jargon, just results you can see."
+          description="Whatever's holding your website back - or wherever you want to take your business next - there's a straightforward way I can help. No jargon, just results you can see."
         />
 
         <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

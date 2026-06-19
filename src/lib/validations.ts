@@ -14,9 +14,9 @@ export const serviceOptions = [
 
 export const budgetOptions = [
   "Under £1,000",
-  "£1,000 – £3,000",
-  "£3,000 – £7,500",
-  "£7,500 – £15,000",
+  "£1,000 - £3,000",
+  "£3,000 - £7,500",
+  "£7,500 - £15,000",
   "£15,000+",
   "Not sure yet",
 ] as const;
@@ -41,7 +41,7 @@ export const contactSchema = z.object({
   message: z
     .string()
     .min(20, "Please tell me a little more (at least 20 characters)")
-    .max(4000, "That message is a bit long — please trim it down"),
+    .max(4000, "That message is a bit long - please trim it down"),
   // Honeypot: must stay empty. Real users never fill this. We allow any value
   // through validation so the route can drop it *silently* (a 422 here would
   // tell a bot it tripped the trap).

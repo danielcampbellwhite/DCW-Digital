@@ -24,7 +24,7 @@ function countLinks(text: string): number {
  * Contact form handler.
  *
  * Spam protection, in order: per-IP rate limit, honeypot, time-trap and a
- * link-flood heuristic — then strict Zod validation. Bot-like submissions are
+ * link-flood heuristic - then strict Zod validation. Bot-like submissions are
  * accepted silently (so bots don't learn what tripped them) rather than erroring.
  *
  * Delivery: sends via the Resend REST API when RESEND_API_KEY is set, otherwise
@@ -56,19 +56,19 @@ export async function POST(request: Request) {
     );
   }
 
-  // 2. Honeypot tripped — silently accept to avoid tipping off bots.
+  // 2. Honeypot tripped - silently accept to avoid tipping off bots.
   if (parsed.data.website) {
     return NextResponse.json({ ok: true });
   }
 
-  // 3. Time-trap — submitted impossibly fast for a human. Silently drop.
+  // 3. Time-trap - submitted impossibly fast for a human. Silently drop.
   if (parsed.data.elapsedMs !== undefined && parsed.data.elapsedMs < MIN_FILL_MS) {
     return NextResponse.json({ ok: true });
   }
 
   const { name, email, company, phone, budget, service, message } = parsed.data;
 
-  // 4. Link-flood heuristic — genuine enquiries rarely contain many links.
+  // 4. Link-flood heuristic - genuine enquiries rarely contain many links.
   if (countLinks(`${message} ${company ?? ""}`) > MAX_LINKS) {
     return NextResponse.json({ ok: true });
   }
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
   if (!apiKey) {
     // Dev / preview fallback: log and succeed.
-    console.info("[contact] (no RESEND_API_KEY — logging only)\n" + summary);
+    console.info("[contact] (no RESEND_API_KEY - logging only)\n" + summary);
     return NextResponse.json({ ok: true, delivery: "logged" });
   }
 
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
         from,
         to,
         reply_to: email,
-        subject: `New enquiry: ${service} — ${name}`,
+        subject: `New enquiry: ${service} - ${name}`,
         text: summary,
       }),
     });

@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site";
 
 const facts = [
-  { icon: MapPin, label: "Liverpool-based, working with clients UK-wide & remote" },
-  { icon: Code2, label: "8+ years building for the web, from agencies to SaaS" },
-  { icon: Users, label: "Family-first — a husband and dad who values balance" },
-  { icon: Heart, label: "Driven by solving real problems with clean technology" },
+  { icon: MapPin, label: "Liverpool-based, happy to work remote across the UK" },
+  { icon: Code2, label: "8+ years building and maintaining sites at agencies" },
+  { icon: Users, label: "Husband and dad - family comes first" },
+  { icon: Heart, label: "Like fixing real problems, not chasing shiny things" },
 ];
 
 /** Personal "About Daniel" preview that humanises the brand. */
@@ -43,22 +43,21 @@ export function AboutPreview() {
         <Reveal>
           <span className="eyebrow">About Daniel</span>
           <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-            An experienced developer who cares about{" "}
-            <span className="text-gradient">outcomes, not just code</span>
+            A developer who actually cares{" "}
+            <span className="text-gradient">whether it works for you</span>
           </h2>
           <div className="mt-5 space-y-4 text-muted-foreground">
             <p>
-              I&apos;m Daniel — a web developer and digital
-              consultant based in Liverpool. Over the last eight years I&apos;ve
-              built everything from marketing sites to SaaS platforms, in
-              agencies, in-house teams and now under my own banner, DCW Digital.
+              I&apos;m Daniel, a web developer based in Liverpool. I&apos;ve spent
+              the last eight or so years building and looking after websites and
+              apps at agencies, and I take on freelance work under my own name,
+              DCW Digital, on the side.
             </p>
             <p>
-              What I genuinely enjoy is the problem-solving: understanding a
-              business, finding where technology can move the needle, and
-              shipping something fast, reliable and measurable. When I&apos;m not
-              building, you&apos;ll find me with my family, tinkering with new
-              tech, or out exploring the northwest.
+              The part I genuinely enjoy is the problem-solving: working out what a
+              business actually needs and then building something that holds up.
+              Away from the keyboard I&apos;m usually with my family, having a
+              tinker with some new bit of tech, or out somewhere in the northwest.
             </p>
           </div>
 

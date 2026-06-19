@@ -48,8 +48,9 @@ export function Hero() {
             animate="visible"
             className="mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg"
           >
-            I design, build and optimise high-performance websites and digital
-            experiences that deliver measurable business results.
+            I build fast, modern websites and web apps that do an actual job for
+            your business - bring in enquiries, rank on Google, and work properly
+            on a phone.
           </motion.p>
 
           <motion.div

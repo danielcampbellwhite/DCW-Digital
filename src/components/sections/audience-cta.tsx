@@ -3,7 +3,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 /**
- * Split "two audiences" CTA — recruiters/employers on the left, prospective
+ * Split "two audiences" CTA - recruiters/employers on the left, prospective
  * clients on the right. Serves both of the site's core conversion goals.
  */
 export function AudienceCta() {
@@ -22,9 +22,9 @@ export function AudienceCta() {
                 Looking for a developer?
               </h3>
               <p className="mt-3 text-muted-foreground">
-                I&apos;m open to permanent, contract and remote opportunities.
-                Get my CV, explore my experience, and see the work I&apos;ve
-                shipped.
+                I&apos;m open to permanent, contract and remote roles. Have a look
+                at my experience and the work I&apos;ve shipped, and get in touch
+                if it&apos;s a fit.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button href="/about" variant="primary">
@@ -48,8 +48,9 @@ export function AudienceCta() {
                 Need help with your website?
               </h3>
               <p className="mt-3 text-muted-foreground">
-                Whether you&apos;re starting fresh or improving what you have,
-                let&apos;s talk about your goals — and how to reach them.
+                New site, tired old one, or something that&apos;s just not working
+                right - tell me what you&apos;re after and I&apos;ll tell you
+                straight what I&apos;d do.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button href="/contact?service=Free+Website+Health+Check" variant="secondary">
