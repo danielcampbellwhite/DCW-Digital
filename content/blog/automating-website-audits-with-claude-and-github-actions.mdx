@@ -1,0 +1,88 @@
+---
+title: "I Built a Bot That Audits Websites and Emails Me the Report"
+description: "How I wired up Claude skills and GitHub Actions into an automated pipeline that audits a site's performance and security, writes it up as a Word doc and PDF, and emails me the finished report."
+date: "2026-06-16"
+category: "Technology"
+tags: ["AI", "Automation", "GitHub Actions", "Claude", "Web Vitals", "Security"]
+author: "Daniel Campbell-White"
+featured: true
+cover: "emerald"
+---
+
+Auditing websites is a big part of what I do. It's also, if I'm honest, a bit
+repetitive. Run the performance tools, check the Core Web Vitals, dig through the
+codebase, scan the dependencies for known vulnerabilities, write it all up in a
+report a client can actually read. Useful work, but a lot of it is the same steps
+over and over.
+
+So I did the developer thing and automated it. Now a bot does the boring bit and
+emails me a finished report. Here's how it hangs together.
+
+## The idea
+
+I wanted something that could:
+
+1. Take a website (and its codebase).
+2. Check the performance and Core Web Vitals.
+3. Scan it for security issues and dodgy dependencies.
+4. Turn all that into a proper, branded report - Word doc and PDF.
+5. Email it to me, done, without me lifting a finger.
+
+Basically, my own audit process, minus me sitting there doing it.
+
+## The stack
+
+Two main pieces doing the heavy lifting:
+
+- **GitHub Actions** - the engine. It runs on a schedule (or when I trigger it),
+  spins up a runner, and does all the actual checking: a Lighthouse run for
+  performance and Web Vitals, a dependency and vulnerability scan over the
+  codebase, and a few extra checks I'd normally do by hand.
+- **Claude skills** - the brains. Once the raw data's been gathered, a Claude
+  skill reads through it, works out what actually matters, and writes it up in
+  plain English. Not just "here's a number", but "here's what's wrong, why it
+  matters, and what to do about it" - the bit that usually takes me the longest.
+
+The nice thing about skills is they're repeatable. I've effectively taught it how
+*I* write an audit, so the output sounds like my reports rather than a wall of
+raw tool output.
+
+## How a run actually goes
+
+1. The workflow kicks off and pulls down the site and its code.
+2. It runs the performance pass (Lighthouse / Core Web Vitals) and the security
+   and dependency scan, and dumps the results out as structured data.
+3. Claude takes that lot, prioritises it, and writes the findings - quick wins,
+   bigger jobs, and the why behind each one.
+4. It drops the writeup into a **templated Word document** (my branding, my
+   layout) and exports a **PDF** alongside it.
+5. The bot emails both over to me, attachments and all.
+
+By the time I've had a coffee, there's a finished audit sitting in my inbox that
+I can review, tweak if needed, and send on.
+
+## Why bother
+
+A few reasons, beyond it being a fun thing to build:
+
+- **Consistency.** Every audit covers the same ground in the same format. Nothing
+  gets forgotten because I was in a rush.
+- **Speed.** The grind that used to eat an afternoon now happens while I'm doing
+  something else.
+- **I stay in the loop.** This isn't "AI does my job". It does the legwork and the
+  first draft. I still review every report before it goes anywhere near a client -
+  the judgement's still mine, the robot just saves me the donkey work.
+
+## Where it's going
+
+Right now it's pointed at my own projects and a watchlist of sites. The obvious
+next step is running it for clients on a schedule - a monthly health report that
+lands automatically, flagging anything that's drifted before it becomes a
+problem. Which, conveniently, is exactly what a good
+[support and maintenance plan](/services#support-maintenance) should be doing
+anyway.
+
+This is the sort of thing I love about the job: spot the repetitive bit, build
+something to handle it, and free yourself up for the work that actually needs a
+human. If you've got a process in your own business that feels like it should be
+automated, [have a chat with me](/contact) - there's usually a way.
