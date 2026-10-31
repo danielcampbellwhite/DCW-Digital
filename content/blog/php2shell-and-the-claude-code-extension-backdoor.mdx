@@ -1,0 +1,192 @@
+---
+title: "PHP2Shell and a Backdoored Claude Code Extension: What Happened and How to Protect Yourself"
+description: "October 2026 hit both ends of the stack at once: critical unauthenticated RCE in core PHP being mass-exploited, and a trojanised Claude Code extension planting SSH backdoors on dev machines. A senior engineer's breakdown of what happened, why, and what to actually do about it."
+date: "2026-10-31"
+category: "Technology"
+tags: ["Security", "PHP", "Claude Code", "Supply Chain", "DevSecOps", "Vulnerabilities"]
+author: "Daniel Campbell-White"
+featured: true
+cover: "violet"
+---
+
+October 2026 has been a genuinely rough month if you run PHP in production *or*
+use an AI coding assistant in your editor - and plenty of us do both. Two
+separate incidents landed almost on top of each other and, between them, they hit
+both ends of the stack: the runtime your users talk to, and the machine you write
+code on.
+
+This is a writeup for engineers. I'll go through what actually happened in each
+case, why it works, and - the important bit - what to do about it. No exploit
+code, just enough mechanism to make the mitigations make sense.
+
+## 1. PHP2Shell: unauthenticated RCE in core PHP
+
+The headline one. Two vulnerabilities, tracked as **CVE-2026-109618** and
+**CVE-2026-109619**, collectively nicknamed *PHP2Shell*. Both are rated **9.2
+Critical** (CVSS v4.0), and both are **unauthenticated remote code execution** in
+core PHP. Not a framework, not a library - the interpreter itself.
+
+### What happened
+
+Patches landed on **21 October 2026** (PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35),
+and the internet did what the internet always does. Within days,
+[CISA added both to its Known Exploited Vulnerabilities catalog](https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching),
+and Cloudflare reported exploitation attempts climbing from tens of thousands to
+*millions* per day. Palo Alto's Cortex Xpanse counted
+[over 22 million internet-facing instances](https://unit42.paloaltonetworks.com/cve-2026-109618-cve-2026-109619/)
+that could be affected. The vulnerable range is enormous: **PHP 5.4 all the way
+through 8.5.11**. If you've got a legacy box running an EOL PHP, it's in scope.
+
+### Why it works
+
+Without handing anyone a recipe, the two bugs are different classes:
+
+- **CVE-2026-109618** is an out-of-memory handling issue - the kind of edge case
+  that's easy to get wrong in a C codebase under memory pressure.
+- **CVE-2026-109619** is a **use-after-free involving state kept between
+  requests**. That last part is the scary bit. In a long-lived worker model
+  (PHP-FPM, mod_php), process memory is reused across requests, so a flaw in how
+  per-request state is cleaned up can be coaxed into reading or writing memory it
+  shouldn't - and from there into code execution. It's a good reminder that
+  "stateless" PHP isn't actually stateless at the process level.
+
+The reason this is a 9.2 and not a 6-point-something is the combination:
+*unauthenticated* + *remote* + *core interpreter* + *huge install base*. You don't
+need a vulnerable plugin or a misconfiguration. You just need to be running PHP.
+
+### How to protect yourself
+
+1. **Patch now, properly.** Upgrade to **8.5.12 / 8.4.27 / 8.3.36 / 8.2.35** or
+   later. "I'll do it next sprint" is not a plan when it's in the KEV catalog and
+   being sprayed at scale.
+2. **Find your actual exposure first.** `php -v` on every host, including the ones
+   nobody's logged into for two years. Shadow infrastructure is where this bites.
+3. **Virtual-patch at the edge.** If you genuinely can't patch immediately, a WAF
+   rule buys you a little time. It is a sticking plaster, not a fix.
+4. **Mind the follow-up.** PHP also disclosed
+   [CVE-2026-115560](https://thehackernews.com/2026/10/urgent-php-warns-of-another-unpatched.html),
+   a session upload-progress RCE, on 23 October. It only affects unusually
+   configured apps and is considered unlikely, but the interim mitigation is
+   simple: set `session.upload_progress.enabled=0` in `php.ini` and restart your
+   workers.
+
+If you're on a managed host, confirm *they've* patched - don't assume. And if
+you're sitting on PHP 7.x or earlier in production, treat this as the nudge to
+finally deal with that.
+
+## 2. The trojanised Claude Code extension
+
+The second one is more interesting, because it's not a bug in anyone's code. It's
+a **supply-chain attack on the tooling we've all rushed to adopt.**
+
+### What happened
+
+Around **29-30 October**, a tampered build of the Claude Code extension -
+version **2.1.313** - showed up in the **Cursor extension marketplace**, and a
+[copy was also found on Open VSX](https://www.helpnetsecurity.com/2026/10/30/claude-code-extension-ssh-backdoor/).
+It looked like the real thing. It wasn't. On install, the malicious version
+[planted an attacker-controlled SSH key and set up persistence](https://www.ox.security/blog/malicious-claude-code-extension-cursor-ssh-backdoor/) -
+in other words, a quiet, persistent backdoor into the developer's machine.
+
+Two things worth being precise about, because the headlines blurred them:
+
+- **Anthropic did not build or ship this.** Per
+  [Cursor's own security notice](https://cursor.com/blog/claude-code-extension-security-notice),
+  it was a tampered artifact distributed through a third-party marketplace, not the
+  official release.
+- **Microsoft's Visual Studio Marketplace had no reported malicious version.** The
+  bad build spread through the marketplaces with lighter publisher verification.
+
+Cursor put the blast radius at up to ~5,000 users. Small in absolute terms. Not
+small when you consider *what* a dev machine holds.
+
+### Why this is worse than it sounds
+
+Think about your threat model for a second. A compromised dev machine is not "one
+laptop". It's: your SSH keys, your cloud CLI tokens, your `.env` files, your npm
+and GitHub credentials, your source code, and - increasingly - an AI agent sitting
+in your editor that can read your whole repo and run commands. An SSH backdoor on
+that box is about as high-value a foothold as an attacker can get, and it bypasses
+every WAF and prod firewall you've got, because it's *inside* the perimeter by
+definition.
+
+Extension marketplaces have quietly become one of the softest links in the
+software supply chain. We'll scrutinise an npm dependency and then one-click
+install an IDE extension with full filesystem and shell access without a second
+thought.
+
+### The quieter cousin: prompt injection in AI agents
+
+Alongside the supply-chain story, there's an ongoing stream of research into
+*prompt injection* against AI coding agents - and here I'll be careful to flag
+what's confirmed versus reported, because a senior engineer should.
+
+- Researchers reported a
+  [deny-rule bypass in Claude Code](https://www.scworld.com/brief/claude-code-vulnerable-to-prompt-injection-due-to-subcommand-limit)
+  earlier in 2026: a hard cap on how many subcommands the permission check would
+  parse meant a sufficiently long command could slip past a deny list and fall
+  back to asking the user. Anthropic has a parser-based fix in the works.
+- Earlier in the year there were disclosed and
+  [since-patched flaws in the Claude Code GitHub Action](https://labs.cloudsecurityalliance.org/research/csa-research-note-claude-code-github-action-prompt-injection/),
+  where a chain starting from a public issue could lead to CI/CD secret exposure.
+
+The common thread: **an AI agent treats the content it reads - your repo, an
+issue, a web page, a dependency's README - as instructions.** That's indirect
+prompt injection, and it's the same class of problem as classic injection bugs,
+just with a fuzzier parser. If the agent can run commands, the content it ingests
+is effectively untrusted input to a shell.
+
+## What to actually do about the tooling
+
+The PHP fix is "patch". The tooling side needs a bit more thought. What I'd
+recommend to any team:
+
+1. **Pin and verify extensions.** Install from the first-party marketplace, check
+   the publisher, and pin versions rather than auto-updating to whatever's latest.
+   A surprise minor-version bump is how 2.1.313 got onto machines.
+2. **Audit what's already installed.** If you or your team use Cursor or anything
+   consuming Open VSX, check for the compromised version now and rotate any SSH
+   keys and tokens from an affected machine. Don't just uninstall and move on.
+3. **Treat your AI agent like an untrusted-input processor.** Run it with the
+   least privilege that still lets it do its job. Don't give it blanket
+   auto-approve on shell commands. Be deliberate about what repos, issues and web
+   content you let it ingest on a privileged machine.
+4. **Keep secrets off the dev box where you can.** Short-lived credentials,
+   secret managers, and scoped tokens limit the blast radius when - not if - a dev
+   machine is compromised.
+5. **Separate "run the agent" from "hold the keys to prod".** The machine that
+   runs an autonomous agent against random repos probably shouldn't also hold your
+   long-lived production SSH keys.
+
+## The takeaway
+
+Here's the thread tying these two very different incidents together: **your attack
+surface now runs from your production runtime all the way to your editor and the
+AI agent inside it.** We're good at thinking about the former. We're still catching
+up on the latter.
+
+PHP2Shell is a classic "patch your runtime, fast" story, and the fix is
+unambiguous. The extension backdoor is the more uncomfortable one, because it
+exploits a habit most of us have picked up this year: trusting AI dev tooling,
+and the marketplaces that distribute it, far more readily than we'd trust anything
+else with shell access to our machines.
+
+None of this means stop using the tools. I use them every day and they make me
+faster. It means apply the same engineering rigour to your dev environment and
+your agents that you already apply to prod. Least privilege, verified supply
+chain, rotated secrets, patch fast. The boring stuff, basically. It's boring
+because it works.
+
+---
+
+**Sources and further reading:**
+[CISA advisory](https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching) ·
+[Unit 42 threat brief](https://unit42.paloaltonetworks.com/cve-2026-109618-cve-2026-109619/) ·
+[Rapid7 analysis](https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/) ·
+[Cursor security notice](https://cursor.com/blog/claude-code-extension-security-notice) ·
+[Help Net Security](https://www.helpnetsecurity.com/2026/10/30/claude-code-extension-ssh-backdoor/) ·
+[OX Security](https://www.ox.security/blog/malicious-claude-code-extension-cursor-ssh-backdoor/)
+
+*Worried about where your own stack stands? A [website audit](/services#website-auditing)
+covers exactly this kind of thing - outdated runtimes, known vulnerabilities and
+the rest. [Get in touch](/contact).*
