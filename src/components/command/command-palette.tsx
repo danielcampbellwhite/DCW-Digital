@@ -33,6 +33,7 @@ const COMMANDS: CommandItem[] = [
   { id: "about", label: "About Daniel", group: "Pages", icon: User, href: "/about", keywords: "story experience cv" },
   { id: "services", label: "Services", group: "Pages", icon: Layers, href: "/services", keywords: "seo development audit pricing" },
   { id: "projects", label: "Projects", group: "Pages", icon: FolderGit2, href: "/projects", keywords: "work portfolio case study" },
+  { id: "ai", label: "How I Build with AI", group: "Pages", icon: Layers, href: "/ai", keywords: "ai artificial intelligence claude architect workflow" },
   { id: "blog", label: "Blog", group: "Pages", icon: Newspaper, href: "/blog", keywords: "articles insights writing" },
   { id: "contact", label: "Contact", group: "Pages", icon: Mail, href: "/contact", keywords: "email quote enquiry" },
   { id: "get-in-touch", label: "Get in touch", group: "Actions", icon: Mail, href: "/contact", keywords: "email enquiry quote message" },
