@@ -1,0 +1,119 @@
+---
+title: "From Support Ticket to Pull Request: I Taught a Bot to Do the First Pass"
+description: "I built an automation that takes a support ticket, works out which project it belongs to, has a go at fixing the bug or building the feature, and opens a pull request for me to review. Here's how it works and where I draw the line."
+date: "2026-10-31"
+category: "Technology"
+tags: ["AI", "Automation", "GitHub", "Developer Productivity", "Support"]
+author: "Daniel Campbell-White"
+featured: false
+cover: "cyan"
+---
+
+Support work has a hidden tax, and it's not the fixing. It's the context
+switching. A ticket comes in, and before you've written a line of code you've had
+to work out which project it's even about, dig the repo out, remember how that
+codebase is laid out, reproduce the problem, and only *then* get to the actual
+change. Do that ten times a day across a handful of client sites and you spend
+more time reorienting than fixing.
+
+So I built something to take the first pass for me. You give it a support ticket,
+it works out which project it belongs to, has a genuine attempt at the fix or the
+feature, and opens a pull request for me to review. I still make every real
+decision. It just does the legwork and hands me a draft.
+
+## The idea
+
+The flow I wanted was simple to describe:
+
+1. A support request lands - a bug report or a feature ask.
+2. The system figures out **which repo** it relates to.
+3. An agent reads the ticket, pulls the code, and **attempts the change**.
+4. It opens a **pull request** with its reasoning, linked back to the ticket.
+5. I review it like I'd review any PR - approve, tweak, or send it back.
+
+Crucially: step 5 is always me. It never merges its own work. More on that in a
+minute, because it's the whole point.
+
+## How it hangs together
+
+A few moving parts:
+
+- **Ticket intake.** A support request (from a form, an email, or a GitHub issue)
+  gets normalised into a structured ticket - title, description, any steps to
+  reproduce, and which client or product it came from.
+- **Routing to the right repo.** This is the bit people underestimate. I keep a
+  small registry that maps clients and products to their repositories, so the
+  system knows that "the booking page is throwing an error" belongs to *this*
+  repo and not the other five. Get the routing wrong and everything downstream is
+  wasted, so it's deliberately boring and explicit.
+- **The agent.** Once it's got the ticket and the repo, an AI coding agent checks
+  the code out, reads enough of it to understand the area, and attempts the
+  change - a fix for a bug, or an implementation for a small feature. It runs the
+  tests and the linter before it's allowed to call itself done.
+- **The pull request.** It pushes a branch and opens a PR that explains what it
+  changed and why, with a link straight back to the original ticket so there's a
+  clean trail from "customer reported X" to "here's the proposed fix."
+
+By the time I look, there's a reviewable PR sitting there with context attached,
+instead of a one-line ticket I have to reverse-engineer from scratch.
+
+## The part that matters: it opens PRs, it doesn't merge them
+
+I want to be really clear about this, because "AI fixes your bugs automatically"
+is the kind of sentence that should make any engineer nervous.
+
+It does not deploy. It does not merge. It does not touch production. It opens a
+pull request, and a human - me - reviews every single one. The agent is good at
+the mechanical first pass: find the relevant code, make a plausible change, wire
+up the tests. It is not a substitute for judgement about whether that change is
+*right*, whether it has side effects, or whether the ticket was even asking for
+the correct thing in the first place.
+
+Treating the output as a **draft to review** rather than an answer to trust is
+the difference between this being a useful tool and a liability. The agent reads
+untrusted input (a ticket someone typed) and acts on a codebase. You keep a human
+gate on anything that ships. Always.
+
+## What it's good at, and what it isn't
+
+Being honest about the boundaries:
+
+**Good fit:**
+
+- Small, well-scoped bugs - the "this label is wrong", "this validation is too
+  strict", "this link 404s" class of ticket.
+- Contained features with a clear spec - add a field, add an endpoint, tweak a
+  piece of behaviour.
+- Anything where the hard part is *finding* the code, not *deciding* the approach.
+
+**Bad fit:**
+
+- Anything architectural, or that spans several systems.
+- Vague tickets where the real work is figuring out what the person actually
+  wants (that still needs a conversation).
+- Anything security-sensitive or touching money, where I want to write every line
+  myself.
+
+For the bad-fit cases it's fine - it either produces a small PR I close, or flags
+that it's out of its depth, and I pick it up the normal way. The win is that the
+easy 60% stops eating my day, so I've got more time for the 40% that actually
+needs a developer's brain.
+
+## Why I care about this
+
+Two reasons, really. One, it makes the support and maintenance I offer faster and
+more consistent, which is good for clients - a small bug can have a PR drafted
+within minutes of the ticket landing, rather than waiting for me to get to it.
+That's exactly the kind of thing a good
+[support and maintenance plan](/services#support-maintenance) should be quietly
+doing in the background.
+
+Two, it's the same instinct that runs through everything I build: find the
+repetitive, low-judgement part of a job and automate *that*, so the human time
+goes where it's actually valuable. I'm not trying to automate myself out of
+support. I'm trying to automate the boring triage so the support people get is
+quicker and I'm less frazzled giving it.
+
+If your business has a process that feels like it's mostly reorienting and
+copy-pasting before the real work starts, there's usually a version of this
+sitting in it. [Happy to talk it through.](/contact)
