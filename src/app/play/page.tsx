@@ -6,13 +6,14 @@ import { SectionHeading } from "@/components/sections/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { BugSquash } from "@/components/play/bug-squash";
 import { SpotTheBug } from "@/components/play/spot-the-bug";
+import { BugInvaders } from "@/components/play/bug-invaders";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
   title: "Play",
   description:
-    "Spot the Bug: a quiz where you find the bug in real code, with plain-English explanations for non-developers. Plus Bug Squash and the games Daniel Campbell-White has built.",
+    "Free developer games: Spot the Bug (find the bug in real code), Bug Invaders (a typing shooter) and Whack-a-Bug. Plus the browser games Daniel Campbell-White has built.",
   path: "/play",
 });
 
@@ -37,7 +38,7 @@ export default function PlayPage() {
             Fancy a <span className="text-gradient">game?</span>
           </>
         }
-        description="Not everything has to be serious. Try to spot the bug like a developer, squash a few more against the clock, or play some of the games I've made outside work."
+        description="Not everything has to be serious. Spot the bug like a developer, type your way through a bug invasion, whack a few more against the clock, or play some of the games I've made outside work."
       />
 
       {/* Spot the Bug quiz */}
@@ -54,13 +55,27 @@ export default function PlayPage() {
         </div>
       </section>
 
-      {/* On-site game */}
-      <section className="bg-surface/30 py-20">
+      {/* Typing shooter */}
+      <section id="bug-invaders" className="scroll-mt-24 bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
-            eyebrow="Play Here"
-            title="Bug Squash"
-            description="Every developer's daily routine, now as a game. Squash the bugs as they appear, but don't squash the features."
+            eyebrow="Typing Game"
+            title="Bug Invaders"
+            description="Bugs are flying at your ship and the only weapon is your keyboard. Type each word to shoot it down. Fair warning: the bosses talk like developers."
+          />
+          <div className="mt-12">
+            <BugInvaders />
+          </div>
+        </div>
+      </section>
+
+      {/* Whack-a-mole */}
+      <section id="whack-a-bug" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Quick Game"
+            title="Whack-a-Bug"
+            description="Whack-a-mole, developer edition. Squash the bugs as they pop up, but leave the features alone. You've got 30 seconds."
           />
           <Reveal className="mt-12">
             <BugSquash />
@@ -69,7 +84,7 @@ export default function PlayPage() {
       </section>
 
       {/* Games I've built */}
-      <section className="py-24">
+      <section className="bg-surface/30 py-24">
         <div className="container-px">
           <SectionHeading
             eyebrow="Side Projects"
