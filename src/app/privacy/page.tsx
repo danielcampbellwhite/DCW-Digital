@@ -6,7 +6,8 @@ import { PageHeader } from "@/components/sections/page-header";
 
 export const metadata: Metadata = buildMetadata({
   title: "Privacy Policy",
-  description: `How ${siteConfig.name} collects, uses and protects your personal data.`,
+  description:
+    "How DCW Digital collects, uses and protects your personal data, including contact form enquiries, analytics and your rights under UK GDPR.",
   path: "/privacy",
 });
 

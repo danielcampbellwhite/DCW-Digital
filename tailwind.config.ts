@@ -84,6 +84,16 @@ const config: Config = {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        // Slide-up entrance that never hides content (keeps LCP at first paint).
+        rise: {
+          from: { transform: "translateY(14px)" },
+          to: { transform: "translateY(0)" },
+        },
+        // Floating background particles - compositor-only (transform + opacity).
+        particle: {
+          "0%, 100%": { transform: "translateY(0)", opacity: "0.2" },
+          "50%": { transform: "translateY(-18px)", opacity: "0.8" },
+        },
         "pulse-glow": {
           "0%, 100%": { opacity: "0.4" },
           "50%": { opacity: "1" },
@@ -96,6 +106,8 @@ const config: Config = {
         "float": "float 6s ease-in-out infinite",
         "shimmer": "shimmer 2.5s linear infinite",
         "pulse-glow": "pulse-glow 4s ease-in-out infinite",
+        rise: "rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
+        particle: "particle 8s ease-in-out infinite",
       },
     },
   },

@@ -590,7 +590,7 @@ export function BugInvaders() {
         <span className="inline-flex items-center gap-1.5 text-muted-foreground">
           <Waves className="size-4 text-primary" /> Wave {hud.wave}
         </span>
-        <span className="inline-flex items-center gap-1" aria-label={`${hud.lives} lives left`}>
+        <span className="inline-flex items-center gap-1" role="img" aria-label={`${hud.lives} lives left`}>
           {Array.from({ length: Math.max(hud.lives, 0) }).map((_, i) => (
             <Heart key={i} className="size-4 fill-red-400 text-red-400" />
           ))}

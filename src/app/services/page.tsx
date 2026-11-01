@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { PricingPackages } from "@/components/services/pricing-packages";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Services",
+  title: "Web Development, Audits & Support Services",
   description:
-    "Website development, SEO optimisation, website auditing, performance optimisation, support & maintenance and digital consulting - services built around measurable business outcomes.",
+    "Website development, website audits, support and maintenance plans, and an on-call digital partner. Based in Liverpool, working across the UK.",
   path: "/services",
 });
 

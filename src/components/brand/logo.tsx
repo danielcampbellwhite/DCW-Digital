@@ -45,7 +45,7 @@ export function Logo({ className, variant = "inline", href = "/" }: LogoProps) {
   if (href === null) return mark;
 
   return (
-    <Link href={href} aria-label="DCW Digital - home" className="inline-flex">
+    <Link href={href} className="inline-flex">
       {mark}
     </Link>
   );

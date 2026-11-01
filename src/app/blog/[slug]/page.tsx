@@ -35,9 +35,10 @@ export async function generateMetadata({
   if (!post) return buildMetadata({ title: "Post not found" });
 
   return buildMetadata({
-    title: post.title,
-    description: post.description,
+    title: post.seoTitle ?? post.title,
+    description: post.seoDescription ?? post.description,
     path: `/blog/${post.slug}`,
+    image: `/blog/${post.slug}/opengraph-image`,
     type: "article",
     publishedTime: post.date,
     tags: post.tags,
@@ -65,6 +66,7 @@ export default async function BlogPostPage({
           date: post.date,
           slug: post.slug,
           cover: post.cover,
+          tags: post.tags,
         })}
       />
       <JsonLd

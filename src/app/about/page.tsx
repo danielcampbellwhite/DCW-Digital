@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = buildMetadata({
   title: "About Daniel Campbell-White",
   description:
-    "Liverpool-based web developer and digital consultant. Daniel's story, career timeline, technical skills, values and what drives him.",
+    "Daniel Campbell-White is a Liverpool web developer and Digital Services Lead. His story, career timeline, skills and how he works.",
   path: "/about",
 });
 

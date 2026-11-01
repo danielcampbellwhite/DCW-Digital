@@ -18,9 +18,9 @@ import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
-  title: "How I Build with AI",
+  title: "How I Use AI in Software Development",
   description:
-    "How Daniel Campbell-White uses AI in software development: as a fast pair of hands under an architect's direction, with human review, tests and guardrails on everything that ships.",
+    "How a Liverpool web developer uses AI properly: AI writes the routine code, while design, review, testing and security stay with a human.",
   path: "/ai",
 });
 

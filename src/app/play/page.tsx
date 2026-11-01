@@ -11,9 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Play",
+  title: "Developer Games: Spot the Bug & Typing Game",
   description:
-    "Free developer games: Spot the Bug (find the bug in real code), Bug Invaders (a typing shooter) and Whack-a-Bug. Plus the browser games Daniel Campbell-White has built.",
+    "Free games for developers and the curious: find the bug in real code, a typing shooter and Whack-a-Bug. Plain-English explanations included.",
   path: "/play",
 });
 

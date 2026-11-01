@@ -136,6 +136,10 @@ export interface PostMeta {
   author: string;
   featured: boolean;
   cover?: string;
+  /** Optional shorter title for search results and social cards. */
+  seoTitle?: string;
+  /** Optional shorter meta description (aim for under 155 characters). */
+  seoDescription?: string;
   readingTime: number;
 }
 

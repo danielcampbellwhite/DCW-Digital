@@ -29,6 +29,8 @@ function readAllPosts(): Post[] {
       author: String(data.author ?? "Daniel Campbell-White"),
       featured: Boolean(data.featured ?? false),
       cover: data.cover ? String(data.cover) : undefined,
+      seoTitle: data.seoTitle ? String(data.seoTitle) : undefined,
+      seoDescription: data.seoDescription ? String(data.seoDescription) : undefined,
       readingTime: readingTime(content),
     };
 

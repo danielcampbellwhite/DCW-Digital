@@ -8,11 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { CommandProvider } from "@/components/command/command-palette";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { JsonLd } from "@/components/seo/json-ld";
-import {
-  personSchema,
-  professionalServiceSchema,
-  localBusinessSchema,
-} from "@/lib/seo";
+import { siteGraphSchema } from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -74,9 +70,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background">
-        <JsonLd data={personSchema()} />
-        <JsonLd data={professionalServiceSchema()} />
-        <JsonLd data={localBusinessSchema()} />
+        <JsonLd data={siteGraphSchema()} />
 
         {/* Skip link for keyboard / screen-reader users */}
         <a
