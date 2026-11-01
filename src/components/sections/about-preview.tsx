@@ -15,24 +15,23 @@ const facts = [
 export function AboutPreview() {
   return (
     <section className="py-24">
-      <div className="container-px grid items-center gap-12 lg:grid-cols-2">
-        <Reveal direction="right">
+      <div className="container-px grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+        <Reveal direction="right" className="lg:justify-self-center">
           <div className="relative">
-            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl border border-border bg-surface">
+            <div className="flex items-center gap-4 rounded-2xl border border-border bg-surface/50 px-5 py-4 backdrop-blur-sm">
               <Image
                 src={siteConfig.headshot}
-                alt={`${siteConfig.owner}, ${siteConfig.jobTitle}`}
-                fill
-                sizes="(max-width: 1024px) 100vw, 384px"
-                className="object-cover"
+                alt={siteConfig.owner}
+                width={48}
+                height={48}
+                className="size-12 shrink-0 rounded-full border border-primary/30 object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background/90 to-transparent" />
-              <div className="absolute bottom-4 left-4 rounded-xl border border-border bg-background/80 px-4 py-2 backdrop-blur">
-                <div className="font-heading text-sm font-semibold">
-                  Daniel Campbell-White
+              <div className="text-left">
+                <div className="font-heading font-semibold text-foreground">
+                  {siteConfig.owner}
                 </div>
                 <div className="font-mono text-xs text-muted-foreground">
-                  Liverpool, UK
+                  Web Developer in Liverpool, UK
                 </div>
               </div>
             </div>

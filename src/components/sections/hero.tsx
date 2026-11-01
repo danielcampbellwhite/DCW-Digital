@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ArrowRight, Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Atmosphere } from "@/components/brand/atmosphere";
@@ -54,29 +53,6 @@ export function Hero() {
               <Mail className="size-4" />
               Get in touch
             </Button>
-          </div>
-
-          {/* Personal introduction */}
-          <div
-            className="mt-14 flex animate-rise items-center gap-4 rounded-2xl border border-border bg-surface/50 px-5 py-4 backdrop-blur-sm"
-            style={rise(4)}
-          >
-            <Image
-              src={siteConfig.headshot}
-              alt={siteConfig.owner}
-              width={48}
-              height={48}
-              priority
-              className="size-12 shrink-0 rounded-full border border-primary/30 object-cover"
-            />
-            <div className="text-left">
-              <div className="font-heading font-semibold text-foreground">
-                {siteConfig.owner}
-              </div>
-              <div className="font-mono text-xs text-muted-foreground">
-                Web Developer in Liverpool, UK
-              </div>
-            </div>
           </div>
         </div>
       </div>
