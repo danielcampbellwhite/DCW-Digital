@@ -72,6 +72,14 @@
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
+  /* Show code exactly as typed: no ligatures turning === into a bar. */
+  code,
+  pre,
+  kbd,
+  .font-mono {
+    font-variant-ligatures: none;
+  }
+
   ::selection {
     @apply bg-primary/30 text-foreground;
   }

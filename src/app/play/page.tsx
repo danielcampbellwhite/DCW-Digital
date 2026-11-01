@@ -5,13 +5,14 @@ import { PageHeader } from "@/components/sections/page-header";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { BugSquash } from "@/components/play/bug-squash";
+import { SpotTheBug } from "@/components/play/spot-the-bug";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
   title: "Play",
   description:
-    "Take a break: play Bug Squash, a quick developer-themed browser game, and check out the games Daniel Campbell-White has built, including Sloppy Games.",
+    "Spot the Bug: a quiz where you find the bug in real code, with plain-English explanations for non-developers. Plus Bug Squash and the games Daniel Campbell-White has built.",
   path: "/play",
 });
 
@@ -36,11 +37,25 @@ export default function PlayPage() {
             Fancy a <span className="text-gradient">game?</span>
           </>
         }
-        description="Not everything has to be serious. Have a go at a quick game I built for the site, or try some of the games I've made outside work."
+        description="Not everything has to be serious. Try to spot the bug like a developer, squash a few more against the clock, or play some of the games I've made outside work."
       />
 
+      {/* Spot the Bug quiz */}
+      <section id="spot-the-bug" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="The Quiz"
+            title="Spot the Bug"
+            description="A look at what I actually do all day. Find the broken line in real-world code, rack up streaks and unlock badges."
+          />
+          <div className="mt-12">
+            <SpotTheBug />
+          </div>
+        </div>
+      </section>
+
       {/* On-site game */}
-      <section className="py-20">
+      <section className="bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Play Here"
@@ -54,7 +69,7 @@ export default function PlayPage() {
       </section>
 
       {/* Games I've built */}
-      <section className="bg-surface/30 py-24">
+      <section className="py-24">
         <div className="container-px">
           <SectionHeading
             eyebrow="Side Projects"
