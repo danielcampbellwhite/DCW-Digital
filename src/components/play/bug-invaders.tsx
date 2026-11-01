@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useReducedMotion } from "framer-motion";
-import { Play, RotateCcw, Heart, Keyboard, Trophy, Waves } from "lucide-react";
+import { Play, Pause, RotateCcw, Heart, Keyboard, Trophy, Waves, X, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +26,7 @@ const BOSS_PHRASES = [
 ];
 
 const BEST_KEY = "dcw-bug-invaders-best";
+const KEY_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 const START_LIVES = 3;
 const MAX_LIVES = 5;
 
@@ -71,7 +72,7 @@ interface Game {
 
 type Phase = "idle" | "playing" | "paused" | "over";
 
-interface Hud { score: number; wave: number; lives: number; accuracy: number }
+interface Hud { score: number; wave: number; lives: number; accuracy: number; next: string }
 interface Summary { score: number; wave: number; wpm: number; accuracy: number; kills: number; best: number; isBest: boolean }
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
@@ -134,14 +135,18 @@ export function BugInvaders() {
   const reduce = useReducedMotion();
   const wrapRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const rootRef = React.useRef<HTMLDivElement>(null);
   const gameRef = React.useRef<Game | null>(null);
   const phaseRef = React.useRef<Phase>("idle");
   const fontRef = React.useRef("monospace");
   const sizeRef = React.useRef({ w: 800, h: 560, dpr: 1 });
+  const fullRef = React.useRef(false);
 
   const [phase, setPhaseState] = React.useState<Phase>("idle");
-  const [hud, setHud] = React.useState<Hud>({ score: 0, wave: 1, lives: START_LIVES, accuracy: 100 });
+  const [hud, setHud] = React.useState<Hud>({ score: 0, wave: 1, lives: START_LIVES, accuracy: 100, next: "" });
+  const [full, setFull] = React.useState(false);
+  const [showKeys, setShowKeys] = React.useState(false);
+  const [pressed, setPressed] = React.useState<string | null>(null);
   const [summary, setSummary] = React.useState<Summary | null>(null);
   const [best, setBest] = React.useState(0);
   const bestRef = React.useRef(0);
@@ -159,6 +164,7 @@ export function BugInvaders() {
     } catch {
       /* ignore */
     }
+    setShowKeys(window.matchMedia("(pointer: coarse)").matches);
     const v = getComputedStyle(document.body).getPropertyValue("--font-jetbrains-mono").trim();
     if (v) fontRef.current = `${v}, ui-monospace, monospace`;
   }, []);
@@ -170,16 +176,21 @@ export function BugInvaders() {
     if (!wrap || !canvas) return;
     const resize = () => {
       const w = wrap.clientWidth;
-      const h = Math.round(Math.min(560, Math.max(380, w * 0.7)));
+      const h = fullRef.current
+        ? Math.max(200, wrap.clientHeight)
+        : Math.round(Math.min(560, Math.max(380, w * 0.7)));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
-      canvas.style.height = `${h}px`;
+      canvas.style.height = fullRef.current ? "100%" : `${h}px`;
       sizeRef.current = { w, h, dpr };
       const g = gameRef.current;
       if (g) {
         const sx = w / g.w;
-        g.enemies.forEach((e) => (e.x *= sx));
+        const sy = h / g.h;
+        g.enemies.forEach((e) => { e.x *= sx; e.y *= sy; });
+        g.bullets.forEach((b) => { b.x *= sx; b.y *= sy; });
+        g.stars.forEach((st) => { st.x *= sx; st.y *= sy; });
         g.w = w;
         g.h = h;
       }
@@ -498,9 +509,7 @@ export function BugInvaders() {
         hudTimer += dt;
         if (hudTimer > 0.1 && gameRef.current) {
           hudTimer = 0;
-          const g = gameRef.current;
-          const total = g.correct + g.misses;
-          setHud({ score: g.score, wave: g.wave, lives: g.lives, accuracy: total ? Math.round((g.correct / total) * 100) : 100 });
+          syncHud();
         }
       }
       draw();
@@ -520,22 +529,78 @@ export function BugInvaders() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  const focusInput = () => inputRef.current?.focus({ preventScroll: true });
+  const syncHud = () => {
+    const g = gameRef.current;
+    if (!g) return;
+    const total = g.correct + g.misses;
+    const t = g.enemies.find((e) => e.id === g.targetId && !e.dying);
+    setHud({
+      score: g.score,
+      wave: g.wave,
+      lives: g.lives,
+      accuracy: total ? Math.round((g.correct / total) * 100) : 100,
+      next: t ? (t.word[t.typed] ?? "").toLowerCase() : "",
+    });
+  };
+
+  /* ── Full screen ──────────────────────────────────────────────────────
+     The game always takes over the viewport with a fixed overlay (works
+     everywhere, including iOS), and also asks for real full screen where
+     the browser supports it. */
+  const enterFull = () => {
+    fullRef.current = true;
+    setFull(true);
+    const el = rootRef.current;
+    if (el && !document.fullscreenElement && typeof el.requestFullscreen === "function") {
+      el.requestFullscreen({ navigationUI: "hide" }).catch(() => {});
+    }
+  };
+
+  const exitFull = () => {
+    fullRef.current = false;
+    setFull(false);
+    if (phaseRef.current === "playing") setPhase("paused");
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  };
+
+  // Lock page scroll while the overlay is up.
+  React.useEffect(() => {
+    if (!full) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [full]);
+
+  // Leaving native full screen (e.g. Esc on desktop) pauses the game.
+  React.useEffect(() => {
+    const onFs = () => {
+      if (!document.fullscreenElement && phaseRef.current === "playing") setPhase("paused");
+    };
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
+  }, []);
 
   const start = () => {
-    const { w, h } = sizeRef.current;
-    const g = newGame(w, h);
-    startWave(g);
-    gameRef.current = g;
-    setSummary(null);
-    setHud({ score: 0, wave: 1, lives: START_LIVES, accuracy: 100 });
-    setPhase("playing");
-    focusInput();
+    enterFull();
+    // Wait for layout so the stage has its full-screen size before spawning.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      (document.activeElement as HTMLElement | null)?.blur?.();
+      const { w, h } = sizeRef.current;
+      const g = newGame(w, h);
+      startWave(g);
+      gameRef.current = g;
+      setSummary(null);
+      setHud({ score: 0, wave: 1, lives: START_LIVES, accuracy: 100, next: "" });
+      setPhase("playing");
+    }));
   };
 
   const resume = () => {
+    if (!fullRef.current) enterFull();
+    (document.activeElement as HTMLElement | null)?.blur?.();
     setPhase("playing");
-    focusInput();
   };
 
   function endGame() {
@@ -553,7 +618,7 @@ export function BugInvaders() {
       /* ignore */
     }
     setBest(newBest);
-    setHud({ score: g.score, wave: g.wave, lives: 0, accuracy: total ? Math.round((g.correct / total) * 100) : 100 });
+    setHud({ score: g.score, wave: g.wave, lives: 0, accuracy: total ? Math.round((g.correct / total) * 100) : 100, next: "" });
     setSummary({
       score: g.score,
       wave: g.wave,
@@ -564,45 +629,136 @@ export function BugInvaders() {
       isBest,
     });
     setPhase("over");
-    inputRef.current?.blur();
   }
 
-  const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    for (const ch of v) typeChar(ch);
-    e.target.value = "";
+  const press = (ch: string) => {
+    if (phaseRef.current !== "playing") return;
+    const before = gameRef.current?.misses ?? 0;
+    typeChar(ch);
+    if ((gameRef.current?.misses ?? 0) > before && "vibrate" in navigator) navigator.vibrate?.(15);
+    syncHud();
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape" && phaseRef.current === "playing") {
-      e.preventDefault();
-      setPhase("paused");
-    }
+  /* Physical keyboard. */
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (phaseRef.current === "playing") {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setPhase("paused");
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          press(e.key);
+        }
+      } else if (fullRef.current && (e.key === "Enter" || e.key === " ")) {
+        // Enter or Space resumes / restarts from the overlay.
+        e.preventDefault();
+        if (phaseRef.current === "paused") resume();
+        else if (phaseRef.current === "over") start();
+      } else if (fullRef.current && e.key === "Escape") {
+        exitFull();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Pause if the window loses focus. */
+  React.useEffect(() => {
+    const onBlur = () => {
+      if (phaseRef.current === "playing") setPhase("paused");
+    };
+    window.addEventListener("blur", onBlur);
+    return () => window.removeEventListener("blur", onBlur);
+  }, []);
+
+  const keyDown = (ch: string) => (e: React.PointerEvent) => {
+    e.preventDefault();
+    setPressed(ch);
+    press(ch);
   };
+  const keyUp = () => setPressed(null);
+
+  const hearts = (
+    <span className="inline-flex items-center gap-1" role="img" aria-label={`${hud.lives} lives left`}>
+      {Array.from({ length: Math.max(hud.lives, 0) }).map((_, i) => (
+        <Heart key={i} className="size-4 fill-red-400 text-red-400" />
+      ))}
+    </span>
+  );
 
   return (
-    <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-4 sm:p-6">
+    <div
+      ref={rootRef}
+      className={cn(
+        full
+          ? "fixed inset-0 z-[110] flex h-[100dvh] flex-col bg-[#070b17] pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]"
+          : "mx-auto max-w-3xl rounded-3xl border border-border bg-card p-4 sm:p-6"
+      )}
+    >
       {/* HUD */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-1 font-mono text-sm">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3 font-mono text-sm",
+          full ? "border-b border-white/10 px-3 py-2 sm:px-5" : "flex-wrap px-1"
+        )}
+      >
         <span className="inline-flex items-center gap-1.5 text-foreground">
           <Trophy className="size-4 text-accent" /> {hud.score}
         </span>
         <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-          <Waves className="size-4 text-primary" /> Wave {hud.wave}
+          <Waves className="size-4 text-primary" /> {full ? "W" : "Wave "}
+          {hud.wave}
         </span>
-        <span className="inline-flex items-center gap-1" role="img" aria-label={`${hud.lives} lives left`}>
-          {Array.from({ length: Math.max(hud.lives, 0) }).map((_, i) => (
-            <Heart key={i} className="size-4 fill-red-400 text-red-400" />
-          ))}
-        </span>
-        <span className="text-muted-foreground">{hud.accuracy}% acc</span>
+        {hearts}
+        {!full && <span className="text-muted-foreground">{hud.accuracy}% acc</span>}
+        {full && (
+          <span className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setShowKeys((v) => !v)}
+              aria-pressed={showKeys}
+              aria-label={showKeys ? "Hide on-screen keyboard" : "Show on-screen keyboard"}
+              className={cn(
+                "grid size-9 place-items-center rounded-lg border transition-colors",
+                showKeys ? "border-primary/50 text-primary" : "border-white/10 text-muted-foreground"
+              )}
+            >
+              <Keyboard className="size-4" />
+            </button>
+            {phase === "playing" && (
+              <button
+                type="button"
+                onClick={() => setPhase("paused")}
+                aria-label="Pause"
+                className="grid size-9 place-items-center rounded-lg border border-white/10 text-muted-foreground"
+              >
+                <Pause className="size-4" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={exitFull}
+              aria-label="Exit game"
+              className="grid size-9 place-items-center rounded-lg border border-white/10 text-muted-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          </span>
+        )}
       </div>
 
       {/* Stage */}
       <div
         ref={wrapRef}
-        className="relative mt-3 overflow-hidden rounded-2xl border border-border"
-        onClick={() => phaseRef.current === "playing" && focusInput()}
+        className={cn(
+          "relative overflow-hidden",
+          full ? "min-h-0 flex-1" : "mt-3 rounded-2xl border border-border"
+        )}
       >
         <canvas
           ref={canvasRef}
@@ -610,25 +766,9 @@ export function BugInvaders() {
           role="img"
           aria-label="Bug Invaders game. Type the word above each bug to shoot it before it reaches your ship."
         />
-        <input
-          ref={inputRef}
-          type="text"
-          inputMode="text"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          aria-label="Type the words here"
-          onChange={onInput}
-          onKeyDown={onKeyDown}
-          onBlur={() => {
-            if (phaseRef.current === "playing") setPhase("paused");
-          }}
-          className="pointer-events-none absolute bottom-0 left-0 h-px w-px opacity-0"
-        />
 
         {phase !== "playing" && (
-          <div className="absolute inset-0 grid place-items-center bg-background/75 p-4 backdrop-blur-sm">
+          <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-background/75 p-4 backdrop-blur-sm">
             <div className="max-w-sm text-center">
               {phase === "idle" && (
                 <>
@@ -639,7 +779,7 @@ export function BugInvaders() {
                     shoot it down. Every third wave brings a boss.
                   </p>
                   <Button onClick={start} variant="primary" className="mt-5">
-                    <Play className="size-4" /> Start typing
+                    <Maximize2 className="size-4" /> Play full screen
                   </Button>
                   {best > 0 && <p className="mt-3 font-mono text-xs text-muted-foreground">Best: {best}</p>}
                 </>
@@ -648,9 +788,16 @@ export function BugInvaders() {
                 <>
                   <h3 className="font-heading text-2xl font-bold">Paused</h3>
                   <p className="mt-2 text-sm text-muted-foreground">Your bugs will wait. Probably.</p>
-                  <Button onClick={resume} variant="primary" className="mt-5">
-                    <Play className="size-4" /> Resume
-                  </Button>
+                  <div className="mt-5 flex flex-wrap justify-center gap-3">
+                    <Button onClick={resume} variant="primary">
+                      <Play className="size-4" /> Resume
+                    </Button>
+                    {full && (
+                      <Button onClick={exitFull} variant="outline">
+                        Exit
+                      </Button>
+                    )}
+                  </div>
                 </>
               )}
               {phase === "over" && summary && (
@@ -673,9 +820,16 @@ export function BugInvaders() {
                       </div>
                     ))}
                   </dl>
-                  <Button onClick={start} variant="primary" className="mt-5">
-                    <RotateCcw className="size-4" /> Play again
-                  </Button>
+                  <div className="mt-5 flex flex-wrap justify-center gap-3">
+                    <Button onClick={start} variant="primary">
+                      <RotateCcw className="size-4" /> Play again
+                    </Button>
+                    {full && (
+                      <Button onClick={exitFull} variant="outline">
+                        Exit
+                      </Button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -683,9 +837,69 @@ export function BugInvaders() {
         )}
       </div>
 
-      <p className="mt-3 text-center text-xs text-muted-foreground">
-        Just start typing · Esc to pause · on mobile, tap the game to bring up the keyboard
-      </p>
+      {/* On-screen keyboard */}
+      {full && showKeys && (
+        <div
+          className="touch-manipulation select-none border-t border-white/10 bg-[#0b1122] px-1 pb-2 pt-2 sm:px-3"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className="mx-auto flex max-w-2xl flex-col gap-1.5">
+            {KEY_ROWS.map((row, r) => (
+              <div key={row} className={cn("flex justify-center gap-1", r === 1 && "px-[5%]", r === 2 && "px-[15%]")}>
+                {row.split("").map((ch) => (
+                  <button
+                    key={ch}
+                    type="button"
+                    tabIndex={-1}
+                    aria-label={ch}
+                    onPointerDown={keyDown(ch)}
+                    onPointerUp={keyUp}
+                    onPointerLeave={keyUp}
+                    onPointerCancel={keyUp}
+                    className={cn(
+                      "h-12 flex-1 rounded-md border font-mono text-lg font-semibold transition-colors duration-75",
+                      pressed === ch
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : hud.next === ch
+                          ? "border-primary/60 bg-primary/15 text-primary"
+                          : "border-white/10 bg-white/[0.06] text-foreground"
+                    )}
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
+            ))}
+            <div className="flex justify-center gap-1 px-[15%]">
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="space"
+                onPointerDown={keyDown(" ")}
+                onPointerUp={keyUp}
+                onPointerLeave={keyUp}
+                onPointerCancel={keyUp}
+                className={cn(
+                  "h-11 flex-1 rounded-md border font-mono text-xs uppercase tracking-widest transition-colors duration-75",
+                  pressed === " "
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : hud.next === " "
+                      ? "border-primary/60 bg-primary/15 text-primary"
+                      : "border-white/10 bg-white/[0.06] text-muted-foreground"
+                )}
+              >
+                space
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!full && (
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          Opens full screen · use your keyboard, or the on-screen one on phones · Esc to pause
+        </p>
+      )}
     </div>
   );
 }
