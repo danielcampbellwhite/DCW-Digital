@@ -35,6 +35,7 @@ export const mainNav: NavLink[] = [
   { label: "Services", href: "/services", description: "How DCW Digital can help" },
   { label: "Projects", href: "/projects", description: "Selected work & case studies" },
   { label: "Blog", href: "/blog", description: "Insights on web, SEO & growth" },
+  { label: "Play", href: "/play", description: "Take a break and play a game" },
   { label: "Contact", href: "/contact", description: "Start a conversation" },
 ];
 
@@ -46,6 +47,7 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
       { label: "About", href: "/about" },
       { label: "Projects", href: "/projects" },
       { label: "How I Use AI", href: "/ai" },
+      { label: "Play", href: "/play" },
       { label: "Blog", href: "/blog" },
     ],
   },
