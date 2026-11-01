@@ -1,6 +1,6 @@
 import { ArrowRight, Check } from "lucide-react";
 import type { Service } from "@/types";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 /**
  * Service card used on the homepage overview and services page. A server
@@ -17,12 +17,16 @@ export function ServiceCard({
 }) {
   const Icon = service.icon;
   return (
-    <div className="card-surface group flex h-full flex-col transition-transform duration-300 hover:-translate-y-1 hover:border-primary/40">
+    <div className="card-surface group relative flex h-full flex-col transition-transform duration-300 hover:-translate-y-1 hover:border-primary/40">
       <div className="mb-4 inline-flex size-12 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
         <Icon className="size-6" />
       </div>
 
-      <h3 className="font-heading text-xl font-semibold">{service.title}</h3>
+      <h3 className="font-heading text-xl font-semibold">
+        <Link href={`/services/${service.slug}`} className="after:absolute after:inset-0">
+          {service.title}
+        </Link>
+      </h3>
       <p className="mt-2 text-sm text-muted-foreground">{service.summary}</p>
 
       {showBenefits && (
@@ -37,10 +41,10 @@ export function ServiceCard({
       )}
 
       <div className="mt-auto flex items-center pt-5">
-        <Button href={service.cta.href} variant="ghost" size="sm" className="ml-auto">
-          {service.cta.label}
-          <ArrowRight className="size-4" />
-        </Button>
+        <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+          Find out more
+          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
       </div>
     </div>
   );

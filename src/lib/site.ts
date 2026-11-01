@@ -54,10 +54,10 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
   {
     title: "What I Do",
     links: [
-      { label: "Website Development", href: "/services#website-development" },
-      { label: "Website Auditing", href: "/services#website-auditing" },
-      { label: "Support & Maintenance", href: "/services#support-maintenance" },
-      { label: "Digital Partner", href: "/services#digital-partner" },
+      { label: "Website Development", href: "/services/website-development" },
+      { label: "Website Auditing", href: "/services/website-auditing" },
+      { label: "Support & Maintenance", href: "/services/support-maintenance" },
+      { label: "Digital Partner", href: "/services/digital-partner" },
     ],
   },
   {

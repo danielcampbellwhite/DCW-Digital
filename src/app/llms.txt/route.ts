@@ -27,7 +27,7 @@ ${siteConfig.owner} is a web developer and Digital Services Lead based in Liverp
 
 ## Services
 
-${services.map((s) => `- [${s.title}](${u}/services#${s.slug}): ${s.summary}`).join("\n")}
+${services.map((s) => `- [${s.title}](${u}/services/${s.slug}): ${s.summary}`).join("\n")}
 
 ## Blog
 

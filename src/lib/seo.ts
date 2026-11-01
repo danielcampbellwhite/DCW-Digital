@@ -197,3 +197,54 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
     })),
   };
 }
+
+export function serviceSchema(service: {
+  name: string;
+  description: string;
+  slug: string;
+  offers?: { name: string; price: number }[];
+}) {
+  const url = `${siteConfig.url}/services/${service.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: service.name,
+    serviceType: service.name,
+    description: service.description,
+    url,
+    provider: { "@id": ID.business },
+    areaServed: [
+      { "@type": "City", name: "Liverpool" },
+      { "@type": "Country", name: "United Kingdom" },
+    ],
+    ...(service.offers?.length
+      ? {
+          offers: service.offers.map((o) => ({
+            "@type": "Offer",
+            name: o.name,
+            price: o.price,
+            priceCurrency: "GBP",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: o.price,
+              priceCurrency: "GBP",
+              unitText: "MONTH",
+            },
+          })),
+        }
+      : {}),
+  };
+}
+
+export function faqSchema(faqs: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}

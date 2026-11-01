@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import { services, supportPackages } from "@/content/services";
@@ -57,7 +58,12 @@ export default function ServicesPage() {
                             Service {String(i + 1).padStart(2, "0")}
                           </span>
                           <h2 className="font-heading text-2xl font-bold">
-                            {service.title}
+                            <Link
+                              href={`/services/${service.slug}`}
+                              className="transition-colors hover:text-primary"
+                            >
+                              {service.title}
+                            </Link>
                           </h2>
                         </div>
                       </div>
@@ -85,10 +91,13 @@ export default function ServicesPage() {
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-6 border-t border-border pt-5">
-                        <Button href={service.cta.href} variant="primary" className="w-full">
-                          {service.cta.label}
+                      <div className="mt-6 space-y-3 border-t border-border pt-5">
+                        <Button href={`/services/${service.slug}`} variant="primary" className="w-full">
+                          More about {service.title.toLowerCase()}
                           <ArrowRight className="size-4" />
+                        </Button>
+                        <Button href={service.cta.href} variant="outline" className="w-full">
+                          {service.cta.label}
                         </Button>
                       </div>
                     </div>
