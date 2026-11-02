@@ -7,13 +7,14 @@ import { Reveal } from "@/components/motion/reveal";
 import { BugSquash } from "@/components/play/bug-squash";
 import { SpotTheBug } from "@/components/play/spot-the-bug";
 import { BugInvaders } from "@/components/play/bug-invaders";
+import { DeployDash } from "@/components/play/deploy-dash";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Spot the Bug & Typing Game",
   description:
-    "Free games for developers and the curious: find the bug in real code, a typing shooter and Whack-a-Bug. Plain-English explanations included.",
+    "Free games for developers and the curious: find the bug in real code, a typing shooter, an endless runner and Whack-a-Bug. Play in your browser.",
   path: "/play",
 });
 
@@ -38,7 +39,7 @@ export default function PlayPage() {
             Fancy a <span className="text-gradient">game?</span>
           </>
         }
-        description="Not everything has to be serious. Spot the bug like a developer, type your way through a bug invasion, whack a few more against the clock, or play some of the games I've made outside work."
+        description="Not everything has to be serious. Spot the bug like a developer, type your way through a bug invasion, dash a release to production, whack a few more against the clock, or play some of the games I've made outside work."
       />
 
       {/* Spot the Bug quiz */}
@@ -69,8 +70,22 @@ export default function PlayPage() {
         </div>
       </section>
 
+      {/* Endless runner */}
+      <section id="deploy-dash" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Endless Runner"
+            title="Deploy Dash"
+            description="Get the release to production. Jump the bugs and failing tests, duck under the error pop-ups, and grab coffee on the way. It only gets faster."
+          />
+          <div className="mt-12">
+            <DeployDash />
+          </div>
+        </div>
+      </section>
+
       {/* Whack-a-mole */}
-      <section id="whack-a-bug" className="scroll-mt-24 py-20">
+      <section id="whack-a-bug" className="scroll-mt-24 bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Quick Game"
@@ -84,7 +99,7 @@ export default function PlayPage() {
       </section>
 
       {/* Games I've built */}
-      <section className="bg-surface/30 py-24">
+      <section className="py-24">
         <div className="container-px">
           <SectionHeading
             eyebrow="Side Projects"
