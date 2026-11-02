@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Command, Mail } from "lucide-react";
+import { Menu, X, Search, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { mainNav } from "@/lib/site";
 import { Logo } from "@/components/brand/logo";
@@ -16,6 +16,13 @@ export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const palette = useCommandPalette();
+  const [shortcut, setShortcut] = React.useState("⌘K");
+
+  // Show the right shortcut for the visitor's platform.
+  React.useEffect(() => {
+    if (!/Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent))
+      setShortcut("Ctrl K");
+  }, []);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -36,7 +43,7 @@ export function Navbar() {
           "transition-all duration-300",
           scrolled
             ? "border-b border-border/70 bg-background/70 backdrop-blur-xl"
-            : "border-b border-transparent bg-transparent"
+            : "border-b border-transparent bg-transparent",
         )}
       >
         <nav
@@ -60,14 +67,18 @@ export function Navbar() {
                       "relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
                       active
                         ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {active && (
                       <motion.span
                         layoutId="nav-active"
                         className="absolute inset-0 -z-10 rounded-full bg-surface/80 ring-1 ring-border"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
                       />
                     )}
                     {link.label}
@@ -82,27 +93,43 @@ export function Navbar() {
             <button
               type="button"
               onClick={palette.open}
-              className="flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Open command palette"
+              className="flex items-center gap-2 rounded-full border border-border bg-surface/50 py-1.5 pl-3 pr-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              aria-label={`Search the site (${shortcut})`}
             >
-              <Command className="size-3.5" />
-              <kbd className="font-mono">⌘K</kbd>
+              <Search className="size-3.5" />
+              <span>Search</span>
+              <kbd className="rounded-full border border-border bg-background/60 px-2 py-0.5 font-mono text-[10px]">
+                {shortcut}
+              </kbd>
             </button>
             <Button href="/contact" variant="primary" size="sm">
               <Mail className="size-4" /> Get in touch
             </Button>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-surface/50 text-foreground lg:hidden"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          {/* Mobile search + menu toggle */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                palette.open();
+              }}
+              className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-surface/50 text-foreground"
+              aria-label="Search the site"
+            >
+              <Search className="size-5" />
+            </button>
+            <button
+              type="button"
+              className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-surface/50 text-foreground"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </nav>
       </div>
 
@@ -131,7 +158,7 @@ export function Navbar() {
                           "flex flex-col rounded-lg px-3 py-3 transition-colors",
                           active
                             ? "bg-surface text-foreground"
-                            : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+                            : "text-muted-foreground hover:bg-surface/60 hover:text-foreground",
                         )}
                       >
                         <span className="font-medium">{link.label}</span>
