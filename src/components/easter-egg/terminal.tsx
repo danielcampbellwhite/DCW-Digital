@@ -92,6 +92,18 @@ const COMMANDS: [string, string][] = [
   ["exit", "close session"],
 ];
 
+/* On-screen keyboard layouts. */
+const SHELL_ROWS = [
+  "1234567890".split(""),
+  "qwertyuiop".split(""),
+  "asdfghjkl".split(""),
+  ["tab", ..."zxcvbnm".split(""), "back"],
+  ["up", "-", ".", "space", "enter"],
+];
+const GAME_ROWS = ["qwertyuiop".split(""), "asdfghjkl".split(""), ["enter", ..."zxcvbnm".split(""), "back"]];
+const KEY_TEXT: Record<string, string> = { tab: "TAB", back: "⌫", up: "↑", space: "SPACE", enter: "ENTER" };
+const KEY_LABELS: Record<string, string> = { tab: "Tab (complete)", back: "Backspace", up: "Previous command", space: "Space", enter: "Enter" };
+
 /* ── Helpers ────────────────────────────────────────────────────────────── */
 
 function read<T>(key: string, fallback: T): T {
@@ -153,6 +165,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const [game, setGame] = React.useState<Game | null>(null);
   const [booting, setBooting] = React.useState(true);
   const [touch, setTouch] = React.useState(false);
+  const [showKeys, setShowKeys] = React.useState(false);
 
   const idRef = React.useRef(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -172,7 +185,9 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     if (t in THEMES) setTheme(t);
     const isRoot = read<boolean>(ROOT_KEY, false);
     setRoot(isRoot);
-    setTouch(window.matchMedia("(pointer: coarse)").matches);
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    setTouch(coarse);
+    setShowKeys(coarse);
 
     const user = isRoot ? "root" : "guest";
     const host = window.location.hostname || "localhost";
@@ -564,6 +579,39 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history"];
 
+  const historyPrev = () => {
+    const h = history.current;
+    if (game || !h.length) return;
+    histIdx.current = histIdx.current < 0 ? h.length - 1 : Math.max(0, histIdx.current - 1);
+    setInput(h[histIdx.current] ?? "");
+  };
+
+  const historyNext = () => {
+    const h = history.current;
+    if (game || histIdx.current < 0) return;
+    histIdx.current += 1;
+    if (histIdx.current >= h.length) {
+      histIdx.current = -1;
+      setInput("");
+    } else setInput(h[histIdx.current] ?? "");
+  };
+
+  const complete = () => {
+    if (game) return;
+    const [first = "", ...rest] = input.split(" ");
+    if (rest.length === 0) {
+      const match = completions.filter((c) => c.startsWith(first.toLowerCase()));
+      if (match.length === 1) setInput(match[0] + " ");
+      else if (match.length > 1) print(make("dim", match.join("  ")));
+    } else if (["open", "cd", "goto"].includes(first)) {
+      const match = Object.keys(PAGES).filter((pg) => pg.startsWith(rest.join(" ").toLowerCase()));
+      if (match.length === 1) setInput(`${first} ${match[0]}`);
+    } else if (first === "cat") {
+      const match = FILES.map((f) => f.name).filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
+      if (match.length === 1) setInput(`cat ${match[0]}`);
+    }
+  };
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (booting) {
       skipBoot();
@@ -575,35 +623,15 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     } else if (e.key === "Escape") {
       e.preventDefault();
       onClose();
-    } else if (e.key === "ArrowUp" && !game) {
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      const h = history.current;
-      if (!h.length) return;
-      histIdx.current = histIdx.current < 0 ? h.length - 1 : Math.max(0, histIdx.current - 1);
-      setInput(h[histIdx.current] ?? "");
-    } else if (e.key === "ArrowDown" && !game) {
+      historyPrev();
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      const h = history.current;
-      if (histIdx.current < 0) return;
-      histIdx.current += 1;
-      if (histIdx.current >= h.length) {
-        histIdx.current = -1;
-        setInput("");
-      } else setInput(h[histIdx.current] ?? "");
+      historyNext();
     } else if (e.key === "Tab") {
       e.preventDefault();
-      const [first, ...rest] = input.split(" ");
-      if (rest.length === 0) {
-        const match = completions.filter((c) => c.startsWith(first!.toLowerCase()));
-        if (match.length === 1) setInput(match[0] + " ");
-        else if (match.length > 1) print(make("dim", match.join("  ")));
-      } else if (["open", "cd", "goto"].includes(first!)) {
-        const match = Object.keys(PAGES).filter((p) => p.startsWith(rest.join(" ").toLowerCase()));
-        if (match.length === 1) setInput(`${first} ${match[0]}`);
-      } else if (first === "cat") {
-        const match = FILES.map((f) => f.name).filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
-        if (match.length === 1) setInput(`cat ${match[0]}`);
-      }
+      complete();
     } else if (e.key === "l" && e.ctrlKey) {
       e.preventDefault();
       setLines([]);
@@ -612,6 +640,27 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       guess("quit");
     } else if (e.key.length === 1) {
       playSound("click");
+    }
+  };
+
+  /* On-screen keyboard. */
+  const pressKey = (key: string) => {
+    playSound("click");
+    histIdx.current = -1;
+    const max = game ? 12 : 120;
+    switch (key) {
+      case "enter":
+        return submit();
+      case "back":
+        return setInput((v) => v.slice(0, -1));
+      case "space":
+        return setInput((v) => (v.length < max ? v + " " : v));
+      case "tab":
+        return complete();
+      case "up":
+        return historyPrev();
+      default:
+        return setInput((v) => (v.length < max ? v + (game ? key.toUpperCase() : key) : v));
     }
   };
 
@@ -652,6 +701,8 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       );
     }
     if (l.kind === "keys") {
+      // The on-screen keyboard already shows this.
+      if (showKeys) return null;
       return (
         <div key={l.id} className="my-1 flex flex-wrap gap-x-1.5 text-sm tracking-wider" aria-label="Letters tried so far">
           {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((ch) => {
@@ -712,6 +763,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         .dcwt-cursor{animation:dcwt-blink 1s steps(1) infinite}
         @keyframes dcwt-blink{50%{opacity:0}}
         .dcwt input{caret-color:transparent}
+        .dcwt-key:active{background:var(--dcwt-fg)!important;color:#031007!important;text-shadow:none!important;opacity:1!important}
         .dcwt input:focus,.dcwt input:focus-visible{outline:none!important;box-shadow:none!important}
         @media (prefers-reduced-motion: reduce){.dcwt-screen,.dcwt-flicker,.dcwt-cursor{animation:none}}
       `}</style>
@@ -720,6 +772,21 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         {/* Title bar */}
         <div className="flex items-center justify-between border-b px-4 py-2 text-xs sm:px-6" style={{ borderColor: t.dim }}>
           <span>{root ? "root" : "guest"}@dcw: ~ (tty1)</span>
+          <span className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowKeys((v) => !v);
+              window.setTimeout(() => inputRef.current?.focus(), 30);
+            }}
+            aria-pressed={showKeys}
+            className="rounded border px-2 py-0.5 hover:opacity-80"
+            style={{ borderColor: t.dim, ...(showKeys ? { background: t.fg, color: "#031007", textShadow: "none" } : {}) }}
+            aria-label={showKeys ? "Hide on-screen keyboard" : "Show on-screen keyboard"}
+          >
+            [KBD]
+          </button>
           <button
             type="button"
             onClick={(e) => {
@@ -732,6 +799,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           >
             [ESC] EXIT
           </button>
+          </span>
         </div>
 
         {/* Output */}
@@ -755,6 +823,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
                   autoComplete="off"
                   spellCheck={false}
                   maxLength={game ? 12 : 120}
+                  inputMode={showKeys ? "none" : "text"}
                   aria-label="Terminal input"
                   className="w-full bg-transparent text-[16px] outline-none sm:text-base"
                   style={{ color: t.fg, textShadow: `0 0 6px ${t.glow}`, outline: "none", boxShadow: "none" }}
@@ -786,6 +855,51 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
                 {c}
               </button>
             ))}
+          </div>
+        )}
+
+        {/* On-screen keyboard */}
+        {showKeys && !booting && (
+          <div
+            className="select-none border-t px-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 touch-manipulation sm:px-3"
+            style={{ borderColor: t.dim }}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <div className="mx-auto flex max-w-2xl flex-col gap-1.5">
+              {(game ? GAME_ROWS : SHELL_ROWS).map((row, r) => (
+                <div key={r} className="flex justify-center gap-1">
+                  {row.map((k) => {
+                    const st = game && k.length === 1 ? game.keys[k.toUpperCase()] : undefined;
+                    const wide = k === "space" ? "flex-[4]" : ["enter", "back", "tab", "up"].includes(k) ? "flex-[1.6]" : "flex-1";
+                    return (
+                      <button
+                        key={k}
+                        type="button"
+                        tabIndex={-1}
+                        aria-label={KEY_LABELS[k] ?? k}
+                        onPointerDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          pressKey(k);
+                        }}
+                        className={`dcwt-key h-11 min-w-0 rounded border text-sm ${wide} ${game ? "uppercase" : ""}`}
+                        style={
+                          st === "hit"
+                            ? { background: t.fg, borderColor: t.fg, color: "#031007", textShadow: "none" }
+                            : st === "near"
+                              ? { borderColor: t.fg, borderStyle: "dashed" }
+                              : st === "miss"
+                                ? { borderColor: t.dim, color: t.dim, opacity: 0.45, textShadow: "none" }
+                                : { borderColor: t.dim }
+                        }
+                      >
+                        {KEY_TEXT[k] ?? k}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
