@@ -47,6 +47,7 @@ interface Game {
   H: number;
   ground: number;
   y: number; // player top
+  h: number; // current player height (standing or ducking)
   vy: number;
   onGround: boolean;
   ducking: boolean;
@@ -94,6 +95,7 @@ function newGame(W: number, H: number): Game {
     H,
     ground,
     y: ground - STAND.h,
+    h: STAND.h,
     vy: 0,
     onGround: true,
     ducking: false,
@@ -144,6 +146,7 @@ export function DeployDash() {
   const viewRef = React.useRef({ w: 800, h: 300, dpr: 1, scale: 1 });
   const bestRef = React.useRef(0);
   const touchStartY = React.useRef<number | null>(null);
+  const swipeDuck = React.useRef(false);
   const overAtRef = React.useRef(0);
 
   const [phase, setPhaseState] = React.useState<Phase>("idle");
@@ -299,8 +302,9 @@ export function DeployDash() {
     }
     g.banner = Math.max(0, g.banner - dt);
 
-    // Player physics.
-    const size = g.ducking && g.onGround ? DUCK : STAND;
+    // Player physics, tracked by the feet so switching between standing
+    // and ducking never lifts the bot off the ground.
+    let feet = g.y + g.h;
     g.buffer = Math.max(0, g.buffer - dt);
     g.coyote = g.onGround ? 0.08 : Math.max(0, g.coyote - dt);
     if (g.buffer > 0 && g.coyote > 0) {
@@ -308,19 +312,20 @@ export function DeployDash() {
       g.onGround = false;
       g.coyote = 0;
       g.buffer = 0;
-      g.ducking = false;
     }
-    g.vy += GRAVITY * dt;
-    g.y += g.vy * dt;
-    const floor = g.ground - size.h;
-    if (g.y >= floor) {
-      if (!g.onGround && g.vy > 300) burst(g, PLAYER_X + size.w / 2, g.ground, "rgba(148,163,184,0.8)", 5);
-      g.y = floor;
-      g.vy = 0;
-      g.onGround = true;
-    } else {
-      g.onGround = false;
+    if (!g.onGround) {
+      g.vy += GRAVITY * dt;
+      feet += g.vy * dt;
+      if (feet >= g.ground) {
+        if (g.vy > 300) burst(g, PLAYER_X + STAND.w / 2, g.ground, "rgba(148,163,184,0.8)", 5);
+        feet = g.ground;
+        g.vy = 0;
+        g.onGround = true;
+      }
     }
+    const size = g.ducking && g.onGround ? DUCK : STAND;
+    g.h = size.h;
+    g.y = feet - size.h;
 
     // World scroll.
     for (const o of g.obstacles) o.x -= dx;
@@ -786,15 +791,19 @@ export function DeployDash() {
     pressJump();
   };
   const onStagePointerMove = (e: React.PointerEvent) => {
-    if (touchStartY.current !== null && e.clientY - touchStartY.current > 30) {
+    if (touchStartY.current !== null && !swipeDuck.current && e.clientY - touchStartY.current > 30) {
       releaseJump();
+      swipeDuck.current = true;
       setDuck(true);
     }
   };
   const onStagePointerUp = () => {
     touchStartY.current = null;
     releaseJump();
-    setDuck(false);
+    if (swipeDuck.current) {
+      swipeDuck.current = false;
+      setDuck(false);
+    }
   };
 
   const holdBtn = (down: () => void, up: () => void) => ({
