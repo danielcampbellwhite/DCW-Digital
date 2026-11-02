@@ -204,7 +204,9 @@ export default function PrivacyPage() {
                 page save your best scores, badges and sound setting in your
                 browser&apos;s local storage so they&apos;re still there next
                 time. This stays on your device and you can clear it at any time
-                through your browser settings. The only exception is the random
+                through your browser settings. To make the site work offline,
+                your browser also saves copies of its pages and images. These
+                contain nothing about you and are refreshed automatically. The only exception is the random
                 player ID, which is sent along with your score when you finish a
                 game so the weekly leaderboard knows which scores are yours.
               </p>

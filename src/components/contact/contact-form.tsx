@@ -68,6 +68,9 @@ export function ContactForm({
     setStatus("submitting");
     setServerError(null);
     try {
+      if (!navigator.onLine) {
+        throw new Error("You're offline, so your message hasn't been sent. Please try again once you're back online.");
+      }
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

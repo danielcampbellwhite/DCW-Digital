@@ -9,6 +9,7 @@ import { CommandProvider } from "@/components/command/command-palette";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteGraphSchema } from "@/lib/seo";
+import { ServiceWorker } from "@/components/pwa/service-worker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,7 +52,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: "/favicon.svg",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
+    statusBarStyle: "black-translucent",
   },
 };
 
@@ -88,6 +94,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </CommandProvider>
+        <ServiceWorker />
       </body>
     </html>
   );
