@@ -182,18 +182,18 @@ export function DeployDash() {
     if (!wrap || !canvas) return;
     const resize = () => {
       const w = wrap.clientWidth;
-      const stageH = fullRef.current ? Math.max(200, wrap.clientHeight) : Math.round(Math.min(340, Math.max(240, w * 0.42)));
+      const stageH = fullRef.current ? Math.max(200, wrap.clientHeight) : Math.round(Math.min(420, Math.max(340, w * 0.5)));
       // On a tall portrait screen, play in a centred band rather than a
       // thin strip under a lot of empty sky.
       const isPortrait = fullRef.current && stageH > w * 0.9;
-      const h = isPortrait ? Math.round(w * 0.85) : stageH;
+      const h = isPortrait ? Math.round(Math.min(stageH, w * 1.05)) : stageH;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       canvas.style.height = `${h}px`;
       canvas.style.position = isPortrait ? "absolute" : "";
       canvas.style.top = isPortrait ? `${Math.round((stageH - h) / 2)}px` : "";
-      const scale = isPortrait ? Math.min(h / 220, w / 440) : Math.min(h / 240, w / 680);
+      const scale = isPortrait ? Math.min(h / 220, w / 400) : Math.min(h / 220, w / 600);
       viewRef.current = { w, h, dpr, scale };
       setPortrait(isPortrait);
       const g = gameRef.current;
