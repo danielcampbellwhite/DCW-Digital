@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { services, supportPackages } from "@/content/services";
 import { clients } from "@/content/clients";
 import { playSound } from "@/lib/sfx";
+import { ANSWERS, ALLOWED } from "@/components/easter-egg/words";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -47,14 +48,6 @@ const THEME_KEY = "dcw-term-theme";
 const ROOT_KEY = "dcw-term-root";
 const STATS_KEY = "dcw-term-stats";
 const MAX_TRIES = 6;
-
-const PASSWORDS = [
-  "ARRAY", "CACHE", "DEBUG", "MERGE", "REACT", "QUERY", "FETCH", "ASYNC", "BUILD", "STACK",
-  "PATCH", "PROXY", "REGEX", "TOKEN", "CLASS", "SCOPE", "SHELL", "LINUX", "CLOUD", "PIXEL",
-  "BYTES", "LOGIN", "ROUTE", "STATE", "PROPS", "HOOKS", "FLOAT", "CONST", "YIELD", "AWAIT",
-  "CRASH", "ERROR", "FRAME", "QUEUE", "TUPLE", "MUTEX", "SLICE", "PARSE", "INDEX", "TABLE",
-  "GROUP", "MOUNT", "BREAK", "WHILE", "TRAIT", "SCRUM", "AGILE", "FLAGS", "NODES", "SWIFT",
-];
 
 const PAGES: Record<string, string> = {
   home: "/",
@@ -244,11 +237,11 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   /* ── Code-breaking game ──────────────────────────────────────────────── */
 
   const startGame = () => {
-    const answer = PASSWORDS[Math.floor(Math.random() * PASSWORDS.length)]!;
+    const answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)]!;
     setGame({ answer, guesses: [], keys: {} });
     print(
       make("head", "PASSWORD DECRYPTION UTILITY"),
-      make("out", "Guess the 5-letter password. It's always something a developer would say."),
+      make("out", "Guess the 5-letter password. It's a random English word."),
       make("dim", `${MAX_TRIES} attempts. [A] right letter, right place · (A) in the password, wrong place · a = not in it.`),
       make("dim", "Type 'quit' to give up."),
       make("out", "")
@@ -278,6 +271,16 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     if (!/^[A-Z]{5}$/.test(word)) {
       playSound("miss");
       print(make("err", "Passwords are exactly 5 letters."));
+      return;
+    }
+    if (!ALLOWED.has(word)) {
+      playSound("miss");
+      print(make("err", `${word} isn't in my word list. That one's free, try again.`));
+      return;
+    }
+    if (game.guesses.includes(word)) {
+      playSound("miss");
+      print(make("err", `You've already tried ${word}.`));
       return;
     }
     const states = score(word, game.answer);
