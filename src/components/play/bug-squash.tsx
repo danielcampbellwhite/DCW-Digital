@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { playSound, unlockAudio } from "@/lib/sfx";
 import { SoundToggle } from "@/components/play/sound-toggle";
+import { submitScore, WeeklyRank } from "@/components/play/weekly-leaderboard";
 
 type Kind = "bug" | "feature";
 type Cell = { id: number; kind: Kind; hit?: boolean } | null;
@@ -136,6 +137,7 @@ export function BugSquash() {
     });
     setMessage(score > best ? "New best score!" : "Time's up!");
     playSound(score > best ? "finish" : "gameOver");
+    void submitScore("whack", score, Date.now() - startedAt.current);
   }, [phase, timeLeft, score, best, clearTimers, commit]);
 
   const hit = React.useCallback(
@@ -260,6 +262,7 @@ export function BugSquash() {
               {phase === "over" && (
                 <p className="mt-1 text-sm text-muted-foreground">{message}</p>
               )}
+              {phase === "over" && <WeeklyRank game="whack" className="mt-1" />}
               {phase === "idle" && (
                 <p className="max-w-xs text-sm text-muted-foreground">
                   Squash the <span className="text-red-400">bugs</span>, leave the{" "}

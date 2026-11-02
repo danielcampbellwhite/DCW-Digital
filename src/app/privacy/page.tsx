@@ -56,6 +56,17 @@ export default function PrivacyPage() {
                   information about it, such as how quickly it loads.
                 </li>
                 <li>
+                  <strong className="text-foreground">Game leaderboards:</strong>{" "}
+                  if you finish a game on the{" "}
+                  <Link href="/play" className={linkCls}>
+                    Play
+                  </Link>{" "}
+                  page, your score is added to a weekly leaderboard along with a
+                  random player ID created in your browser. Players are shown
+                  only by a randomly generated name (like &quot;Async Otter
+                  42&quot;), so nothing on the leaderboard identifies you.
+                </li>
+                <li>
                   <strong className="text-foreground">Technical information:</strong>{" "}
                   to stop spam, the contact form briefly holds your IP address in
                   memory to limit repeated submissions. My hosting provider also
@@ -139,6 +150,10 @@ export default function PrivacyPage() {
                   <strong className="text-foreground">My email provider</strong> -
                   storing and sending email.
                 </li>
+                <li>
+                  <strong className="text-foreground">Upstash</strong> - storing
+                  the weekly game leaderboards.
+                </li>
               </ul>
               <p className="mt-3">
                 I may also share information where the law requires it.
@@ -173,6 +188,10 @@ export default function PrivacyPage() {
                   Opt-out requests: a minimal record is kept so I can respect
                   your choice.
                 </li>
+                <li>
+                  Game leaderboards: reset every week and deleted automatically
+                  after five weeks.
+                </li>
               </ul>
             </Block>
 
@@ -184,9 +203,10 @@ export default function PrivacyPage() {
                 </Link>{" "}
                 page save your best scores, badges and sound setting in your
                 browser&apos;s local storage so they&apos;re still there next
-                time. This information stays on your device, is never sent to
-                me, and you can clear it at any time through your browser
-                settings.
+                time. This stays on your device and you can clear it at any time
+                through your browser settings. The only exception is the random
+                player ID, which is sent along with your score when you finish a
+                game so the weekly leaderboard knows which scores are yours.
               </p>
             </Block>
 

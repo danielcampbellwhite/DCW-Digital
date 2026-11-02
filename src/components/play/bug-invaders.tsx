@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { playSound, unlockAudio } from "@/lib/sfx";
 import { SoundToggle } from "@/components/play/sound-toggle";
+import { submitScore, WeeklyRank } from "@/components/play/weekly-leaderboard";
 
 /* ── Word lists ─────────────────────────────────────────────────────────── */
 
@@ -640,6 +641,7 @@ export function BugInvaders() {
     });
     setPhase("over");
     playSound("gameOver");
+    void submitScore("invaders", g.score, performance.now() - g.startedAt);
   }
 
   const press = (ch: string) => {
@@ -820,6 +822,7 @@ export function BugInvaders() {
                     {summary.score}
                   </p>
                   {summary.isBest && <p className="text-sm font-medium text-accent">New best score!</p>}
+                  <WeeklyRank game="invaders" className="mt-1" />
                   <dl className="mx-auto mt-4 grid max-w-xs grid-cols-2 gap-2 text-sm">
                     {[
                       ["Wave", summary.wave],

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { playSound, unlockAudio } from "@/lib/sfx";
 import { SoundToggle } from "@/components/play/sound-toggle";
+import { submitScore, WeeklyRank } from "@/components/play/weekly-leaderboard";
 
 /* ── Tuning (world units; the canvas is scaled to fit) ─────────────────── */
 
@@ -746,6 +747,7 @@ export function DeployDash() {
     setBest(newBest);
     setHud({ score, coffee: g.coffee });
     setSummary({ score, coffee: g.coffee, releases: g.releases, best: newBest, isBest });
+    void submitScore("dash", score, g.time * 1000);
     // Short beat so the crash is visible before the overlay.
     overAtRef.current = performance.now();
     phaseRef.current = "over";
@@ -943,6 +945,7 @@ export function DeployDash() {
                     {summary.score}
                   </p>
                   {summary.isBest && <p className="text-sm font-medium text-accent">New best score!</p>}
+                  <WeeklyRank game="dash" className="mt-1" />
                   <dl className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2 text-sm">
                     {[
                       ["Best", summary.best],

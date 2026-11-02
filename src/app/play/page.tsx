@@ -7,6 +7,7 @@ import { BugSquash } from "@/components/play/bug-squash";
 import { SpotTheBug } from "@/components/play/spot-the-bug";
 import { BugInvaders } from "@/components/play/bug-invaders";
 import { DeployDash } from "@/components/play/deploy-dash";
+import { WeeklyLeaderboard } from "@/components/play/weekly-leaderboard";
 
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Spot the Bug & Typing Game",
@@ -53,6 +54,7 @@ export default function PlayPage() {
           <div className="mt-12">
             <BugInvaders />
           </div>
+          <WeeklyLeaderboard game="invaders" className="mt-6" />
         </div>
       </section>
 
@@ -67,6 +69,7 @@ export default function PlayPage() {
           <div className="mt-12">
             <DeployDash />
           </div>
+          <WeeklyLeaderboard game="dash" className="mt-6" />
         </div>
       </section>
 
@@ -81,6 +84,7 @@ export default function PlayPage() {
           <Reveal className="mt-12">
             <BugSquash />
           </Reveal>
+          <WeeklyLeaderboard game="whack" className="mt-6 max-w-xl" />
         </div>
       </section>
     </>
