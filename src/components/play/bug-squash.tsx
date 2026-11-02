@@ -4,6 +4,8 @@ import * as React from "react";
 import { Bug, Sparkles, Play, RotateCcw, Trophy, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { playSound, unlockAudio } from "@/lib/sfx";
+import { SoundToggle } from "@/components/play/sound-toggle";
 
 type Kind = "bug" | "feature";
 type Cell = { id: number; kind: Kind; hit?: boolean } | null;
@@ -89,6 +91,8 @@ export function BugSquash() {
   }, [commit]);
 
   const start = () => {
+    unlockAudio();
+    playSound("start");
     clearTimers();
     commit(empty());
     setScore(0);
@@ -99,6 +103,11 @@ export function BugSquash() {
     setPhase("playing");
     later(spawn, 400);
   };
+
+  // Tick for the last few seconds.
+  React.useEffect(() => {
+    if (phase === "playing" && timeLeft > 0 && timeLeft <= 5) playSound("tick");
+  }, [phase, timeLeft]);
 
   // Countdown.
   React.useEffect(() => {
@@ -126,6 +135,7 @@ export function BugSquash() {
       return nb;
     });
     setMessage(score > best ? "New best score!" : "Time's up!");
+    playSound(score > best ? "finish" : "gameOver");
   }, [phase, timeLeft, score, best, clearTimers, commit]);
 
   const hit = React.useCallback(
@@ -137,9 +147,11 @@ export function BugSquash() {
       next[i] = { ...c, hit: true };
       commit(next);
       if (c.kind === "bug") {
+        playSound("splat");
         setScore((s) => s + 10);
         setMessage("Squashed!");
       } else {
+        playSound("wrong");
         setScore((s) => Math.max(0, s - 15));
         setMessage("Oops, that was a feature!");
       }
@@ -180,8 +192,11 @@ export function BugSquash() {
         >
           <Timer className="size-4" /> {timeLeft}s
         </span>
-        <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-          <Trophy className="size-4 text-accent" /> {best}
+        <span className="inline-flex items-center gap-3 text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <Trophy className="size-4 text-accent" /> {best}
+          </span>
+          <SoundToggle />
         </span>
       </div>
 

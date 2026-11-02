@@ -30,6 +30,8 @@ import {
 } from "@/content/bug-hunt";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { playSound, unlockAudio } from "@/lib/sfx";
+import { SoundToggle } from "@/components/play/sound-toggle";
 
 /* ── Config ─────────────────────────────────────────────────────────────── */
 
@@ -228,6 +230,7 @@ export function SpotTheBug() {
     writeJSON(BADGE_KEY, next);
     setUnlocked(next);
     setNewBadges((n) => [...n, ...fresh]);
+    window.setTimeout(() => playSound("badge"), 450);
     const names = fresh.map((id) => BADGES.find((b) => b.id === id)?.name).join(", ");
     setToast(`Badge unlocked: ${names}`);
   }, []);
@@ -245,6 +248,8 @@ export function SpotTheBug() {
   };
 
   const start = () => {
+    unlockAudio();
+    playSound("start");
     setRound(buildRound());
     setIndex(0);
     setScore(0);
@@ -272,6 +277,7 @@ export function SpotTheBug() {
     const correct = question.bugLines.includes(selected);
     const seconds = (Date.now() - startRef.current) / 1000;
 
+    playSound(correct ? "correct" : "wrong");
     if (!correct) {
       setOutcome({ correct: false, points: 0, base: 0, speed: 0, streak: 0, hinted: hintShown });
       setStreak(0);
@@ -320,6 +326,7 @@ export function SpotTheBug() {
       return nb;
     });
     setPhase("results");
+    playSound("finish");
     scrollTop();
   };
 
@@ -373,6 +380,7 @@ export function SpotTheBug() {
               <span className="inline-flex items-center gap-1 text-foreground">
                 <Trophy className="size-4 text-accent" /> {score}
               </span>
+              <SoundToggle className="size-8" />
             </div>
           </div>
           <div className="mt-3 h-1 overflow-hidden rounded-full bg-surface">
@@ -407,7 +415,10 @@ export function SpotTheBug() {
             bugLines={outcome ? question.bugLines : []}
             wrong={outcome && !outcome.correct ? selected : null}
             disabled={!!outcome}
-            onSelect={setSelected}
+            onSelect={(i) => {
+              playSound("select");
+              setSelected(i);
+            }}
           />
 
           {/* Hint */}

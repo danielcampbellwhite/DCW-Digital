@@ -5,6 +5,8 @@ import { useReducedMotion } from "framer-motion";
 import { Play, Pause, RotateCcw, Heart, Keyboard, Trophy, Waves, X, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { playSound, unlockAudio } from "@/lib/sfx";
+import { SoundToggle } from "@/components/play/sound-toggle";
 
 /* ── Word lists ─────────────────────────────────────────────────────────── */
 
@@ -226,21 +228,25 @@ export function BugInvaders() {
       target = candidates[0];
       if (!target) {
         g.misses++;
+        playSound("miss");
         return;
       }
       g.targetId = target.id;
     }
     if (target.word[target.typed]?.toLowerCase() !== c) {
       g.misses++;
+      playSound("miss");
       return;
     }
     target.typed++;
     g.correct++;
+    if (target.typed < target.word.length) playSound("shoot");
     target.y -= target.boss ? 1 : 3; // a little knockback
     const sx = g.w / 2;
     const sy = g.h - 34;
     g.bullets.push({ x: sx, y: sy, targetId: target.id });
     if (target.typed >= target.word.length) {
+      playSound(target.boss ? "bigExplode" : "explode");
       target.dying = 0.15;
       g.targetId = null;
       g.kills++;
@@ -306,6 +312,7 @@ export function BugInvaders() {
       e.y += (dy / d) * e.speed * dt;
       if (d < e.r + 18) {
         g.lives--;
+        if (g.lives > 0) playSound("hurt");
         g.shake = reduce ? 0 : 0.35;
         burst(g, e.x, e.y, "#fb923c", 30);
         e.dying = -1;
@@ -347,6 +354,7 @@ export function BugInvaders() {
     if (g.toSpawn === 0 && !g.bossPending && g.enemies.length === 0) {
       g.wave++;
       startWave(g);
+      playSound("wave");
     }
 
     // Game over.
@@ -583,6 +591,8 @@ export function BugInvaders() {
   }, []);
 
   const start = () => {
+    unlockAudio();
+    playSound("start");
     enterFull();
     // Wait for layout so the stage has its full-screen size before spawning.
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -629,6 +639,7 @@ export function BugInvaders() {
       isBest,
     });
     setPhase("over");
+    playSound("gameOver");
   }
 
   const press = (ch: string) => {
@@ -716,8 +727,10 @@ export function BugInvaders() {
         </span>
         {hearts}
         {!full && <span className="text-muted-foreground">{hud.accuracy}% acc</span>}
+        {!full && <SoundToggle />}
         {full && (
           <span className="flex items-center gap-1">
+            <SoundToggle className="border-white/10" />
             <button
               type="button"
               onClick={() => setShowKeys((v) => !v)}

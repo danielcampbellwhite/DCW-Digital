@@ -5,6 +5,8 @@ import { useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowUp, Coffee, Maximize2, Pause, Play, RotateCcw, Rocket, Trophy, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { playSound, unlockAudio } from "@/lib/sfx";
+import { SoundToggle } from "@/components/play/sound-toggle";
 
 /* ── Tuning (world units; the canvas is scaled to fit) ─────────────────── */
 
@@ -299,6 +301,7 @@ export function DeployDash() {
       g.releases = releasesNow;
       g.banner = 2;
       g.bannerText = `v${releasesNow + 1}.0 shipped`;
+      playSound("release");
     }
     g.banner = Math.max(0, g.banner - dt);
 
@@ -308,6 +311,7 @@ export function DeployDash() {
     g.buffer = Math.max(0, g.buffer - dt);
     g.coyote = g.onGround ? 0.08 : Math.max(0, g.coyote - dt);
     if (g.buffer > 0 && g.coyote > 0) {
+      playSound("jump");
       g.vy = -JUMP_V;
       g.onGround = false;
       g.coyote = 0;
@@ -353,6 +357,7 @@ export function DeployDash() {
       const inset = o.kind === "bug" ? 4 : 3;
       if (px < o.x + o.w - inset && px + pw > o.x + inset && py < o.y + o.h - inset && py + ph > o.y + inset) {
         g.dead = true;
+        playSound("crash");
         burst(g, PLAYER_X + cur.w / 2, g.y + cur.h / 2, "#00e5ff", 30);
         burst(g, o.x + o.w / 2, o.y + o.h / 2, "#f87171", 20);
         endGame();
@@ -364,6 +369,7 @@ export function DeployDash() {
         p.taken = true;
         g.coffee++;
         g.score += COFFEE_POINTS;
+        playSound("coin");
         burst(g, p.x, p.y, "#fbbf24", 12);
       }
     }
@@ -699,6 +705,8 @@ export function DeployDash() {
   }, []);
 
   const start = () => {
+    unlockAudio();
+    playSound("start");
     enterFull();
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
@@ -741,7 +749,10 @@ export function DeployDash() {
     // Short beat so the crash is visible before the overlay.
     overAtRef.current = performance.now();
     phaseRef.current = "over";
-    window.setTimeout(() => setPhaseState("over"), 450);
+    window.setTimeout(() => {
+      setPhaseState("over");
+      playSound("gameOver");
+    }, 450);
   }
 
   /* Keyboard. */
@@ -840,8 +851,10 @@ export function DeployDash() {
           <Coffee className="size-4 text-amber-400" /> {hud.coffee}
         </span>
         {!full && <span className="text-muted-foreground">Best {best}</span>}
+        {!full && <SoundToggle />}
         {full && (
           <span className="flex items-center gap-1">
+            <SoundToggle className="border-white/10" />
             {phase === "playing" && (
               <button
                 type="button"
