@@ -63,23 +63,33 @@ const PAGES: Record<string, string> = {
   privacy: "/privacy",
 };
 
-const FILES = ["readme.txt", "about.txt", "services.txt", "projects.txt", "secret.enc"];
+/** Fake file system for `ls -l` / `cat`. */
+const FILES: { name: string; size: number; owner: "guest" | "root"; perms: string }[] = [
+  { name: "readme.txt", size: 214, owner: "guest", perms: "-rw-r--r--" },
+  { name: "about.txt", size: 389, owner: "guest", perms: "-rw-r--r--" },
+  { name: "services.txt", size: 512, owner: "guest", perms: "-rw-r--r--" },
+  { name: "projects.txt", size: 455, owner: "guest", perms: "-rw-r--r--" },
+  { name: "secret.enc", size: 256, owner: "root", perms: "-r--------" },
+];
 
 const COMMANDS: [string, string][] = [
-  ["help", "show this list"],
-  ["about", "who's behind the keyboard"],
-  ["services", "what I can help with"],
-  ["projects", "organisations I've worked with"],
-  ["blog", "latest articles (then 'read <n>')"],
-  ["games", "games on the Play page"],
-  ["open <page>", "go to a page, e.g. 'open contact'"],
-  ["ls / cat <file>", "look around the file system"],
-  ["crack", "break the password and get root"],
-  ["stats", "your code-breaking record"],
-  ["theme <name>", "green, amber or white"],
-  ["whoami / date / echo", "the usual suspects"],
+  ["help", "list available commands"],
+  ["about", "print operator profile"],
+  ["services", "list installed services"],
+  ["projects", "list client deployments"],
+  ["blog", "list recent posts"],
+  ["read <n>", "open post <n> from blog"],
+  ["games", "list games on /play"],
+  ["open <page>", "navigate to a page"],
+  ["ls [-l]", "list directory contents"],
+  ["cat <file>", "print file contents"],
+  ["crack", "run password recovery on secret.enc"],
+  ["stats", "show crack statistics"],
+  ["theme <green|amber|white>", "set phosphor colour"],
+  ["whoami, pwd, date, echo", "standard utilities"],
+  ["history", "show command history"],
   ["clear", "clear the screen"],
-  ["exit", "close the terminal (or press Esc)"],
+  ["exit", "close session"],
 ];
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
@@ -98,6 +108,18 @@ function write(key: string, value: unknown) {
   } catch {
     /* ignore */
   }
+}
+
+/** Format like the Unix `date` command: "Mon Nov  2 17:41:03 GMT 2026". */
+function unixDate(d = new Date()) {
+  const day = d.toLocaleString("en-GB", { weekday: "short" });
+  const mon = d.toLocaleString("en-GB", { month: "short" });
+  const time = d.toLocaleTimeString("en-GB", { hour12: false });
+  const tz =
+    new Intl.DateTimeFormat("en-GB", { timeZoneName: "short" })
+      .formatToParts(d)
+      .find((x) => x.type === "timeZoneName")?.value ?? "";
+  return `${day} ${mon} ${String(d.getDate()).padStart(2, " ")} ${time} ${tz} ${d.getFullYear()}`;
 }
 
 /** Wordle-style scoring, handling repeated letters properly. */
@@ -153,15 +175,17 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     setTouch(window.matchMedia("(pointer: coarse)").matches);
 
     const user = isRoot ? "root" : "guest";
+    const host = window.location.hostname || "localhost";
     const boot: [Kind, string][] = [
-      ["head", "DCW-OS 2.6.0 · (c) DCW Digital, Liverpool"],
-      ["dim", "Memory check ..................... 640K OK"],
-      ["dim", "Loading kernel modules ........... coffee.sys ok"],
-      ["dim", "Mounting /home/" + user + " .............. ok"],
-      ["dim", "Checking for bugs ................ 1 found (it's a feature)"],
-      ["dim", "Establishing secure link ......... ok"],
+      ["dim", "[    0.000000] DCW-OS 2.6.0-lts (build@dcw) #1 SMP PREEMPT"],
+      ["dim", "[    0.014212] Memory: 640K available, 0K reserved"],
+      ["dim", "[    0.051877] Loading module coffee.ko ... ok"],
+      ["dim", "[    0.093340] Running self-test: 1 bug found (marked as feature)"],
+      ["dim", `[    0.127608] Mounting /home/${user} ... ok`],
+      ["dim", `[    0.188054] eth0: link up, connected to ${host}`],
       ["out", ""],
-      ["ok", `Welcome, ${user}. Type 'help' to see what you can do.`],
+      ["out", `Last login: ${unixDate(new Date(Date.now() - 1000 * 60 * 60 * 26))} on tty1`],
+      ["out", "Type 'help' for a list of commands."],
       ["out", ""],
     ];
     const queue = boot.map(([k, t2]) => make(k, t2));
@@ -226,7 +250,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   }, []);
 
   const go = (href: string) => {
-    out(`Opening ${href} ...`);
+    out(`navigating to ${href} ...`);
     playSound("select");
     window.setTimeout(() => {
       onClose();
@@ -240,10 +264,10 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     const answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)]!;
     setGame({ answer, guesses: [], keys: {} });
     print(
-      make("head", "PASSWORD DECRYPTION UTILITY"),
-      make("out", "Guess the 5-letter password. It's a random English word."),
-      make("dim", `${MAX_TRIES} attempts. [A] right letter, right place · (A) in the password, wrong place · a = not in it.`),
-      make("dim", "Type 'quit' to give up."),
+      make("head", "crack 1.4.2 - password recovery utility"),
+      make("dim", `target: secret.enc   wordlist: en (${ANSWERS.length} entries)   max attempts: ${MAX_TRIES}`),
+      make("dim", "key: solid = correct position, dashed = wrong position, faded = not present"),
+      make("dim", "enter a 5-letter guess, or 'quit' to abort"),
       make("out", "")
     );
   };
@@ -263,24 +287,24 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     if (!game) return;
     const word = raw.trim().toUpperCase();
     if (word === "QUIT" || word === "EXIT") {
-      print(make("err", `Decryption aborted. The password was ${game.answer}.`), make("out", ""));
+      print(make("err", "^C"), make("err", `crack: aborted by user (password was ${game.answer})`), make("out", ""));
       recordGame(false, MAX_TRIES);
       setGame(null);
       return;
     }
     if (!/^[A-Z]{5}$/.test(word)) {
       playSound("miss");
-      print(make("err", "Passwords are exactly 5 letters."));
+      print(make("err", `crack: invalid input '${raw.trim()}': expected 5 letters [A-Z]`));
       return;
     }
     if (!ALLOWED.has(word)) {
       playSound("miss");
-      print(make("err", `${word} isn't in my word list. That one's free, try again.`));
+      print(make("err", `crack: ${word}: not in wordlist (attempt not counted)`));
       return;
     }
     if (game.guesses.includes(word)) {
       playSound("miss");
-      print(make("err", `You've already tried ${word}.`));
+      print(make("err", `crack: ${word}: already tried (attempt not counted)`));
       return;
     }
     const states = score(word, game.answer);
@@ -303,9 +327,10 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       print(
         row,
         make("out", ""),
-        make("ok", "██ ACCESS GRANTED ██"),
-        make("out", `Cracked in ${guesses.length} ${guesses.length === 1 ? "try" : "tries"}. You now have root.`),
-        make("dim", "secret.enc has been decrypted. Try 'cat secret.enc'."),
+        make("ok", `[+] match found: ${word} (${guesses.length}/${MAX_TRIES} attempts)`),
+        make("ok", "[+] decrypting secret.enc ... done"),
+        make("ok", "[+] escalating privileges ... uid=0(root) gid=0(root)"),
+        make("dim", "run 'cat secret.enc' to read the file"),
         make("out", "")
       );
     } else if (left === 0) {
@@ -315,14 +340,15 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       print(
         row,
         make("out", ""),
-        make("err", "██ TERMINAL LOCKED ██"),
-        make("out", `The password was ${game.answer}. Type 'crack' to try again.`),
+        make("err", `[-] max attempts (${MAX_TRIES}) reached. session locked.`),
+        make("err", `[-] password was: ${game.answer}`),
+        make("dim", "run 'crack' to retry"),
         make("out", "")
       );
     } else {
       playSound("select");
       setGame({ ...game, guesses, keys });
-      print(row, { id: ++idRef.current, kind: "keys", states: keys }, make("dim", `${left} ${left === 1 ? "attempt" : "attempts"} left.`));
+      print(row, { id: ++idRef.current, kind: "keys", states: keys }, make("dim", `attempts remaining: ${left}`));
     }
   };
 
@@ -331,7 +357,13 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const cat = (file: string): void => {
     switch (file) {
       case "readme.txt":
-        return out("You found the terminal. Not many people do.", "Have a poke around. 'help' lists everything, 'crack' is the fun bit.");
+        return out(
+          "README",
+          "======",
+          "You've found the terminal. Not many people do.",
+          "",
+          "Run 'help' to see what's here. 'crack' is the fun bit."
+        );
       case "about.txt":
         return run("about");
       case "services.txt":
@@ -339,85 +371,113 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "projects.txt":
         return run("projects");
       case "secret.enc":
-        if (!root) {
-          return print(make("err", "secret.enc: encrypted. You need root to read this."), make("dim", "Hint: try 'crack'."));
-        }
-        return print(
-          make("ok", "--- secret.enc (decrypted) ---"),
-          make("out", "If you've made it this far, you're exactly the kind of person"),
-          make("out", "I like working with: curious, persistent, and happy to poke"),
-          make("out", "at things until they give up their secrets."),
-          make("out", ""),
-          make("out", "Fancy building something together? Type 'open contact'."),
-          make("out", "- Daniel")
+        if (!root) return print(make("err", "cat: secret.enc: Permission denied"));
+        return out(
+          "From: daniel@dcw",
+          "To:   root",
+          "Subj: you made it",
+          "",
+          "If you've got this far, you're exactly the kind of person I like",
+          "working with: curious, persistent, and happy to poke at things",
+          "until they give up their secrets.",
+          "",
+          "Fancy building something together? Run 'open contact'.",
+          "",
+          "-- Daniel"
         );
+      case "":
+        return print(make("err", "usage: cat <file>"));
       default:
-        return print(make("err", `cat: ${file || "(nothing)"}: No such file. Try 'ls'.`));
+        return print(make("err", `cat: ${file}: No such file or directory`));
     }
   };
 
   function run(raw: string): void {
     const [cmd = "", ...args] = raw.trim().split(/\s+/);
     const arg = args.join(" ");
+    const pageList = Object.keys(PAGES).join("  ");
     switch (cmd.toLowerCase()) {
       case "":
         return;
       case "help":
       case "?":
-        print(make("head", "Available commands"));
-        COMMANDS.forEach(([c, d]) => print(make("out", `  ${c.padEnd(22)} ${d}`)));
-        return print(make("dim", "Tip: Tab completes commands, ↑/↓ recalls history."));
+        out("DCW-OS shell, version 2.6.0", "These commands are available:", "");
+        COMMANDS.forEach(([c, d]) => out(`  ${c.padEnd(28)}${d}`));
+        return print(make("out", ""), make("dim", "tab completes commands and paths. up/down recalls history."));
       case "about":
       case "whois":
+      case "finger":
         return out(
-          "Daniel Campbell-White - web developer, Liverpool.",
-          "8+ years building and looking after websites and apps, a lot of",
-          "it for NHS trusts, public health services and charities.",
-          "Freelances as DCW Digital: fast, accessible sites built properly.",
-          "Uses AI every day, reviews every line. Runs on coffee."
+          ...[
+            ["Login", "daniel"],
+            ["Name", "Daniel Campbell-White"],
+            ["Role", "web developer"],
+            ["Location", "Liverpool, UK"],
+            ["Company", "DCW Digital (freelance)"],
+            ["Experience", "8+ years"],
+            ["Sectors", "NHS trusts, public health, charities"],
+            ["Stack", "Next.js, React, TypeScript"],
+            ["Plan", "build fast, accessible sites properly. review every line."],
+            ["Fuel", "coffee"],
+          ].map(([k, v]) => `${(k + ":").padEnd(12)}${v}`)
         );
-      case "services":
-        services.forEach((s) => out(`  * ${s.title.padEnd(24)} ${s.summary}`));
-        return out(
-          `  Support plans from £${Math.min(...supportPackages.map((p) => p.priceMonthly))}/month.`,
-          "  'open services' for the details."
-        );
+      case "services": {
+        out(`${"SERVICE".padEnd(24)}STATUS    DESCRIPTION`);
+        services.forEach((sv) => out(`${sv.slug.padEnd(24)}active    ${sv.summary}`));
+        const from = Math.min(...supportPackages.map((pk) => pk.priceMonthly));
+        return print(make("out", ""), make("dim", `support plans from £${from}/mo. run 'open services' for details.`));
+      }
       case "projects":
       case "clients":
-        clients.forEach((c) => out(`  * ${c.name}`));
-        return out("  'open projects' for more.");
+        out(`total ${clients.length}`);
+        clients.forEach((c) => out(`  ${c.sector.padEnd(22)}${c.name}`));
+        return print(make("out", ""), make("dim", "run 'open projects' for details."));
       case "blog":
-        posts.forEach((p, i) => out(`  [${i + 1}] ${p.title}`));
-        return print(make("dim", "Type 'read <number>' to open one."));
+        posts.forEach((pt, i) => out(`  ${String(i + 1).padStart(2)}  ${pt.title}`));
+        return print(make("out", ""), make("dim", "usage: read <n>"));
       case "read": {
+        if (!arg) return print(make("err", "usage: read <n>"));
         const n = Number(arg);
         const post = posts[n - 1];
-        if (!post) return print(make("err", "read: give me a number from the 'blog' list."));
+        if (!post) return print(make("err", `read: ${arg}: invalid post number (1-${posts.length})`));
         return go(`/blog/${post.slug}`);
       }
       case "games":
         return out(
-          "  * Spot the Bug   - find the broken line of code",
-          "  * Bug Invaders   - a typing shooter",
-          "  * Deploy Dash    - an endless runner",
-          "  * Whack-a-Bug    - 30 seconds of squashing",
-          "  * crack          - you're already here",
-          "  'open play' to play."
+          `${"GAME".padEnd(16)}TYPE`,
+          `${"spot-the-bug".padEnd(16)}quiz: find the broken line of code`,
+          `${"bug-invaders".padEnd(16)}typing shooter`,
+          `${"deploy-dash".padEnd(16)}endless runner`,
+          `${"whack-a-bug".padEnd(16)}30-second reflex game`,
+          `${"crack".padEnd(16)}password recovery (this terminal)`,
+          "",
+          "run 'open play' to launch."
         );
       case "open":
       case "cd":
       case "goto": {
         const key = arg.toLowerCase().replace(/^\/+/, "");
-        if (!key) return print(make("err", `usage: ${cmd} <page>   pages: ${Object.keys(PAGES).join(", ")}`));
-        if (key === "~" || key === "..") return go("/");
+        if (!key) return print(make("err", `usage: ${cmd} <page>`), make("dim", `pages: ${pageList}`));
+        if (key === "~" || key === ".." || key === "/") return go("/");
         const href = PAGES[key];
-        if (!href) return print(make("err", `${cmd}: ${arg}: no such page. Try: ${Object.keys(PAGES).join(", ")}`));
+        if (!href) return print(make("err", `${cmd}: ${arg}: No such page`), make("dim", `pages: ${pageList}`));
         return go(href);
       }
       case "contact":
-        return out("The best way to reach me is the contact form.", "Type 'open contact' and I'll take you there.");
+      case "mail":
+        return out("contact: messages are handled by the contact form.", "run 'open contact' to send one.");
       case "ls":
-        return out(FILES.join("   "));
+      case "dir": {
+        if (arg.includes("-l")) {
+          const now = new Date();
+          const stamp = `${now.toLocaleString("en-GB", { month: "short" })} ${String(now.getDate()).padStart(2, " ")} 09:14`;
+          out(`total ${FILES.length}`);
+          return FILES.forEach((f) =>
+            out(`${f.perms}  1 ${f.owner.padEnd(6)}${f.owner.padEnd(6)}${String(f.size).padStart(5)} ${stamp} ${f.name}`)
+          );
+        }
+        return out(FILES.map((f) => f.name).join("  "));
+      }
       case "cat":
       case "less":
       case "more":
@@ -427,49 +487,61 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "decrypt":
         return startGame();
       case "stats": {
-        const s = read<Stats>(STATS_KEY, { played: 0, wins: 0, streak: 0, best: null });
+        const st = read<Stats>(STATS_KEY, { played: 0, wins: 0, streak: 0, best: null });
         return out(
-          `  Played: ${s.played}   Cracked: ${s.wins}   Streak: ${s.streak}`,
-          `  Best: ${s.best ? `${s.best} ${s.best === 1 ? "try" : "tries"}` : "-"}`
+          `runs:     ${st.played}`,
+          `cracked:  ${st.wins}`,
+          `streak:   ${st.streak}`,
+          `best:     ${st.best ? `${st.best}/${MAX_TRIES} attempts` : "n/a"}`
         );
       }
       case "theme": {
-        const t = arg.toLowerCase() as ThemeName;
-        if (!(t in THEMES)) return print(make("err", "theme: choose green, amber or white."));
-        setTheme(t);
-        write(THEME_KEY, t);
-        return print(make("ok", `Phosphor set to ${t}.`));
+        const th = arg.toLowerCase() as ThemeName;
+        if (!arg) return out(`current: ${theme}`, "usage: theme <green|amber|white>");
+        if (!(th in THEMES)) return print(make("err", `theme: invalid argument '${arg}'`), make("dim", "valid: green, amber, white"));
+        setTheme(th);
+        write(THEME_KEY, th);
+        return out(`theme: phosphor set to ${th}`);
       }
       case "whoami":
-        return out(root ? "root (you cracked it, nice)" : "guest");
+        return out(root ? "root" : "guest");
+      case "id":
+        return out(root ? "uid=0(root) gid=0(root) groups=0(root)" : "uid=1000(guest) gid=1000(guest) groups=1000(guest)");
       case "date":
-        return out(new Date().toString());
+        return out(unixDate());
+      case "uname":
+        return out(arg.includes("-a") ? "DCW-OS dcw 2.6.0-lts #1 SMP PREEMPT x86_64 GNU/Linux" : "DCW-OS");
       case "echo":
         return out(arg);
       case "pwd":
         return out(root ? "/root" : "/home/guest");
       case "history":
-        return out(...history.current.map((h, i) => `  ${String(i + 1).padStart(3)}  ${h}`));
+        return out(...history.current.map((h, i) => `${String(i + 1).padStart(5)}  ${h}`));
       case "sudo":
-        if (root) return out("You're already root. With great power...");
-        return print(make("err", "guest is not in the sudoers file. This incident will be reported."), make("dim", "(Earn root with 'crack'.)"));
+        if (root) return out("sudo: you are already root");
+        return print(make("out", "[sudo] password for guest: "), make("err", "guest is not in the sudoers file. This incident will be reported."));
+      case "su":
+        if (root) return out("su: already root");
+        return print(make("out", "Password: "), make("err", "su: Authentication failure"), make("dim", "hint: try 'crack'"));
       case "rm":
-        return print(make("err", "Nice try."));
+        return print(make("err", `rm: cannot remove '${arg || "/"}': Permission denied`));
       case "coffee":
-        return out("Brewing ... ☕ done. Productivity +10%.");
+        return out("coffee: brewing ... done", "coffee: productivity +10%");
       case "hello":
       case "hi":
-        return out("Hello! Type 'help' if you're lost.");
+        return out("hi. run 'help' to get started.");
       case "clear":
       case "cls":
         return setLines([]);
       case "exit":
       case "quit":
       case "logout":
-        return onClose();
+        out("logout");
+        window.setTimeout(onClose, 300);
+        return;
       default:
         playSound("miss");
-        return print(make("err", `command not found: ${cmd}. Type 'help'.`));
+        return print(make("err", `dcwsh: command not found: ${cmd}`));
     }
   }
 
@@ -478,7 +550,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     setInput("");
     histIdx.current = -1;
     if (game) {
-      print(make("in", `decrypt> ${value}`));
+      print(make("in", `crack> ${value}`));
       if (value.trim()) guess(value);
       return;
     }
@@ -490,7 +562,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     run(value);
   };
 
-  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "date", "echo", "clear", "exit", "sudo", "coffee", "history"];
+  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history"];
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (booting) {
@@ -529,7 +601,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         const match = Object.keys(PAGES).filter((p) => p.startsWith(rest.join(" ").toLowerCase()));
         if (match.length === 1) setInput(`${first} ${match[0]}`);
       } else if (first === "cat") {
-        const match = FILES.filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
+        const match = FILES.map((f) => f.name).filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
         if (match.length === 1) setInput(`cat ${match[0]}`);
       }
     } else if (e.key === "l" && e.ctrlKey) {
@@ -545,14 +617,14 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   const tap = (cmd: string) => {
     if (game && cmd !== "quit") return;
-    print(make("in", `${game ? "decrypt>" : root ? "root@dcw:~#" : "guest@dcw:~$"} ${cmd}`));
+    print(make("in", `${game ? "crack>" : root ? "root@dcw:~#" : "guest@dcw:~$"} ${cmd}`));
     if (game) guess(cmd);
     else run(cmd);
     inputRef.current?.focus();
   };
 
   const t = THEMES[theme];
-  const prompt = game ? "decrypt>" : root ? "root@dcw:~#" : "guest@dcw:~$";
+  const prompt = game ? "crack>" : root ? "root@dcw:~#" : "guest@dcw:~$";
 
   /* ── Render ──────────────────────────────────────────────────────────── */
 
@@ -647,7 +719,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       <div className="dcwt-screen dcwt-flicker relative z-[1] flex min-h-0 flex-1 flex-col">
         {/* Title bar */}
         <div className="flex items-center justify-between border-b px-4 py-2 text-xs sm:px-6" style={{ borderColor: t.dim }}>
-          <span>DCW-OS TERMINAL · {theme.toUpperCase()} PHOSPHOR</span>
+          <span>{root ? "root" : "guest"}@dcw: ~ (tty1)</span>
           <button
             type="button"
             onClick={(e) => {
