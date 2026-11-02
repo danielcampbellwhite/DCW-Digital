@@ -87,7 +87,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row">
           <p>
-            © {year} {siteConfig.name}. Built by {siteConfig.owner}.
+            <span data-secret-tap="">© {year} {siteConfig.name}. Built by {siteConfig.owner}.</span>
           </p>
           <p className="flex items-center gap-2">
             <span className="inline-block size-2 animate-pulse-glow rounded-full bg-accent" />

@@ -15,9 +15,11 @@ import {
   Facebook,
   Instagram,
   ArrowRight,
+  SquareTerminal,
 } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { OPEN_TERMINAL_EVENT } from "@/components/easter-egg/secret-terminal";
 
 interface CommandItem {
   id: string;
@@ -48,6 +50,9 @@ const COMMANDS: CommandItem[] = [
   { id: "instagram", label: "Instagram", group: "Social", icon: Instagram, href: siteConfig.links.instagram, external: true },
 ];
 
+const SECRET_WORDS = ["sudo", "terminal", "hack", "crack", "root"];
+const SECRET_COMMAND: CommandItem = { id: "terminal", label: "Open terminal", group: "Actions", icon: SquareTerminal };
+
 interface CommandContextValue {
   open: () => void;
   close: () => void;
@@ -77,6 +82,8 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return COMMANDS;
+    // A hidden entry for anyone who goes looking.
+    if (SECRET_WORDS.includes(q)) return [SECRET_COMMAND];
     return COMMANDS.filter((c) =>
       `${c.label} ${c.keywords ?? ""} ${c.group}`.toLowerCase().includes(q)
     );
@@ -112,6 +119,10 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
   const run = React.useCallback(
     (cmd: CommandItem) => {
       close();
+      if (cmd.id === "terminal") {
+        window.setTimeout(() => window.dispatchEvent(new Event(OPEN_TERMINAL_EVENT)), 50);
+        return;
+      }
       if (!cmd.href) return;
       if (cmd.external) {
         window.open(cmd.href, "_blank", "noopener,noreferrer");

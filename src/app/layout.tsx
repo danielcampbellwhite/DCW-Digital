@@ -10,6 +10,8 @@ import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteGraphSchema } from "@/lib/seo";
 import { ServiceWorker } from "@/components/pwa/service-worker";
+import { SecretTerminal } from "@/components/easter-egg/secret-terminal";
+import { getAllPostsMeta } from "@/lib/blog";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -95,6 +97,7 @@ export default function RootLayout({
           <Footer />
         </CommandProvider>
         <ServiceWorker />
+        <SecretTerminal posts={getAllPostsMeta().slice(0, 8).map(({ title, slug }) => ({ title, slug }))} />
       </body>
     </html>
   );
