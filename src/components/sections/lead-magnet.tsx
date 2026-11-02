@@ -17,7 +17,7 @@ export function LeadMagnet() {
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-accent/30 bg-gradient-to-br from-accent/10 via-card to-card p-8 sm:p-12">
             <div className="absolute -left-16 top-1/2 size-56 -translate-y-1/2 rounded-full bg-accent/20 blur-3xl" />
-            <div className="relative grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+            <div className="relative grid grid-cols-[minmax(0,1fr)] items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-accent">
                   <Activity className="size-3.5" /> Free Lead Magnet

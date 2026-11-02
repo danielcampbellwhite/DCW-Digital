@@ -34,7 +34,7 @@ export default async function ContactPage({
       />
 
       <section className="py-16">
-        <div className="container-px grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+        <div className="container-px grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[1.5fr_1fr]">
           {/* Form */}
           <div className="rounded-3xl border border-border bg-card p-6 sm:p-8">
             <h2 className="font-heading text-xl font-bold">Send me a message</h2>

@@ -6,10 +6,11 @@ import { services, supportPackages } from "@/content/services";
 import { clients } from "@/content/clients";
 import { playSound } from "@/lib/sfx";
 import { ANSWERS, ALLOWED } from "@/components/easter-egg/words";
+import { VAULT, findVaultFile, rainLine, randomJoke } from "@/components/easter-egg/vault";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
-type Kind = "in" | "out" | "err" | "ok" | "dim" | "head";
+type Kind = "in" | "out" | "err" | "ok" | "dim" | "head" | "art";
 type LetterState = "hit" | "near" | "miss";
 
 type Line =
@@ -81,7 +82,9 @@ const COMMANDS: [string, string][] = [
   ["read <n>", "open post <n> from blog"],
   ["games", "list games on /play"],
   ["open <page>", "navigate to a page"],
-  ["ls [-l]", "list directory contents"],
+  ["ls [-la]", "list directory contents"],
+  ["cd <dir>", "change directory"],
+  ["tree", "show the file system"],
   ["cat <file>", "print file contents"],
   ["crack", "run password recovery on secret.enc"],
   ["stats", "show crack statistics"],
@@ -166,6 +169,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const [booting, setBooting] = React.useState(true);
   const [touch, setTouch] = React.useState(false);
   const [showKeys, setShowKeys] = React.useState(false);
+  const [cwd, setCwd] = React.useState<"home" | "vault">("home");
   const themeNames = Object.keys(THEMES) as ThemeName[];
   const nextTheme = themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]!;
 
@@ -178,6 +182,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const bootQueue = React.useRef<Line[]>([]);
 
   const make = (kind: Kind, text: string): Line => ({ id: ++idRef.current, kind, text });
+  const shellPrompt = `${root ? "root" : "guest"}@dcw:${cwd === "vault" ? "~/vault" : "~"}${root ? "#" : "$"}`;
   const print = React.useCallback((...ls: Line[]) => setLines((prev) => [...prev, ...ls].slice(-400)), []);
   const out = (...texts: string[]) => print(...texts.map((t) => make("out", t)));
 
@@ -347,7 +352,8 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         make("ok", `[+] match found: ${word} (${guesses.length}/${MAX_TRIES} attempts)`),
         make("ok", "[+] decrypting secret.enc ... done"),
         make("ok", "[+] escalating privileges ... uid=0(root) gid=0(root)"),
-        make("dim", "run 'cat secret.enc' to read the file"),
+        make("ok", "[+] new directory unlocked: ~/vault"),
+        make("dim", "run 'cat secret.enc', or 'cd vault' to look around"),
         make("out", "")
       );
     } else if (left === 0) {
@@ -371,8 +377,43 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   /* ── Commands ────────────────────────────────────────────────────────── */
 
+  const catVault = (name: string): boolean => {
+    const f = findVaultFile(name);
+    if (!f) return false;
+    if (!root) {
+      print(make("err", `cat: vault/${name}: Permission denied`));
+      return true;
+    }
+    const lines = typeof f.lines === "function" ? f.lines() : f.lines;
+    print(...lines.map((l) => make("art", l)));
+    return true;
+  };
+
+  const runMatrix = () => {
+    if (!root) return print(make("err", "sh: matrix.sh: Permission denied"));
+    playSound("start");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rows = reduce ? 4 : 18;
+    for (let i = 0; i < rows; i++) {
+      window.setTimeout(() => print(make("art", rainLine())), reduce ? 0 : i * 70);
+    }
+    window.setTimeout(
+      () => print(make("out", ""), make("ok", "the rain stops. you're still here."), make("out", "")),
+      reduce ? 0 : rows * 70 + 150
+    );
+  };
+
   const cat = (file: string): void => {
-    switch (file) {
+    const name = file.replace(/^(\.\/)?/, "");
+    if (name.startsWith("vault/") && catVault(name.slice(6))) return;
+    if (cwd === "vault") {
+      if (catVault(name)) return;
+      return print(make("err", name ? `cat: ${name}: No such file or directory` : "usage: cat <file>"));
+    }
+    switch (name) {
+      case "vault":
+      case "vault/":
+        return print(make("err", "cat: vault: Is a directory"));
       case "readme.txt":
         return out(
           "README",
@@ -400,7 +441,9 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           "",
           "Fancy building something together? Run 'open contact'.",
           "",
-          "-- Daniel"
+          "-- Daniel",
+          "",
+          "P.S. I've unlocked ~/vault for you. cd vault and have a look."
         );
       case "":
         return print(make("err", "usage: cat <file>"));
@@ -470,8 +513,21 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           "",
           "run 'open play' to launch."
         );
+      case "cd": {
+        const dir = arg.toLowerCase().replace(/\/+$/, "");
+        if (["vault", "~/vault", "/root/vault", "./vault"].includes(dir)) {
+          if (!root) return print(make("err", "cd: vault: Permission denied"), make("dim", "hint: only root can go in there. try 'crack'"));
+          setCwd("vault");
+          return;
+        }
+        if (["", "~", "..", "/", "/root", "/home/guest", "-"].includes(dir)) {
+          setCwd("home");
+          return;
+        }
+        if (cwd === "vault" || !PAGES[dir]) return print(make("err", `cd: ${arg}: No such file or directory`));
+        return go(PAGES[dir]!);
+      }
       case "open":
-      case "cd":
       case "goto": {
         const key = arg.toLowerCase().replace(/^\/+/, "");
         if (!key) return print(make("err", `usage: ${cmd} <page>`), make("dim", `pages: ${pageList}`));
@@ -484,17 +540,56 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "mail":
         return out("contact: messages are handled by the contact form.", "run 'open contact' to send one.");
       case "ls":
-      case "dir": {
-        if (arg.includes("-l")) {
-          const now = new Date();
-          const stamp = `${now.toLocaleString("en-GB", { month: "short" })} ${String(now.getDate()).padStart(2, " ")} 09:14`;
-          out(`total ${FILES.length}`);
-          return FILES.forEach((f) =>
+      case "dir":
+      case "ll": {
+        const long = cmd === "ll" || /-\w*l/.test(arg);
+        const all = /-\w*a/.test(arg);
+        const target = arg.replace(/-\w+/g, "").trim().replace(/\/+$/, "");
+        const inVault = target === "vault" || target === "~/vault" || (cwd === "vault" && !["~", ".."].includes(target));
+        if (inVault && !root) return print(make("err", "ls: cannot open directory 'vault': Permission denied"));
+        const now = new Date();
+        const stamp = `${now.toLocaleString("en-GB", { month: "short" })} ${String(now.getDate()).padStart(2, " ")} 09:14`;
+        type Entry = { perms: string; owner: string; size: number; name: string };
+        const entries: Entry[] = inVault
+          ? VAULT.filter((f) => all || !f.hidden).map((f) => ({
+              perms: f.exec ? "-rwxr-x---" : "-rw-r-----",
+              owner: "root",
+              size: f.size,
+              name: f.name,
+            }))
+          : [
+              ...FILES.map((f) => ({ perms: f.perms, owner: f.owner, size: f.size, name: f.name })),
+              { perms: "drwx------", owner: "root", size: 4096, name: "vault/" },
+            ];
+        if (all) entries.unshift({ perms: "drwxr-xr-x", owner: "root", size: 4096, name: "." }, { perms: "drwxr-xr-x", owner: "root", size: 4096, name: ".." });
+        if (long) {
+          out(`total ${entries.length}`);
+          return entries.forEach((f) =>
             out(`${f.perms}  1 ${f.owner.padEnd(6)}${f.owner.padEnd(6)}${String(f.size).padStart(5)} ${stamp} ${f.name}`)
           );
         }
-        return out(FILES.map((f) => f.name).join("  "));
+        return out(entries.map((f) => f.name).join("  "));
       }
+      case "tree":
+        if (!root) {
+          return out(".", ...FILES.map((f) => `├── ${f.name}`), "└── vault/  [permission denied]");
+        }
+        return out(
+          ".",
+          ...FILES.map((f) => `├── ${f.name}`),
+          "└── vault/",
+          ...VAULT.filter((f) => !f.hidden).map((f, i, arr) => `    ${i === arr.length - 1 ? "└──" : "├──"} ${f.name}`)
+        );
+      case "fortune":
+        return print(...randomJoke().map((l) => make("out", l)));
+      case "./matrix.sh":
+      case "./vault/matrix.sh":
+        if (cmd === "./matrix.sh" && cwd !== "vault") return print(make("err", "sh: ./matrix.sh: No such file or directory"));
+        return runMatrix();
+      case "sh":
+      case "bash":
+        if (/^(\.\/)?(vault\/)?matrix\.sh$/.test(arg) && (cwd === "vault" || arg.includes("vault/"))) return runMatrix();
+        return print(make("err", `${cmd}: ${arg || "(no file)"}: No such file or directory`));
       case "cat":
       case "less":
       case "more":
@@ -531,7 +626,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "echo":
         return out(arg);
       case "pwd":
-        return out(root ? "/root" : "/home/guest");
+        return out(cwd === "vault" ? "/root/vault" : root ? "/root" : "/home/guest");
       case "history":
         return out(...history.current.map((h, i) => `${String(i + 1).padStart(5)}  ${h}`));
       case "sudo":
@@ -571,7 +666,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       if (value.trim()) guess(value);
       return;
     }
-    print(make("in", `${root ? "root@dcw:~#" : "guest@dcw:~$"} ${value}`));
+    print(make("in", `${shellPrompt} ${value}`));
     if (value.trim()) {
       history.current = [...history.current, value].slice(-50);
       playSound("select");
@@ -579,7 +674,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     run(value);
   };
 
-  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history"];
+  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history", "cd", "tree", "fortune"];
 
   const historyPrev = () => {
     const h = history.current;
@@ -606,11 +701,14 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       if (match.length === 1) setInput(match[0] + " ");
       else if (match.length > 1) print(make("dim", match.join("  ")));
     } else if (["open", "cd", "goto"].includes(first)) {
-      const match = Object.keys(PAGES).filter((pg) => pg.startsWith(rest.join(" ").toLowerCase()));
+      const opts = first === "cd" ? ["vault", ".."] : Object.keys(PAGES);
+      const match = opts.filter((pg) => pg.startsWith(rest.join(" ").toLowerCase()));
       if (match.length === 1) setInput(`${first} ${match[0]}`);
     } else if (first === "cat") {
-      const match = FILES.map((f) => f.name).filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
+      const names = cwd === "vault" ? VAULT.map((f) => f.name) : FILES.map((f) => f.name);
+      const match = names.filter((f) => f.startsWith(rest.join(" ").toLowerCase()));
       if (match.length === 1) setInput(`cat ${match[0]}`);
+      else if (match.length > 1) print(make("dim", match.join("  ")));
     }
   };
 
@@ -668,14 +766,14 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   const tap = (cmd: string) => {
     if (game && cmd !== "quit") return;
-    print(make("in", `${game ? "crack>" : root ? "root@dcw:~#" : "guest@dcw:~$"} ${cmd}`));
+    print(make("in", `${game ? "crack>" : shellPrompt} ${cmd}`));
     if (game) guess(cmd);
     else run(cmd);
     inputRef.current?.focus();
   };
 
   const t = THEMES[theme];
-  const prompt = game ? "crack>" : root ? "root@dcw:~#" : "guest@dcw:~$";
+  const prompt = game ? "crack>" : shellPrompt;
 
   /* ── Render ──────────────────────────────────────────────────────────── */
 
@@ -730,6 +828,13 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         </div>
       );
     }
+    if (l.kind === "art") {
+      return (
+        <div key={l.id} className="whitespace-pre text-[12px] leading-snug sm:text-sm">
+          {l.text || " "}
+        </div>
+      );
+    }
     const style: React.CSSProperties =
       l.kind === "dim" ? { color: t.dim, textShadow: "none" } : l.kind === "err" ? { color: "#ff6b6b", textShadow: "0 0 6px rgba(255,107,107,0.5)" } : {};
     return (
@@ -748,7 +853,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       role="dialog"
       aria-modal="true"
       aria-label="Secret terminal"
-      className="dcwt fixed inset-0 z-[200] flex flex-col bg-[#020604] font-mono"
+      className="dcwt fixed inset-0 z-[200] flex flex-col overflow-hidden bg-[#020604] font-mono"
       style={{ color: t.fg, textShadow: `0 0 6px ${t.glow}`, ["--dcwt-fg" as string]: t.fg }}
       onClick={() => inputRef.current?.focus()}
       onPointerDown={skipBoot}
@@ -772,9 +877,12 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
       <div className="dcwt-screen dcwt-flicker relative z-[1] flex min-h-0 flex-1 flex-col">
         {/* Title bar */}
-        <div className="flex items-center justify-between border-b px-4 py-2 text-xs sm:px-6" style={{ borderColor: t.dim }}>
-          <span>{root ? "root" : "guest"}@dcw: ~ (tty1)</span>
-          <span className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-3 border-b px-4 py-2 text-xs sm:px-6" style={{ borderColor: t.dim }}>
+          <span className="min-w-0 truncate">
+            {root ? "root" : "guest"}@dcw: {cwd === "vault" ? "~/vault" : "~"}
+            <span className="hidden sm:inline"> (tty1)</span>
+          </span>
+          <span className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={(e) => {
@@ -843,7 +951,14 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         {/* Quick commands for touch screens */}
         {touch && !booting && (
           <div className="flex gap-2 overflow-x-auto border-t px-3 py-2 text-xs" style={{ borderColor: t.dim }}>
-            {(game ? ["quit"] : ["help", "about", "crack", "ls", "blog", `theme ${nextTheme}`, "exit"]).map((c) => (
+            {(game
+              ? ["quit"]
+              : cwd === "vault"
+                ? ["ls -a", ...VAULT.filter((f) => !f.exec).map((f) => `cat ${f.name}`), "./matrix.sh", "cd .."]
+                : root
+                  ? ["help", "cd vault", "ls", "crack", "about", `theme ${nextTheme}`, "exit"]
+                  : ["help", "about", "crack", "ls", "blog", `theme ${nextTheme}`, "exit"]
+            ).map((c) => (
               <button
                 key={c}
                 type="button"

@@ -60,7 +60,7 @@ export const mdxComponents: MDXComponents = {
   ),
   code: (props) => (
     <code
-      className="rounded bg-surface px-1.5 py-0.5 font-mono text-sm text-accent"
+      className="rounded bg-surface px-1.5 py-0.5 font-mono text-sm text-accent [overflow-wrap:anywhere]"
       {...props}
     />
   ),

@@ -10,10 +10,10 @@ export function AudienceCta() {
   return (
     <section className="py-24">
       <div className="container-px">
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
           {/* Employers / recruiters */}
           <Reveal direction="right">
-            <div className="relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-card to-card p-8 sm:p-10">
+            <div className="relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-10">
               <div className="absolute -right-12 -top-12 size-40 rounded-full bg-primary/20 blur-3xl" />
               <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                 <Briefcase className="size-3.5" /> For employers & recruiters
@@ -39,7 +39,7 @@ export function AudienceCta() {
 
           {/* Clients */}
           <Reveal>
-            <div className="relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-secondary/10 via-card to-card p-8 sm:p-10">
+            <div className="relative h-full overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-secondary/10 via-card to-card p-6 sm:p-10">
               <div className="absolute -right-12 -top-12 size-40 rounded-full bg-secondary/20 blur-3xl" />
               <span className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium text-violet-300">
                 <Search className="size-3.5" /> For businesses
@@ -53,7 +53,7 @@ export function AudienceCta() {
                 straight what I&apos;d do.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href="/contact?service=Free+Website+Health+Check" variant="secondary">
+                <Button href="/contact?service=Free+Website+Health+Check" variant="secondary" className="h-auto min-h-11 whitespace-normal py-2.5 text-center">
                   <Search className="size-4" /> Get a website health check
                 </Button>
                 <Button href="/contact" variant="outline">
