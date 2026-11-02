@@ -265,7 +265,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     setGame({ answer, guesses: [], keys: {} });
     print(
       make("head", "crack 1.4.2 - password recovery utility"),
-      make("dim", `target: secret.enc   wordlist: en (${ANSWERS.length} entries)   max attempts: ${MAX_TRIES}`),
+      make("dim", `target: secret.enc   wordlist: en_GB (${ANSWERS.length} entries)   max attempts: ${MAX_TRIES}`),
       make("dim", "key: solid = correct position, dashed = wrong position, faded = not present"),
       make("dim", "enter a 5-letter guess, or 'quit' to abort"),
       make("out", "")
