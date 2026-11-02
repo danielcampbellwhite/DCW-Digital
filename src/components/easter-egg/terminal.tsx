@@ -85,7 +85,7 @@ const COMMANDS: [string, string][] = [
   ["cat <file>", "print file contents"],
   ["crack", "run password recovery on secret.enc"],
   ["stats", "show crack statistics"],
-  ["theme <green|amber|white>", "set phosphor colour"],
+  ["theme [green|amber|white]", "set phosphor colour (no arg cycles)"],
   ["whoami, pwd, date, echo", "standard utilities"],
   ["history", "show command history"],
   ["clear", "clear the screen"],
@@ -166,6 +166,8 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const [booting, setBooting] = React.useState(true);
   const [touch, setTouch] = React.useState(false);
   const [showKeys, setShowKeys] = React.useState(false);
+  const themeNames = Object.keys(THEMES) as ThemeName[];
+  const nextTheme = themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]!;
 
   const idRef = React.useRef(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -511,8 +513,8 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         );
       }
       case "theme": {
-        const th = arg.toLowerCase() as ThemeName;
-        if (!arg) return out(`current: ${theme}`, "usage: theme <green|amber|white>");
+        // No argument: cycle to the next colour.
+        const th = (arg ? arg.toLowerCase() : nextTheme) as ThemeName;
         if (!(th in THEMES)) return print(make("err", `theme: invalid argument '${arg}'`), make("dim", "valid: green, amber, white"));
         setTheme(th);
         write(THEME_KEY, th);
@@ -841,7 +843,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         {/* Quick commands for touch screens */}
         {touch && !booting && (
           <div className="flex gap-2 overflow-x-auto border-t px-3 py-2 text-xs" style={{ borderColor: t.dim }}>
-            {(game ? ["quit"] : ["help", "about", "crack", "ls", "blog", "theme amber", "exit"]).map((c) => (
+            {(game ? ["quit"] : ["help", "about", "crack", "ls", "blog", `theme ${nextTheme}`, "exit"]).map((c) => (
               <button
                 key={c}
                 type="button"
