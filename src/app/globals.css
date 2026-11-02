@@ -145,3 +145,51 @@
     text-wrap: balance;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Root-session extras (unlocked via the secret terminal). Purely cosmetic.
+   ───────────────────────────────────────────────────────────────────────── */
+html[data-root-theme="green"],
+html[data-root-theme="amber"] {
+  --background: var(--rt-h) 60% 2%;
+  --surface: var(--rt-h) 45% 4%;
+  --card: var(--rt-h) 45% 5%;
+  --card-foreground: var(--rt-h) 100% 70%;
+  --foreground: var(--rt-h) 100% 70%;
+  --muted: var(--rt-h) 40% 10%;
+  --muted-foreground: var(--rt-h) 45% 52%;
+  --border: var(--rt-h) 50% 18%;
+  --input: var(--rt-h) 50% 18%;
+  --ring: var(--rt-h) 100% 60%;
+  --primary: var(--rt-h) 100% 60%;
+  --primary-foreground: var(--rt-h) 60% 3%;
+  --secondary: var(--rt-h) 70% 45%;
+  --secondary-foreground: var(--rt-h) 60% 3%;
+  --accent: var(--rt-h) 100% 66%;
+  --accent-foreground: var(--rt-h) 60% 3%;
+}
+html[data-root-theme="green"] { --rt-h: 135; }
+html[data-root-theme="amber"] { --rt-h: 38; }
+html[data-root-theme] body,
+html[data-root-theme] h1,
+html[data-root-theme] h2,
+html[data-root-theme] h3,
+html[data-root-theme] h4,
+html[data-root-theme] .font-heading {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+html[data-root-theme] body {
+  text-shadow: 0 0 4px hsl(var(--primary) / 0.3);
+}
+html[data-root-theme] img {
+  filter: grayscale(1) sepia(1) hue-rotate(calc((var(--rt-h) - 38) * 1deg)) saturate(1.6) brightness(0.9);
+}
+
+@keyframes dcw-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg) scale(1.05); }
+  75% { transform: rotate(6deg) scale(1.05); }
+}
+html[data-party] [data-logo] {
+  animation: dcw-wobble 0.8s ease-in-out infinite;
+}

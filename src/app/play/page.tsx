@@ -8,6 +8,7 @@ import { SpotTheBug } from "@/components/play/spot-the-bug";
 import { BugInvaders } from "@/components/play/bug-invaders";
 import { DeployDash } from "@/components/play/deploy-dash";
 import { WeeklyLeaderboard } from "@/components/play/weekly-leaderboard";
+import { ClassifiedGames } from "@/components/play/classified-games";
 
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Spot the Bug & Typing Game",
@@ -85,6 +86,20 @@ export default function PlayPage() {
             <BugSquash />
           </Reveal>
           <WeeklyLeaderboard game="whack" className="mt-6 max-w-xl" />
+        </div>
+      </section>
+
+      {/* Root-only games, unlocked via the secret terminal */}
+      <section id="classified" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Classified"
+            title="Bug Sweeper"
+            description="Clear the codebase without opening a file that's hiding a bug. Numbers tell you how many bugs are in the files around them."
+          />
+          <div className="mt-12">
+            <ClassifiedGames />
+          </div>
         </div>
       </section>
     </>

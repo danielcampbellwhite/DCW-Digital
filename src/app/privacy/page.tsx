@@ -201,7 +201,7 @@ export default function PrivacyPage() {
                 <Link href="/play" className={linkCls}>
                   Play
                 </Link>{" "}
-                page save your best scores, badges and sound setting in your
+                page save your best scores, badges, sound setting and settings for hidden extras in your
                 browser&apos;s local storage so they&apos;re still there next
                 time. This stays on your device and you can clear it at any time
                 through your browser settings. To make the site work offline,

@@ -11,6 +11,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { siteGraphSchema } from "@/lib/seo";
 import { ServiceWorker } from "@/components/pwa/service-worker";
 import { SecretTerminal } from "@/components/easter-egg/secret-terminal";
+import { RootLayer } from "@/components/root/root-layer";
 import { getAllPostsMeta } from "@/lib/blog";
 
 const inter = Inter({
@@ -97,6 +98,7 @@ export default function RootLayout({
           <Footer />
         </CommandProvider>
         <ServiceWorker />
+        <RootLayer />
         <SecretTerminal posts={getAllPostsMeta().slice(0, 8).map(({ title, slug }) => ({ title, slug }))} />
       </body>
     </html>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { services, supportPackages } from "@/content/services";
 import { clients } from "@/content/clients";
 import { playSound } from "@/lib/sfx";
+import { formatCountdown, grantRoot, OPEN_ROOT_PANEL_EVENT, revokeRoot, useRootSession } from "@/lib/root-access";
 import { ANSWERS, ALLOWED } from "@/components/easter-egg/words";
 import { VAULT, findVaultFile, rainLine, randomJoke } from "@/components/easter-egg/vault";
 
@@ -46,7 +47,6 @@ const THEMES = {
 type ThemeName = keyof typeof THEMES;
 
 const THEME_KEY = "dcw-term-theme";
-const ROOT_KEY = "dcw-term-root";
 const STATS_KEY = "dcw-term-stats";
 const MAX_TRIES = 6;
 
@@ -91,8 +91,11 @@ const COMMANDS: [string, string][] = [
   ["theme [green|amber|white]", "set phosphor colour (no arg cycles)"],
   ["whoami, pwd, date, echo", "standard utilities"],
   ["history", "show command history"],
+  ["session", "show root session time left"],
+  ["settings", "root control panel (root only)"],
+  ["logout", "end the root session"],
   ["clear", "clear the screen"],
-  ["exit", "close session"],
+  ["exit", "close the terminal"],
 ];
 
 /* On-screen keyboard layouts. */
@@ -164,7 +167,9 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const [lines, setLines] = React.useState<Line[]>([]);
   const [input, setInput] = React.useState("");
   const [theme, setTheme] = React.useState<ThemeName>("green");
-  const [root, setRoot] = React.useState(false);
+  const session = useRootSession();
+  const root = !!session;
+  const loggedOut = React.useRef(false);
   const [game, setGame] = React.useState<Game | null>(null);
   const [booting, setBooting] = React.useState(true);
   const [touch, setTouch] = React.useState(false);
@@ -190,8 +195,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   React.useEffect(() => {
     const t = read<ThemeName>(THEME_KEY, "green");
     if (t in THEMES) setTheme(t);
-    const isRoot = read<boolean>(ROOT_KEY, false);
-    setRoot(isRoot);
+    const isRoot = root;
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     setTouch(coarse);
     setShowKeys(coarse);
@@ -250,6 +254,20 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [booting]);
+
+  // Announce when the root session runs out at midnight (not on logout).
+  const wasRoot = React.useRef(root);
+  React.useEffect(() => {
+    if (wasRoot.current && !root) {
+      setCwd("home");
+      if (!loggedOut.current) {
+        print(make("err", "session expired at 00:00. you're guest again."), make("dim", "run 'crack' to re-authenticate."));
+      }
+      loggedOut.current = false;
+    }
+    wasRoot.current = root;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [root]);
 
   // Focus the prompt as soon as it appears.
   React.useEffect(() => {
@@ -344,8 +362,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       playSound("finish");
       recordGame(true, guesses.length);
       setGame(null);
-      setRoot(true);
-      write(ROOT_KEY, true);
+      const granted = grantRoot();
       print(
         row,
         make("out", ""),
@@ -353,6 +370,8 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         make("ok", "[+] decrypting secret.enc ... done"),
         make("ok", "[+] escalating privileges ... uid=0(root) gid=0(root)"),
         make("ok", "[+] new directory unlocked: ~/vault"),
+        make("ok", `[+] root session valid until 00:00 (${formatCountdown(granted.expiresAt - Date.now())} left)`),
+        make("dim", "run 'settings' for root-only site settings, 'logout' to end the session"),
         make("dim", "run 'cat secret.enc', or 'cd vault' to look around"),
         make("out", "")
       );
@@ -645,11 +664,36 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "clear":
       case "cls":
         return setLines([]);
-      case "exit":
-      case "quit":
       case "logout":
+        if (root) {
+          loggedOut.current = true;
+          revokeRoot();
+          setCwd("home");
+          return print(make("out", "logout: root session ended"), make("dim", "you're guest again. run 'crack' to get root back."));
+        }
         out("logout");
         window.setTimeout(onClose, 300);
+        return;
+      case "exit":
+      case "quit":
+        out("logout");
+        window.setTimeout(onClose, 300);
+        return;
+      case "session":
+      case "uptime":
+        if (!session) return out("session: guest (no root session)", "run 'crack' to get root until midnight.");
+        return out(
+          `session: root since ${new Date(session.grantedAt).toLocaleTimeString("en-GB", { hour12: false })}`,
+          `expires: 00:00 (${formatCountdown(session.expiresAt - Date.now())} left)`
+        );
+      case "settings":
+      case "config":
+        if (!root) return print(make("err", "settings: Permission denied"), make("dim", "hint: root only. try 'crack'"));
+        out("opening root control panel ...");
+        window.setTimeout(() => {
+          onClose();
+          window.dispatchEvent(new Event(OPEN_ROOT_PANEL_EVENT));
+        }, 300);
         return;
       default:
         playSound("miss");
@@ -674,7 +718,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     run(value);
   };
 
-  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history", "cd", "tree", "fortune"];
+  const completions = ["help", "about", "services", "projects", "blog", "read", "games", "open", "ls", "cat", "crack", "stats", "theme", "whoami", "id", "date", "uname", "echo", "pwd", "clear", "exit", "sudo", "coffee", "history", "cd", "tree", "fortune", "session", "settings", "logout"];
 
   const historyPrev = () => {
     const h = history.current;
@@ -956,7 +1000,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
               : cwd === "vault"
                 ? ["ls -a", ...VAULT.filter((f) => !f.exec).map((f) => `cat ${f.name}`), "./matrix.sh", "cd .."]
                 : root
-                  ? ["help", "cd vault", "ls", "crack", "about", `theme ${nextTheme}`, "exit"]
+                  ? ["help", "cd vault", "settings", "session", "logout", `theme ${nextTheme}`, "exit"]
                   : ["help", "about", "crack", "ls", "blog", `theme ${nextTheme}`, "exit"]
             ).map((c) => (
               <button

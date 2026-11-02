@@ -10,6 +10,7 @@ import { mainNav } from "@/lib/site";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { useCommandPalette } from "@/components/command/command-palette";
+import { RootBadge } from "@/components/root/root-badge";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -90,6 +91,7 @@ export function Navbar() {
 
           {/* Desktop actions */}
           <div className="hidden items-center gap-2 lg:flex">
+            <RootBadge />
             <button
               type="button"
               onClick={palette.open}
@@ -109,6 +111,7 @@ export function Navbar() {
 
           {/* Mobile search + menu toggle */}
           <div className="flex items-center gap-2 lg:hidden">
+            <RootBadge compact />
             <button
               type="button"
               onClick={() => {

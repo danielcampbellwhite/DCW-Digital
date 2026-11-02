@@ -23,6 +23,7 @@ export function Logo({ className, variant = "inline", href = "/" }: LogoProps) {
     >
       <span
         aria-hidden
+        data-logo=""
         className="grid size-9 place-items-center rounded-lg border border-primary/30 bg-gradient-to-br from-primary/20 to-secondary/20 text-sm font-bold text-primary shadow-[0_0_20px_-6px_hsl(var(--primary)/0.6)]"
       >
         D
