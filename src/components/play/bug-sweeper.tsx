@@ -290,7 +290,7 @@ export function BugSweeper() {
       {/* Board */}
       <div className="mt-4 overflow-x-auto pb-1">
         <div
-          className="mx-auto grid gap-[3px]"
+          className="mx-auto grid gap-1"
           style={{
             gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
             width: `min(100%, ${cols * 38}px)`,
@@ -333,11 +333,16 @@ export function BugSweeper() {
                   shown
                     ? c.bug
                       ? boom === i
-                        ? "bg-red-500/40"
-                        : "bg-red-500/10"
-                      : "bg-background/60"
-                    : "border border-border bg-surface hover:border-primary/50 hover:bg-primary/10",
-                  done && !shown && "hover:border-border hover:bg-surface"
+                        ? "border border-red-500/60 bg-red-500/45"
+                        : "border border-red-500/25 bg-red-500/15"
+                      : // Cleared: flat, dark and sunken.
+                        "border border-foreground/[0.06] bg-black/45 shadow-[inset_0_2px_4px_rgb(0_0_0/0.55)]"
+                    : // Untapped: raised like a key, lighter on top, with a highlight and drop shadow.
+                      cn(
+                        "border border-foreground/25 bg-gradient-to-b from-foreground/[0.16] to-foreground/[0.06]",
+                        "shadow-[inset_0_1px_0_hsl(var(--foreground)/0.22),0_2px_0_rgb(0_0_0/0.55)]",
+                        !done && "hover:border-primary/70 hover:from-primary/30 hover:to-primary/10 active:translate-y-px active:shadow-none"
+                      )
                 )}
               >
                 {shown ? (
