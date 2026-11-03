@@ -30,7 +30,9 @@ export function RootLayer() {
     else delete html.dataset.rootTheme;
     if (session && settings.party) html.dataset.party = "";
     else delete html.dataset.party;
-  }, [session, settings.terminalMode, settings.party]);
+    if (session && settings.crt) html.dataset.crt = "";
+    else delete html.dataset.crt;
+  }, [session, settings.terminalMode, settings.party, settings.crt]);
 
   const needsEffects = !!session && (settings.crt || settings.bugCursor || settings.party);
 

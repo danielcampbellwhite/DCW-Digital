@@ -146,7 +146,7 @@ export function RootPanel({ onClose }: { onClose: () => void }) {
                   ))}
                 </div>
               </div>
-              <Toggle label="CRT screen" description="Scanlines and a curved-glass vignette over everything." checked={settings.crt} onChange={(v) => set({ crt: v })} />
+              <Toggle label="CRT screen" description="An old, dusty tube monitor: curved glass, scanlines, static and flicker." checked={settings.crt} onChange={(v) => set({ crt: v })} />
               <Toggle
                 label="Bug cursor"
                 description={finePointer ? "A bug follows your mouse. Click to squash it." : "Needs a mouse, so it's off on touch screens."}

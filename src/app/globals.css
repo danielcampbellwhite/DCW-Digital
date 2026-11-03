@@ -193,3 +193,11 @@ html[data-root-theme] img {
 html[data-party] [data-logo] {
   animation: dcw-wobble 0.8s ease-in-out infinite;
 }
+
+/* CRT screen: slightly mis-converged colour fringes and phosphor bloom on text. */
+html[data-crt] body {
+  text-shadow:
+    0.7px 0 0 rgba(255, 50, 50, 0.4),
+    -0.7px 0 0 rgba(50, 170, 255, 0.4),
+    0 0 6px hsl(var(--primary) / 0.35);
+}

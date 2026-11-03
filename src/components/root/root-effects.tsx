@@ -15,20 +15,130 @@ export function RootEffects({ crt, bugCursor, party }: { crt: boolean; bugCursor
   );
 }
 
+/** Grainy static: one noise tile, jittered around to look alive. */
+function noiseTile(size = 160) {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const ctx = c.getContext("2d")!;
+  const img = ctx.createImageData(size, size);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = Math.random() * 255;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    img.data[i + 3] = Math.random() * 70;
+  }
+  ctx.putImageData(img, 0, 0);
+  return c.toDataURL("image/png");
+}
+
+/** Dust, hairs, scratches and smudges on the glass. Drawn once. */
+function dustLayer(w = 1400, h = 900) {
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext("2d")!;
+  const r = (a: number, b: number) => a + Math.random() * (b - a);
+  // Greasy smudges.
+  for (let i = 0; i < 7; i++) {
+    const x = r(0, w), y = r(0, h), rad = r(80, 260);
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+    g.addColorStop(0, `rgba(255,255,255,${r(0.025, 0.06)})`);
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+  }
+  // Specks of dust.
+  for (let i = 0; i < 900; i++) {
+    ctx.fillStyle = `rgba(${Math.random() < 0.7 ? "255,255,255" : "0,0,0"},${r(0.08, 0.45)})`;
+    ctx.beginPath();
+    ctx.arc(r(0, w), r(0, h), r(0.3, 1.6), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Hairs.
+  ctx.lineCap = "round";
+  for (let i = 0; i < 6; i++) {
+    const x = r(0, w), y = r(0, h);
+    ctx.strokeStyle = `rgba(255,255,255,${r(0.12, 0.3)})`;
+    ctx.lineWidth = r(0.5, 1.1);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(x + r(-60, 60), y + r(-60, 60), x + r(-90, 90), y + r(-90, 90), x + r(-120, 120), y + r(-120, 120));
+    ctx.stroke();
+  }
+  // Fine scratches.
+  for (let i = 0; i < 10; i++) {
+    const x = r(0, w), y = r(0, h), len = r(40, 220), ang = r(-0.4, 0.4) + (Math.random() < 0.5 ? 0 : Math.PI / 2);
+    ctx.strokeStyle = `rgba(255,255,255,${r(0.05, 0.14)})`;
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+    ctx.stroke();
+  }
+  return c.toDataURL("image/png");
+}
+
 function CrtOverlay() {
+  const [tex, setTex] = React.useState<{ noise: string; dust: string } | null>(null);
+  React.useEffect(() => setTex({ noise: noiseTile(), dust: dustLayer() }), []);
+
+  // Each layer is its own fixed element (not wrapped) so its blend mode mixes
+  // with the page underneath rather than with an isolated group.
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-[95]">
+    <>
       <style>{`
-        .dcw-crt{position:absolute;inset:0;
+        .dcw-crt{position:fixed;inset:0;pointer-events:none;z-index:95}
+        /* Phosphor mask: the fine RGB stripes of a real tube. */
+        .dcw-crt.crt-mask{mix-blend-mode:multiply;opacity:.38;
+          background:repeating-linear-gradient(90deg,rgb(255,110,110) 0 1px,rgb(110,255,110) 1px 2px,rgb(120,150,255) 2px 3px)}
+        /* Deep scanlines that slowly crawl. */
+        .dcw-crt.crt-lines{top:-3px;
+          background:repeating-linear-gradient(to bottom,rgba(0,0,0,.38) 0 1px,rgba(0,0,0,0) 1px 3px);
+          animation:dcw-crawl 1.2s linear infinite}
+        @keyframes dcw-crawl{to{transform:translateY(3px)}}
+        /* Static. */
+        .dcw-crt.crt-noise{inset:-20%;opacity:.12;mix-blend-mode:screen;background-size:160px;
+          animation:dcw-noise .45s steps(1) infinite}
+        @keyframes dcw-noise{0%{transform:translate(0,0)}20%{transform:translate(-7%,4%)}40%{transform:translate(5%,-6%)}
+          60%{transform:translate(-3%,8%)}80%{transform:translate(8%,2%)}100%{transform:translate(-5%,-4%)}}
+        /* Dust and smudges on the glass. */
+        .dcw-crt.crt-dust{background-size:cover;background-position:center;mix-blend-mode:screen;opacity:.75}
+        /* The rolling bar. */
+        .dcw-crt.crt-bar{bottom:auto;height:22vh;top:-25vh;mix-blend-mode:screen;
+          background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.06) 50%,rgba(255,255,255,0));
+          animation:dcw-roll 7s linear infinite}
+        @keyframes dcw-roll{to{transform:translateY(130vh)}}
+        /* Curved glass: dark bowed edges and a vignette (gradients, not big
+           blurred shadows, which make browsers render the layer blurry). */
+        .dcw-crt.crt-glass{
           background:
-            repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px),
-            radial-gradient(ellipse at center,rgba(0,0,0,0) 62%,rgba(0,0,0,.55) 100%);
-          animation:dcw-crt-flicker .15s infinite}
-        @keyframes dcw-crt-flicker{0%,100%{opacity:1}50%{opacity:.94}}
-        @media (prefers-reduced-motion: reduce){.dcw-crt{animation:none}}
+            radial-gradient(ellipse at 50% 48%,rgba(0,0,0,0) 52%,rgba(0,0,0,.6) 100%),
+            linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,0) 7%,rgba(0,0,0,0) 93%,rgba(0,0,0,.55)),
+            linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0) 9%,rgba(0,0,0,0) 91%,rgba(0,0,0,.55))}
+        /* Rounded tube corners and a thin bezel edge. */
+        .dcw-crt.crt-corners{box-shadow:inset 0 0 0 2px #000;
+          background:
+            radial-gradient(circle at 100% 100%,rgba(0,0,0,0) 27px,#000 28px) top left/30px 30px no-repeat,
+            radial-gradient(circle at 0 100%,rgba(0,0,0,0) 27px,#000 28px) top right/30px 30px no-repeat,
+            radial-gradient(circle at 100% 0,rgba(0,0,0,0) 27px,#000 28px) bottom left/30px 30px no-repeat,
+            radial-gradient(circle at 0 0,rgba(0,0,0,0) 27px,#000 28px) bottom right/30px 30px no-repeat}
+        .dcw-crt.crt-glare{mix-blend-mode:screen;
+          background:radial-gradient(ellipse 60% 35% at 30% 12%,rgba(255,255,255,.06),rgba(255,255,255,0) 70%)}
+        /* Unsteady tube: an irregular dip in brightness. */
+        .dcw-crt.crt-flicker{background:#000;opacity:0;animation:dcw-flicker 3.2s infinite}
+        @keyframes dcw-flicker{0%,100%{opacity:0}7%{opacity:.14}8%{opacity:0}31%{opacity:.06}32%{opacity:0}
+          55%{opacity:.11}56%{opacity:.03}57%{opacity:0}83%{opacity:.08}84%{opacity:0}}
+        @media (prefers-reduced-motion: reduce){.dcw-crt.crt-lines,.dcw-crt.crt-noise,.dcw-crt.crt-flicker{animation:none}.dcw-crt.crt-bar{display:none}}
       `}</style>
-      <div className="dcw-crt" />
-    </div>
+      <div aria-hidden className="dcw-crt crt-mask" />
+      <div aria-hidden className="dcw-crt crt-lines" />
+      {tex && <div aria-hidden className="dcw-crt crt-noise" style={{ backgroundImage: `url(${tex.noise})` }} />}
+      {tex && <div aria-hidden className="dcw-crt crt-dust" style={{ backgroundImage: `url(${tex.dust})` }} />}
+      <div aria-hidden className="dcw-crt crt-bar" />
+      <div aria-hidden className="dcw-crt crt-glare" />
+      <div aria-hidden className="dcw-crt crt-flicker" />
+      <div aria-hidden className="dcw-crt crt-glass" />
+      <div aria-hidden className="dcw-crt crt-corners" />
+    </>
   );
 }
 
