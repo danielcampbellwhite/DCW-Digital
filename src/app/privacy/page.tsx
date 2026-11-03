@@ -11,7 +11,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/privacy",
 });
 
-const lastUpdated = "2 November 2026";
+const lastUpdated = "3 November 2026";
 
 const linkCls = "text-primary underline-offset-4 hover:underline";
 
@@ -64,6 +64,15 @@ export default function PrivacyPage() {
                   contact form message.
                 </li>
                 <li>
+                  <strong className="text-foreground">&quot;Ask DCW&quot; assistant:</strong>{" "}
+                  if you use the chat assistant, your questions and the
+                  conversation so far are sent to Anthropic, which provides the
+                  AI model, to generate a reply. I don&apos;t store chats on my
+                  servers, and your browser only keeps the conversation until
+                  you close the tab. Please don&apos;t include personal or
+                  sensitive details in your questions.
+                </li>
+                <li>
                   <strong className="text-foreground">Game leaderboards:</strong>{" "}
                   if you finish a game on the{" "}
                   <Link href="/play" className={linkCls}>
@@ -92,6 +101,7 @@ export default function PrivacyPage() {
                 <li>To reply to your enquiry and provide the services you ask for.</li>
                 <li>To send you things you&apos;ve asked for, such as a quote or a website health check.</li>
                 <li>To contact businesses about services that may be useful to them, such as a free website health check.</li>
+                <li>To answer your questions in the chat assistant.</li>
                 <li>To keep this website secure and protect it from spam and abuse.</li>
               </ul>
               <p className="mt-3">
@@ -161,6 +171,12 @@ export default function PrivacyPage() {
                 <li>
                   <strong className="text-foreground">Google</strong> - running
                   the website health check (PageSpeed Insights).
+                </li>
+                <li>
+                  <strong className="text-foreground">Anthropic</strong> -
+                  generating replies in the &quot;Ask DCW&quot; chat assistant.
+                  Anthropic doesn&apos;t use these conversations to train its
+                  models.
                 </li>
                 <li>
                   <strong className="text-foreground">Upstash</strong> - storing
