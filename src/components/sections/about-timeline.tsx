@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import type { TimelineEntry } from "@/types";
 
 /**
@@ -11,7 +12,7 @@ import type { TimelineEntry } from "@/types";
  * reduced motion.
  */
 export function AboutTimeline({ entries }: { entries: TimelineEntry[] }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = React.useRef<HTMLOListElement>(null);
 
   const { scrollYProgress } = useScroll({

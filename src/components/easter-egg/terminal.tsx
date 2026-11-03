@@ -108,6 +108,8 @@ const SHELL_ROWS = [
 ];
 const GAME_ROWS = ["qwertyuiop".split(""), "asdfghjkl".split(""), ["enter", ..."zxcvbnm".split(""), "back"]];
 const KEY_TEXT: Record<string, string> = { tab: "TAB", back: "⌫", up: "↑", space: "SPACE", enter: "ENTER" };
+/** Line kinds that type themselves out; the rest appear instantly. */
+const TYPED = new Set<string>(["out", "ok", "dim", "head", "err", "art"]);
 const KEY_LABELS: Record<string, string> = { tab: "Tab (complete)", back: "Backspace", up: "Previous command", space: "Space", enter: "Enter" };
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
@@ -179,6 +181,18 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   const nextTheme = themeNames[(themeNames.indexOf(theme) + 1) % themeNames.length]!;
 
   const idRef = React.useRef(0);
+
+  /* ── Typewriter output ──────────────────────────────────────────────────
+     Lines with an id below reveal.id are fully shown; the line at reveal.id
+     is part-typed; anything after it is still waiting. Typed output speeds
+     up with the amount queued, so even long output finishes in ~0.5s. */
+  const reveal = React.useRef({ id: 1, chars: 0 });
+  const linesRef = React.useRef<Line[]>([]);
+  const [, setTick] = React.useState(0);
+  const flushOutput = () => {
+    reveal.current = { id: idRef.current + 1, chars: 0 };
+    setTick((n) => n + 1);
+  };
   const inputRef = React.useRef<HTMLInputElement>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const history = React.useRef<string[]>([]);
@@ -236,11 +250,63 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    linesRef.current = lines;
+  }, [lines]);
+
+  React.useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const typedText = (l: Line) => (TYPED.has(l.kind) && "text" in l ? l.text : null);
+    let raf = 0;
+    let rate = 0;
+    const frame = () => {
+      const ls = linesRef.current;
+      const r = reveal.current;
+      let k = ls.findIndex((l) => l.id >= r.id);
+      if (k >= 0) {
+        if (reduce) {
+          reveal.current = { id: idRef.current + 1, chars: 0 };
+        } else {
+          // Steady rate for this burst of output: whatever's queued finishes in
+          // about half a second (~30 frames), and never slower than 4 chars/frame.
+          let queued = -r.chars;
+          for (let i = k; i < ls.length; i++) queued += typedText(ls[i]!)?.length ?? 0;
+          rate = Math.max(rate, 4, Math.ceil(queued / 30));
+          let budget = rate;
+          let { id, chars } = ls[k]!.id > r.id ? { id: ls[k]!.id, chars: 0 } : r;
+          while (k < ls.length) {
+            const text = typedText(ls[k]!);
+            if (text === null || chars + budget >= text.length) {
+              if (text !== null) budget -= text.length - chars;
+              k += 1;
+              id = ls[k]?.id ?? idRef.current + 1;
+              chars = 0;
+              if (text !== null && budget <= 0) break;
+            } else {
+              chars += budget;
+              break;
+            }
+          }
+          reveal.current = { id, chars };
+        }
+        setTick((n) => n + 1);
+        const el = scrollRef.current;
+        if (el) el.scrollTop = el.scrollHeight;
+      } else {
+        rate = 0; // idle: the next burst sets its own pace
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   const skipBoot = () => {
     if (!booting) return;
     bootTimers.current.forEach((t) => window.clearTimeout(t));
     setLines(bootQueue.current);
     setBooting(false);
+    flushOutput();
   };
 
   // Any key skips the boot sequence (Esc still closes).
@@ -702,6 +768,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   }
 
   const submit = () => {
+    flushOutput();
     const value = input;
     setInput("");
     histIdx.current = -1;
@@ -810,6 +877,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   const tap = (cmd: string) => {
     if (game && cmd !== "quit") return;
+    flushOutput();
     print(make("in", `${game ? "crack>" : shellPrompt} ${cmd}`));
     if (game) guess(cmd);
     else run(cmd);
@@ -821,7 +889,34 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   /* ── Render ──────────────────────────────────────────────────────────── */
 
+  const typing = lines.some((l) => l.id >= reveal.current.id);
+
+  /** Visible (possibly part-typed) text, with the full text for screen readers. */
+  const typed = (l: Line & { text: string }) => {
+    const r = reveal.current;
+    if (l.id < r.id) return l.text || " ";
+    const shown = l.id === r.id ? l.text.slice(0, r.chars) : "";
+    return (
+      <>
+        <span className="sr-only">{l.text}</span>
+        <span aria-hidden>
+          {shown}
+          {l.id === r.id && <span style={{ background: t.fg }} className="ml-px inline-block h-[1em] w-[0.55em] translate-y-[0.15em]" />}
+        </span>
+      </>
+    );
+  };
+
   const renderLine = (l: Line) => {
+    // Waiting to be typed: only typed text kinds render (for screen readers).
+    if (l.id >= reveal.current.id && !TYPED.has(l.kind)) return null;
+    if (l.id > reveal.current.id && "text" in l) {
+      return (
+        <div key={l.id} className="sr-only">
+          {l.text}
+        </div>
+      );
+    }
     if (l.kind === "guess") {
       const label = l.letters.map((x) => `${x.ch} ${x.state === "hit" ? "correct" : x.state === "near" ? "in the word, wrong place" : "not in the word"}`).join(", ");
       return (
@@ -875,7 +970,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     if (l.kind === "art") {
       return (
         <div key={l.id} className="whitespace-pre text-[12px] leading-snug sm:text-sm">
-          {l.text || " "}
+          {typed(l)}
         </div>
       );
     }
@@ -887,7 +982,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         className={l.kind === "head" || l.kind === "ok" ? "font-bold" : undefined}
         style={l.kind === "in" ? { opacity: 0.9 } : style}
       >
-        {l.text || " "}
+        {l.kind === "in" ? l.text || " " : typed(l)}
       </div>
     );
   };
@@ -964,7 +1059,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
           {/* Prompt */}
           {!booting && (
-            <label className="flex items-center gap-2">
+            <label className={`flex items-center gap-2 transition-opacity duration-75 ${typing ? "opacity-0" : "opacity-100"}`}>
               <span className="shrink-0">{prompt}</span>
               <span className="relative flex min-w-0 flex-1 items-center">
                 <input

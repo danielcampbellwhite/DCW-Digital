@@ -1,11 +1,12 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
+
 import * as React from "react";
 import {
   useInView,
   useMotionValue,
   useSpring,
-  useReducedMotion,
 } from "framer-motion";
 
 interface CounterProps {
@@ -23,7 +24,7 @@ interface CounterProps {
 export function Counter({ value, prefix = "", suffix = "", decimals = 0 }: CounterProps) {
   const ref = React.useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   const motionValue = useMotionValue(0);
   const spring = useSpring(motionValue, { duration: 1600, bounce: 0 });

@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
@@ -46,7 +47,7 @@ export function Reveal({
   distance = 24,
   as = "div",
 }: RevealProps) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const MotionTag = motion[as];
 
   if (reduce) {
@@ -87,7 +88,7 @@ export function StaggerGroup({
   className?: string;
   stagger?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   if (reduce) return <div className={className}>{children}</div>;
 
   return (
@@ -114,7 +115,7 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   if (reduce) return <div className={className}>{children}</div>;
 
   return (
