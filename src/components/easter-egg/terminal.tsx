@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { services, supportPackages } from "@/content/services";
 import { clients } from "@/content/clients";
 import { playSound } from "@/lib/sfx";
+import { currentSeason } from "@/lib/season";
 import { formatCountdown, grantRoot, OPEN_ROOT_PANEL_EVENT, revokeRoot, useRootSession } from "@/lib/root-access";
 import { ANSWERS, ALLOWED } from "@/components/easter-egg/words";
 import { VAULT, findVaultFile, rainLine, randomJoke } from "@/components/easter-egg/vault";
@@ -215,6 +216,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
     const user = isRoot ? "root" : "guest";
     const host = window.location.hostname || "localhost";
+    const season = currentSeason();
     const boot: [Kind, string][] = [
       ["dim", "[    0.000000] DCW-OS 2.6.0-lts (build@dcw) #1 SMP PREEMPT"],
       ["dim", "[    0.014212] Memory: 640K available, 0K reserved"],
@@ -222,9 +224,19 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       ["dim", "[    0.093340] Running self-test: 1 bug found (marked as feature)"],
       ["dim", `[    0.127608] Mounting /home/${user} ... ok`],
       ["dim", `[    0.188054] eth0: link up, connected to ${host}`],
+      ...(season === "winter"
+        ? ([["dim", "[    0.203117] Loading module tinsel.ko ... ok"]] as [Kind, string][])
+        : season === "halloween"
+          ? ([["dim", "[    0.203117] Summoning daemons ... 13 found"]] as [Kind, string][])
+          : []),
       ["out", ""],
       ["out", `Last login: ${unixDate(new Date(Date.now() - 1000 * 60 * 60 * 26))} on tty1`],
       ["out", "Type 'help' for a list of commands."],
+      ...(season === "winter"
+        ? ([["ok", "Festive mode is on. Try 'xmas'."]] as [Kind, string][])
+        : season === "halloween"
+          ? ([["ok", "Something's lurking in here. Try 'boo'."]] as [Kind, string][])
+          : []),
       ["out", ""],
     ];
     const queue = boot.map(([k, t2]) => make(k, t2));
@@ -857,6 +869,44 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         return print(make("out", "Password: "), make("err", "su: Authentication failure"), make("dim", "hint: try 'crack'"));
       case "rm":
         return print(make("err", `rm: cannot remove '${arg || "/"}': Permission denied`));
+      case "xmas":
+      case "christmas":
+        if (currentSeason() !== "winter") return out("xmas: not yet. come back in December.");
+        playSound("finish");
+        return print(
+          ...[
+            "          *",
+            "         /.\\",
+            "        /..'\\",
+            "        /'.'\\",
+            "       /.''.'\\",
+            "       /.'.'.\\",
+            "      /'.''.'.\\",
+            "      ^^^[_]^^^",
+            "",
+            "  merry christmas from DCW Digital.",
+            "  may your builds be green and your",
+            "  deploys be boring.",
+          ].map((l) => make("art", l))
+        );
+      case "boo":
+      case "halloween":
+        if (currentSeason() !== "halloween") return out("boo: too early. try again in late October.");
+        playSound("hurt");
+        return print(
+          ...[
+            "          ,",
+            "       .-' '-.",
+            "      /  ^ ^  \\",
+            "     |   /_\\   |",
+            "     |  \\___/  |",
+            "      \\  ---  /",
+            "       '-...-'",
+            "",
+            "  happy halloween. the only thing",
+            "  scary in here is a Friday deploy.",
+          ].map((l) => make("art", l))
+        );
       case "coffee":
         return out("coffee: brewing ... done", "coffee: productivity +10%");
       case "hello":

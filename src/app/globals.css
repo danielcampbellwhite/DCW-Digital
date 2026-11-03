@@ -201,3 +201,26 @@ html[data-crt] body {
     -0.7px 0 0 rgba(50, 170, 255, 0.4),
     0 0 6px hsl(var(--primary) / 0.35);
 }
+
+/* Seasonal touches (see SeasonalLayer). */
+html[data-season="winter"] [data-logo] {
+  position: relative;
+  overflow: visible;
+}
+html[data-season="winter"] [data-logo]::after {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: -8px;
+  width: 30px;
+  height: 22px;
+  transform: rotate(-20deg);
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 30'%3E%3Cpath d='M5 23 Q13 3 29 6 Q37 8 34 17 Q30 12 26 14 Q20 17 22 23 Z' fill='%23e11d48'/%3E%3Crect x='2' y='21' width='23' height='7' rx='3.5' fill='%23f8fafc'/%3E%3Ccircle cx='34' cy='18' r='4.2' fill='%23f8fafc'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+}
+html[data-season="halloween"] [data-logo] {
+  border-color: rgba(249, 115, 22, 0.6);
+  color: #fb923c;
+  box-shadow: 0 0 20px -2px rgba(249, 115, 22, 0.75);
+}

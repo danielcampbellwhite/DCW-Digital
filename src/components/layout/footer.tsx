@@ -3,6 +3,7 @@ import { Facebook, Instagram, Mail, MapPin } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { footerNav, siteConfig } from "@/lib/site";
 import { Button } from "@/components/ui/button";
+import { SeasonToggle } from "@/components/season/season-toggle";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -89,6 +90,7 @@ export function Footer() {
           <p data-secret-tap="" className="select-none py-2 text-center sm:text-left">
             © {year} {siteConfig.name}. Built by {siteConfig.owner}.
           </p>
+          <SeasonToggle />
           <p className="flex items-center gap-2">
             <span className="inline-block size-2 animate-pulse-glow rounded-full bg-accent" />
             Available for new projects &amp; opportunities
