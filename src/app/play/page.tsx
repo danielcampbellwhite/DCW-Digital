@@ -95,7 +95,7 @@ export default function PlayPage() {
           <SectionHeading
             eyebrow="Classified"
             title="Classified games"
-            description="Root access only. Three extra games for anyone who's cracked the terminal password today."
+            description="Root access only. Extra games for anyone who's cracked the terminal password today."
           />
           <div className="mt-12">
             <ClassifiedGames />

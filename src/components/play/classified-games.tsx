@@ -10,13 +10,11 @@ import { OPEN_TERMINAL_EVENT } from "@/components/easter-egg/secret-terminal";
 // Only downloaded for people with root access, one game at a time.
 const loading = () => <p className="py-10 text-center font-mono text-sm text-muted-foreground">decrypting…</p>;
 const BugSweeper = dynamic(() => import("@/components/play/bug-sweeper").then((m) => m.BugSweeper), { ssr: false, loading });
-const MergeConflict = dynamic(() => import("@/components/play/merge-conflict").then((m) => m.MergeConflict), { ssr: false, loading });
 const StackOverflow = dynamic(() => import("@/components/play/stack-overflow").then((m) => m.StackOverflow), { ssr: false, loading });
 
 const GAMES = [
   { id: "sweeper", name: "Bug Sweeper", blurb: "Clear the codebase without opening a file that's hiding a bug. Numbers count the bugs next door." },
-  { id: "merge", name: "Merge Conflict", blurb: "A memory game. Flip cards to match pairs and resolve every conflict in as few moves as possible." },
-  { id: "stack", name: "Stack Overflow", blurb: "Drop sliding blocks of code onto the stack. Overhangs get trimmed; miss completely and it overflows." },
+  { id: "stack", name: "Stack Overflow", blurb: "A falling-blocks puzzle. Fit the code blocks together so full rows compile, before legacy code pushes the stack over the top." },
 ] as const;
 type GameId = (typeof GAMES)[number]["id"];
 const TAB_KEY = "dcw-classified-tab";
@@ -96,7 +94,6 @@ export function ClassifiedGames() {
 
       <div role="tabpanel" aria-label={current.name}>
         {tab === "sweeper" && <BugSweeper />}
-        {tab === "merge" && <MergeConflict />}
         {tab === "stack" && <StackOverflow />}
       </div>
     </div>

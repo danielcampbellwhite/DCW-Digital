@@ -719,8 +719,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
                 "",
                 "CLASSIFIED (root)",
                 `${"bug-sweeper".padEnd(16)}minesweeper for codebases`,
-                `${"merge-conflict".padEnd(16)}memory game`,
-                `${"stack-overflow".padEnd(16)}one-tap block stacker`,
+                `${"stack-overflow".padEnd(16)}falling-blocks puzzle`,
                 `${"snake".padEnd(16)}in this terminal: cd vault && ./snake`,
               ]
             : []),
