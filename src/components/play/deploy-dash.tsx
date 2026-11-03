@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { playSound, unlockAudio } from "@/lib/sfx";
 import { SoundToggle } from "@/components/play/sound-toggle";
+import { HardModeToggle } from "@/components/play/hard-mode";
+import { hasRoot } from "@/lib/root-access";
 import { submitScore, WeeklyRank } from "@/components/play/weekly-leaderboard";
 
 /* ── Tuning (world units; the canvas is scaled to fit) ─────────────────── */
@@ -73,6 +75,7 @@ interface Game {
   releases: number;
   time: number;
   dead: boolean;
+  hard: boolean;
 }
 
 type Phase = "idle" | "playing" | "paused" | "over";
@@ -91,7 +94,7 @@ function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h
   else ctx.rect(x, y, w, h);
 }
 
-function newGame(W: number, H: number): Game {
+function newGame(W: number, H: number, hard = false): Game {
   const ground = H - 34;
   return {
     W,
@@ -105,7 +108,7 @@ function newGame(W: number, H: number): Game {
     jumpHeld: false,
     coyote: 0,
     buffer: 0,
-    speed: START_SPEED,
+    speed: hard ? START_SPEED * 1.4 : START_SPEED,
     distance: 0,
     score: 0,
     coffee: 0,
@@ -127,6 +130,7 @@ function newGame(W: number, H: number): Game {
     releases: 0,
     time: 0,
     dead: false,
+    hard,
   };
 }
 
@@ -159,6 +163,18 @@ export function DeployDash() {
   const [full, setFull] = React.useState(false);
   const [touch, setTouch] = React.useState(false);
   const [portrait, setPortrait] = React.useState(false);
+  const [hard, setHardState] = React.useState(false);
+  const hardRef = React.useRef(false);
+  const setHard = React.useCallback((h: boolean) => {
+    hardRef.current = h;
+    setHardState(h);
+    try {
+      bestRef.current = Number(window.localStorage.getItem(h ? `${BEST_KEY}-hard` : BEST_KEY)) || 0;
+    } catch {
+      bestRef.current = 0;
+    }
+    setBest(bestRef.current);
+  }, []);
 
   const setPhase = (p: Phase) => {
     phaseRef.current = p;
@@ -254,7 +270,8 @@ export function DeployDash() {
 
   /* ── Simulation ───────────────────────────────────────────────────────── */
   const spawn = (g: Game) => {
-    const s = g.score;
+    // Friday Deploy: everything that normally builds up arrives straight away.
+    const s = g.score + (g.hard ? 800 : 0);
     const roll = Math.random();
     const x = g.W + 30;
     let obs: Obstacle[] = [];
@@ -289,7 +306,7 @@ export function DeployDash() {
     const g = gameRef.current;
     if (!g || g.dead) return;
     g.time += dt;
-    g.speed = Math.min(MAX_SPEED, g.speed + ACCEL * dt);
+    g.speed = Math.min(g.hard ? MAX_SPEED * 1.2 : MAX_SPEED, g.speed + ACCEL * (g.hard ? 1.6 : 1) * dt);
     const dx = g.speed * dt;
     g.distance += dx;
     g.groundOffset = (g.groundOffset + dx) % 40;
@@ -552,7 +569,7 @@ export function DeployDash() {
     if (!canvas || !ctx) return;
     const { w, h, dpr, scale } = viewRef.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#070b17";
+    ctx.fillStyle = gameRef.current?.hard ? "#12060a" : "#070b17";
     ctx.fillRect(0, 0, w, h);
 
     ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
@@ -706,6 +723,8 @@ export function DeployDash() {
   }, []);
 
   const start = () => {
+    // Hard mode needs root; it may have ended since the mode was picked.
+    if (hardRef.current && !hasRoot()) setHard(false);
     unlockAudio();
     playSound("start");
     enterFull();
@@ -713,7 +732,7 @@ export function DeployDash() {
       requestAnimationFrame(() => {
         (document.activeElement as HTMLElement | null)?.blur?.();
         const { w, h, scale } = viewRef.current;
-        gameRef.current = newGame(w / scale, h / scale);
+        gameRef.current = newGame(w / scale, h / scale, hardRef.current);
         setSummary(null);
         setHud({ score: 0, coffee: 0 });
         setPhase("playing");
@@ -740,14 +759,14 @@ export function DeployDash() {
     const newBest = Math.max(bestRef.current, score);
     bestRef.current = newBest;
     try {
-      window.localStorage.setItem(BEST_KEY, String(newBest));
+      window.localStorage.setItem(g.hard ? `${BEST_KEY}-hard` : BEST_KEY, String(newBest));
     } catch {
       /* ignore */
     }
     setBest(newBest);
     setHud({ score, coffee: g.coffee });
     setSummary({ score, coffee: g.coffee, releases: g.releases, best: newBest, isBest });
-    void submitScore("dash", score, g.time * 1000);
+    void submitScore(g.hard ? "dash-hard" : "dash", score, g.time * 1000);
     // Short beat so the crash is visible before the overlay.
     overAtRef.current = performance.now();
     phaseRef.current = "over";
@@ -916,7 +935,13 @@ export function DeployDash() {
                     tests, duck under the error pop-ups and grab the coffee. It
                     gets faster the further you go.
                   </p>
-                  <Button onClick={start} variant="primary" className="mt-5">
+                  <HardModeToggle hard={hard} onChange={setHard} hardLabel="Friday Deploy" />
+                  {hard && (
+                    <p className="mt-2 text-xs text-red-300">
+                      It&apos;s 16:59 on a Friday. Much faster, and every hazard from the very first metre.
+                    </p>
+                  )}
+                  <Button onClick={start} variant={hard ? "outline" : "primary"} className={cn("mt-5", hard && "border-red-400/60 text-red-200")}>
                     <Maximize2 className="size-4" /> Play full screen
                   </Button>
                   {best > 0 && <p className="mt-3 font-mono text-xs text-muted-foreground">Best: {best}</p>}
@@ -940,12 +965,13 @@ export function DeployDash() {
               )}
               {phase === "over" && summary && (
                 <div aria-live="polite">
-                  <p className="text-sm uppercase tracking-wider text-muted-foreground">Build failed</p>
+                  <p className="text-sm uppercase tracking-wider text-muted-foreground">Build failed{hard ? " · Friday Deploy" : ""}</p>
                   <p className={cn("mt-1 font-heading text-4xl font-bold", summary.isBest && "text-accent")}>
                     {summary.score}
                   </p>
                   {summary.isBest && <p className="text-sm font-medium text-accent">New best score!</p>}
-                  <WeeklyRank game="dash" className="mt-1" />
+                  <WeeklyRank game={hard ? "dash-hard" : "dash"} className="mt-1" />
+                  <HardModeToggle hard={hard} onChange={setHard} hardLabel="Friday Deploy" />
                   <dl className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2 text-sm">
                     {[
                       ["Best", summary.best],

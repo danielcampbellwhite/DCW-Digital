@@ -9,6 +9,7 @@ import { BugInvaders } from "@/components/play/bug-invaders";
 import { DeployDash } from "@/components/play/deploy-dash";
 import { WeeklyLeaderboard } from "@/components/play/weekly-leaderboard";
 import { ClassifiedGames } from "@/components/play/classified-games";
+import { RootOnly } from "@/components/play/hard-mode";
 
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Spot the Bug & Typing Game",
@@ -56,6 +57,9 @@ export default function PlayPage() {
             <BugInvaders />
           </div>
           <WeeklyLeaderboard game="invaders" className="mt-6" />
+          <RootOnly>
+            <WeeklyLeaderboard game="invaders-hard" className="mt-6" />
+          </RootOnly>
         </div>
       </section>
 
@@ -71,6 +75,9 @@ export default function PlayPage() {
             <DeployDash />
           </div>
           <WeeklyLeaderboard game="dash" className="mt-6" />
+          <RootOnly>
+            <WeeklyLeaderboard game="dash-hard" className="mt-6" />
+          </RootOnly>
         </div>
       </section>
 

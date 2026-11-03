@@ -142,7 +142,8 @@ export function WeeklyLeaderboard({ game, className }: { game: GameId; className
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="inline-flex items-center gap-2 font-heading text-lg font-semibold">
-          <Trophy className="size-5 text-accent" /> This week&apos;s top scores
+          <Trophy className={cn("size-5", game.endsWith("-hard") ? "text-red-400" : "text-accent")} />
+          {game.endsWith("-hard") ? `${GAMES[game].label.split(": ")[1]}: this week's top scores` : "This week's top scores"}
         </h3>
         <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
           {board && <span>Resets in {resetsIn(board.resetsAt)}</span>}

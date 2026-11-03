@@ -59,6 +59,11 @@ function emit() {
   window.dispatchEvent(new Event(EVENT));
 }
 
+/** Is there an active root session right now? (Non-hook, for event handlers.) */
+export function hasRoot() {
+  return typeof window !== "undefined" && readSession() !== null;
+}
+
 export function grantRoot() {
   const session: RootSession = { grantedAt: Date.now(), expiresAt: nextMidnight() };
   try {

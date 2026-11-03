@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { playSound, unlockAudio } from "@/lib/sfx";
 import { SoundToggle } from "@/components/play/sound-toggle";
+import { HardModeToggle } from "@/components/play/hard-mode";
+import { hasRoot } from "@/lib/root-access";
 import { submitScore, WeeklyRank } from "@/components/play/weekly-leaderboard";
 
 /* ── Word lists ─────────────────────────────────────────────────────────── */
@@ -71,6 +73,7 @@ interface Game {
   startedAt: number;
   shake: number;
   nextId: number;
+  hard: boolean;
 }
 
 type Phase = "idle" | "playing" | "paused" | "over";
@@ -95,7 +98,7 @@ function pickWord(wave: number, taken: Set<string>): string {
   return pick(WORDS.medium);
 }
 
-function newGame(w: number, h: number): Game {
+function newGame(w: number, h: number, hard = false): Game {
   return {
     w,
     h,
@@ -117,12 +120,14 @@ function newGame(w: number, h: number): Game {
     startedAt: performance.now(),
     shake: 0,
     nextId: 1,
+    hard,
   };
 }
 
 function startWave(g: Game) {
-  g.toSpawn = 4 + g.wave * 3;
-  g.bossPending = g.wave % 3 === 0;
+  // Nightmare: more bugs per wave and a boss every second wave.
+  g.toSpawn = g.hard ? 6 + g.wave * 4 : 4 + g.wave * 3;
+  g.bossPending = g.wave % (g.hard ? 2 : 3) === 0;
   g.spawnTimer = 1.2;
   g.banner = 2;
 }
@@ -153,6 +158,19 @@ export function BugInvaders() {
   const [summary, setSummary] = React.useState<Summary | null>(null);
   const [best, setBest] = React.useState(0);
   const bestRef = React.useRef(0);
+  const [hard, setHardState] = React.useState(false);
+  const hardRef = React.useRef(false);
+  const bestKey = (h: boolean) => (h ? `${BEST_KEY}-hard` : BEST_KEY);
+  const setHard = React.useCallback((h: boolean) => {
+    hardRef.current = h;
+    setHardState(h);
+    try {
+      bestRef.current = Number(window.localStorage.getItem(h ? `${BEST_KEY}-hard` : BEST_KEY)) || 0;
+    } catch {
+      bestRef.current = 0;
+    }
+    setBest(bestRef.current);
+  }, []);
 
   const setPhase = (p: Phase) => {
     phaseRef.current = p;
@@ -278,19 +296,19 @@ export function BugInvaders() {
       const alive = g.enemies.filter((e) => !e.dying);
       const taken = new Set(alive.map((e) => e.word[e.typed]?.toLowerCase() ?? ""));
       if (g.toSpawn > 0) {
-        const word = pickWord(g.wave, taken);
+        const word = pickWord(g.wave + (g.hard ? 4 : 0), taken);
         g.enemies.push({
           id: g.nextId++, word, typed: 0, boss: false, r: 14, dying: 0,
           x: rand(40, g.w - 40), y: -20,
-          speed: (24 + g.wave * 4 + rand(0, 12)) * scale,
+          speed: (24 + g.wave * 4 + rand(0, 12)) * scale * (g.hard ? 1.55 : 1),
         });
         g.toSpawn--;
-        g.spawnTimer = Math.max(0.55, 2.1 - g.wave * 0.15) * rand(0.8, 1.2);
+        g.spawnTimer = Math.max(0.55, 2.1 - g.wave * 0.15) * rand(0.8, 1.2) * (g.hard ? 0.65 : 1);
       } else if (g.bossPending && alive.length <= 2) {
         g.enemies.push({
           id: g.nextId++, word: pick(BOSS_PHRASES), typed: 0, boss: true, r: 26, dying: 0,
           x: g.w / 2, y: -40,
-          speed: (12 + g.wave * 1.2) * scale,
+          speed: (12 + g.wave * 1.2) * scale * (g.hard ? 1.4 : 1),
         });
         g.bossPending = false;
       }
@@ -370,7 +388,7 @@ export function BugInvaders() {
     const g = gameRef.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    ctx.fillStyle = "#070b17";
+    ctx.fillStyle = g?.hard ? "#12060a" : "#070b17";
     ctx.fillRect(0, 0, w, h);
 
     if (g && g.shake > 0) ctx.translate(rand(-4, 4) * g.shake * 3, rand(-4, 4) * g.shake * 3);
@@ -489,7 +507,7 @@ export function BugInvaders() {
 
     // Wave banner.
     if (g.banner > 0) {
-      const boss = g.wave % 3 === 0;
+      const boss = g.wave % (g.hard ? 2 : 3) === 0;
       ctx.globalAlpha = Math.min(1, g.banner);
       ctx.textAlign = "center";
       ctx.font = `700 30px ${fontRef.current}`;
@@ -592,6 +610,8 @@ export function BugInvaders() {
   }, []);
 
   const start = () => {
+    // Hard mode needs root; it may have ended since the mode was picked.
+    if (hardRef.current && !hasRoot()) setHard(false);
     unlockAudio();
     playSound("start");
     enterFull();
@@ -599,7 +619,7 @@ export function BugInvaders() {
     requestAnimationFrame(() => requestAnimationFrame(() => {
       (document.activeElement as HTMLElement | null)?.blur?.();
       const { w, h } = sizeRef.current;
-      const g = newGame(w, h);
+      const g = newGame(w, h, hardRef.current);
       startWave(g);
       gameRef.current = g;
       setSummary(null);
@@ -624,7 +644,7 @@ export function BugInvaders() {
     const newBest = Math.max(prevBest, g.score);
     bestRef.current = newBest;
     try {
-      window.localStorage.setItem(BEST_KEY, String(newBest));
+      window.localStorage.setItem(bestKey(g.hard), String(newBest));
     } catch {
       /* ignore */
     }
@@ -641,7 +661,7 @@ export function BugInvaders() {
     });
     setPhase("over");
     playSound("gameOver");
-    void submitScore("invaders", g.score, performance.now() - g.startedAt);
+    void submitScore(g.hard ? "invaders-hard" : "invaders", g.score, performance.now() - g.startedAt);
   }
 
   const press = (ch: string) => {
@@ -793,7 +813,13 @@ export function BugInvaders() {
                     Bugs are heading for your ship. Type the word on each one to
                     shoot it down. Every third wave brings a boss.
                   </p>
-                  <Button onClick={start} variant="primary" className="mt-5">
+                  <HardModeToggle hard={hard} onChange={setHard} hardLabel="Nightmare" />
+                  {hard && (
+                    <p className="mt-2 text-xs text-red-300">
+                      Faster bugs, longer words from the start, and a boss every second wave.
+                    </p>
+                  )}
+                  <Button onClick={start} variant={hard ? "outline" : "primary"} className={cn("mt-5", hard && "border-red-400/60 text-red-200")}>
                     <Maximize2 className="size-4" /> Play full screen
                   </Button>
                   {best > 0 && <p className="mt-3 font-mono text-xs text-muted-foreground">Best: {best}</p>}
@@ -817,12 +843,13 @@ export function BugInvaders() {
               )}
               {phase === "over" && summary && (
                 <div aria-live="polite">
-                  <p className="text-sm uppercase tracking-wider text-muted-foreground">Game over</p>
+                  <p className="text-sm uppercase tracking-wider text-muted-foreground">Game over{hard ? " · Nightmare" : ""}</p>
                   <p className={cn("mt-1 font-heading text-4xl font-bold", summary.isBest && "text-accent")}>
                     {summary.score}
                   </p>
                   {summary.isBest && <p className="text-sm font-medium text-accent">New best score!</p>}
-                  <WeeklyRank game="invaders" className="mt-1" />
+                  <WeeklyRank game={hard ? "invaders-hard" : "invaders"} className="mt-1" />
+                  <HardModeToggle hard={hard} onChange={setHard} hardLabel="Nightmare" />
                   <dl className="mx-auto mt-4 grid max-w-xs grid-cols-2 gap-2 text-sm">
                     {[
                       ["Wave", summary.wave],

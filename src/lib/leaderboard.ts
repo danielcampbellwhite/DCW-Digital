@@ -10,6 +10,8 @@ export const GAMES = {
   invaders: { label: "Bug Invaders", maxScore: 500_000, perSecond: 600 },
   dash: { label: "Deploy Dash", maxScore: 200_000, perSecond: 140 },
   whack: { label: "Whack-a-Bug", maxScore: 1_500, perSecond: 60 },
+  "invaders-hard": { label: "Bug Invaders: Nightmare", maxScore: 1_000_000, perSecond: 1_000 },
+  "dash-hard": { label: "Deploy Dash: Friday Deploy", maxScore: 300_000, perSecond: 220 },
 } as const;
 
 export type GameId = keyof typeof GAMES;
