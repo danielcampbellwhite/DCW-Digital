@@ -10,11 +10,14 @@ import { DeployDash } from "@/components/play/deploy-dash";
 import { WeeklyLeaderboard } from "@/components/play/weekly-leaderboard";
 import { ClassifiedGames } from "@/components/play/classified-games";
 import { RootOnly } from "@/components/play/hard-mode";
+import { DevGames } from "@/components/play/dev-games/dev-games";
+import { LoadBalancer } from "@/components/play/load-balancer";
+import { StartupTycoon } from "@/components/play/startup-tycoon";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Developer Games: Spot the Bug & Typing Game",
+  title: "Developer Games: Dev Games, Spot the Bug & More",
   description:
-    "Free games for developers and the curious: find the bug in real code, a typing shooter, an endless runner and Whack-a-Bug. Play in your browser.",
+    "Free browser games for developers and the curious: a five-event sports day with all-time world records, spot the bug, a typing shooter, a load balancer and an idle startup game.",
   path: "/play",
 });
 
@@ -28,7 +31,7 @@ export default function PlayPage() {
             Fancy a <span className="text-gradient">game?</span>
           </>
         }
-        description="Not everything has to be serious. Spot the bug like a developer, type your way through a bug invasion, dash a release to production, or whack a few more against the clock."
+        description="Not everything has to be serious. Chase a world record at the Dev Games, spot the bug like a developer, keep the servers up as the load balancer, or build a startup empire one feature at a time."
       />
 
       {/* Spot the Bug quiz */}
@@ -45,8 +48,22 @@ export default function PlayPage() {
         </div>
       </section>
 
+      {/* Multi-event athletics */}
+      <section id="dev-games" className="scroll-mt-24 bg-surface/30 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Sports Day"
+            title="The Dev Games"
+            description="Five events, one champion. Sprint, hurdles, long jump, javelin and archery, played on your keyboard or phone. The world records are the best ever set by players on this site, and they never reset."
+          />
+          <div className="mt-12">
+            <DevGames />
+          </div>
+        </div>
+      </section>
+
       {/* Typing shooter */}
-      <section id="bug-invaders" className="scroll-mt-24 bg-surface/30 py-20">
+      <section id="bug-invaders" className="scroll-mt-24 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Typing Game"
@@ -64,7 +81,7 @@ export default function PlayPage() {
       </section>
 
       {/* Endless runner */}
-      <section id="deploy-dash" className="scroll-mt-24 py-20">
+      <section id="deploy-dash" className="scroll-mt-24 bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Endless Runner"
@@ -78,6 +95,21 @@ export default function PlayPage() {
           <RootOnly>
             <WeeklyLeaderboard game="dash-hard" className="mt-6" />
           </RootOnly>
+        </div>
+      </section>
+
+      {/* Load balancer */}
+      <section id="load-balancer" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Ops Game"
+            title="Load Balancer"
+            description="Traffic is pouring in and you're the router. Send every request to the right kind of server, keep the load spread so nothing falls over, and scale up before the next spike hits."
+          />
+          <div className="mt-12">
+            <LoadBalancer />
+          </div>
+          <WeeklyLeaderboard game="balancer" className="mt-6" />
         </div>
       </section>
 
@@ -96,8 +128,22 @@ export default function PlayPage() {
         </div>
       </section>
 
+      {/* Idle game */}
+      <section id="startup-tycoon" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Idle Game"
+            title="Startup Tycoon"
+            description="Start with a laptop and a dream. Ship features, win users, hire a team and grow to an IPO, without letting tech debt or your servers sink you. It keeps going while you're away."
+          />
+          <div className="mt-12">
+            <StartupTycoon />
+          </div>
+        </div>
+      </section>
+
       {/* Root-only games, unlocked via the secret terminal */}
-      <section id="classified" className="scroll-mt-24 py-20">
+      <section id="classified" className="scroll-mt-24 bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Classified"

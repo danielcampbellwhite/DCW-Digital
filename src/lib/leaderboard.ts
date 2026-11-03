@@ -12,6 +12,7 @@ export const GAMES = {
   whack: { label: "Whack-a-Bug", maxScore: 1_500, perSecond: 60 },
   "invaders-hard": { label: "Bug Invaders: Nightmare", maxScore: 1_000_000, perSecond: 1_000 },
   "dash-hard": { label: "Deploy Dash: Friday Deploy", maxScore: 300_000, perSecond: 220 },
+  balancer: { label: "Load Balancer", maxScore: 300_000, perSecond: 120 },
 } as const;
 
 export type GameId = keyof typeof GAMES;

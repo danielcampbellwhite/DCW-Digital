@@ -722,9 +722,12 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         return out(
           `${"GAME".padEnd(16)}TYPE`,
           `${"spot-the-bug".padEnd(16)}quiz: find the broken line of code`,
+          `${"dev-games".padEnd(16)}five-event sports day, all-time world records`,
           `${"bug-invaders".padEnd(16)}typing shooter`,
           `${"deploy-dash".padEnd(16)}endless runner`,
+          `${"load-balancer".padEnd(16)}keep the servers up`,
           `${"whack-a-bug".padEnd(16)}30-second reflex game`,
+          `${"startup-tycoon".padEnd(16)}idle game: grow a startup to IPO`,
           `${"crack".padEnd(16)}password recovery (this terminal)`,
           ...(root
             ? [

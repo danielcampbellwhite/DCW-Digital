@@ -218,7 +218,9 @@ export default function PrivacyPage() {
                 </li>
                 <li>
                   Game leaderboards: reset every week and deleted automatically
-                  after five weeks.
+                  after five weeks. Dev Games world records are kept until
+                  someone beats them, and only ever show the random player
+                  name.
                 </li>
               </ul>
             </Block>
@@ -229,7 +231,7 @@ export default function PrivacyPage() {
                 <Link href="/play" className={linkCls}>
                   Play
                 </Link>{" "}
-                page save your best scores, badges, sound setting and settings for hidden extras in your
+                page save your best scores, game progress, badges, sound setting and settings for hidden extras in your
                 browser&apos;s local storage so they&apos;re still there next
                 time. This stays on your device and you can clear it at any time
                 through your browser settings. To make the site work offline,
