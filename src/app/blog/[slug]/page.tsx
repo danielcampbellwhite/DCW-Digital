@@ -164,7 +164,7 @@ export default async function BlogPostPage({
               <Button href="/contact" variant="primary">
                 Get in touch
               </Button>
-              <Button href="/contact?service=Free+Website+Health+Check" variant="outline">
+              <Button href="/website-health-check" variant="outline">
                 Free Website Health Check
               </Button>
             </div>

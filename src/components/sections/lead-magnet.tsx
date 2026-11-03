@@ -42,7 +42,7 @@ export function LeadMagnet() {
 
               <div className="flex flex-col gap-3">
                 <Button
-                  href="/contact?service=Free+Website+Health+Check"
+                  href="/website-health-check"
                   variant="accent"
                   size="lg"
                 >

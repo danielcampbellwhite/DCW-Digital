@@ -53,7 +53,7 @@ export function AudienceCta() {
                 straight what I&apos;d do.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href="/contact?service=Free+Website+Health+Check" variant="secondary" className="h-auto min-h-11 whitespace-normal py-2.5 text-center">
+                <Button href="/website-health-check" variant="secondary" className="h-auto min-h-11 whitespace-normal py-2.5 text-center">
                   <Search className="size-4" /> Get a website health check
                 </Button>
                 <Button href="/contact" variant="outline">

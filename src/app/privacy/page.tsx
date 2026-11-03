@@ -56,6 +56,14 @@ export default function PrivacyPage() {
                   information about it, such as how quickly it loads.
                 </li>
                 <li>
+                  <strong className="text-foreground">Website health check:</strong>{" "}
+                  the address you enter is sent to Google&apos;s PageSpeed
+                  Insights service to run the test, and the results may be
+                  cached for a few hours. If you ask for the full report, your
+                  name, email and the results are sent to me like a normal
+                  contact form message.
+                </li>
+                <li>
                   <strong className="text-foreground">Game leaderboards:</strong>{" "}
                   if you finish a game on the{" "}
                   <Link href="/play" className={linkCls}>
@@ -149,6 +157,10 @@ export default function PrivacyPage() {
                 <li>
                   <strong className="text-foreground">My email provider</strong> -
                   storing and sending email.
+                </li>
+                <li>
+                  <strong className="text-foreground">Google</strong> - running
+                  the website health check (PageSpeed Insights).
                 </li>
                 <li>
                   <strong className="text-foreground">Upstash</strong> - storing

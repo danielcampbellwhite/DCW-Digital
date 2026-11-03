@@ -23,6 +23,7 @@ ${siteConfig.owner} is a web developer and Digital Services Lead based in Liverp
 - [Work & Clients](${u}/projects): Organisations Daniel has built and supported sites for
 - [How I Use AI](${u}/ai): How Daniel uses AI in development, with a human reviewing everything
 - [Play](${u}/play): Developer games, including Spot the Bug and a typing game
+- [Free Website Health Check](${u}/website-health-check): Instant speed, SEO and accessibility check with plain-English results
 - [Contact](${u}/contact): Contact form for projects and roles
 
 ## Services

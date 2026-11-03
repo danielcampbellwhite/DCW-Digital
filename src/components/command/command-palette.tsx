@@ -45,7 +45,7 @@ const COMMANDS: CommandItem[] = [
   { id: "blog", label: "Blog", group: "Pages", icon: Newspaper, href: "/blog", keywords: "articles insights writing" },
   { id: "contact", label: "Contact", group: "Pages", icon: Mail, href: "/contact", keywords: "email quote enquiry" },
   { id: "get-in-touch", label: "Get in touch", group: "Actions", icon: Mail, href: "/contact", keywords: "email enquiry quote message" },
-  { id: "audit", label: "Request a Free Website Health Check", group: "Actions", icon: Search, href: "/contact?service=Free+Website+Health+Check", keywords: "audit review free" },
+  { id: "audit", label: "Request a Free Website Health Check", group: "Actions", icon: Search, href: "/website-health-check", keywords: "audit review free" },
   { id: "facebook", label: "Facebook", group: "Social", icon: Facebook, href: siteConfig.links.facebook, external: true },
   { id: "instagram", label: "Instagram", group: "Social", icon: Instagram, href: siteConfig.links.instagram, external: true },
 ];

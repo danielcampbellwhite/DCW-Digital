@@ -61,7 +61,7 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
     title: "Info",
     links: [
       { label: "Contact", href: "/contact" },
-      { label: "Free Website Health Check", href: "/contact?service=Free+Website+Health+Check" },
+      { label: "Free Website Health Check", href: "/website-health-check" },
       { label: "Privacy Policy", href: "/privacy" },
     ],
   },
