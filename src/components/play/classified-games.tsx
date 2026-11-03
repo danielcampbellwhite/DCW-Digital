@@ -1,20 +1,50 @@
 "use client";
 
+import * as React from "react";
 import dynamic from "next/dynamic";
 import { Lock, ShieldCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { formatCountdown, useNow, useRootSession } from "@/lib/root-access";
 import { OPEN_TERMINAL_EVENT } from "@/components/easter-egg/secret-terminal";
 
-// Only downloaded for people with root access.
-const BugSweeper = dynamic(() => import("@/components/play/bug-sweeper").then((m) => m.BugSweeper), {
-  ssr: false,
-  loading: () => <p className="text-center text-sm text-muted-foreground">Decrypting…</p>,
-});
+// Only downloaded for people with root access, one game at a time.
+const loading = () => <p className="py-10 text-center font-mono text-sm text-muted-foreground">decrypting…</p>;
+const BugSweeper = dynamic(() => import("@/components/play/bug-sweeper").then((m) => m.BugSweeper), { ssr: false, loading });
+const MergeConflict = dynamic(() => import("@/components/play/merge-conflict").then((m) => m.MergeConflict), { ssr: false, loading });
+const StackOverflow = dynamic(() => import("@/components/play/stack-overflow").then((m) => m.StackOverflow), { ssr: false, loading });
+
+const GAMES = [
+  { id: "sweeper", name: "Bug Sweeper", blurb: "Clear the codebase without opening a file that's hiding a bug. Numbers count the bugs next door." },
+  { id: "merge", name: "Merge Conflict", blurb: "A memory game. Flip cards to match pairs and resolve every conflict in as few moves as possible." },
+  { id: "stack", name: "Stack Overflow", blurb: "Drop sliding blocks of code onto the stack. Overhangs get trimmed; miss completely and it overflows." },
+] as const;
+type GameId = (typeof GAMES)[number]["id"];
+const TAB_KEY = "dcw-classified-tab";
 
 /** Games only available during a root session (see the secret terminal). */
 export function ClassifiedGames() {
   const session = useRootSession();
   const now = useNow(!!session);
+  const [tab, setTab] = React.useState<GameId>("sweeper");
+
+  React.useEffect(() => {
+    try {
+      const t = window.localStorage.getItem(TAB_KEY) as GameId | null;
+      if (t && GAMES.some((g) => g.id === t)) setTab(t);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const choose = (id: GameId) => {
+    setTab(id);
+    try {
+      window.localStorage.setItem(TAB_KEY, id);
+    } catch {
+      /* ignore */
+    }
+  };
+  const current = GAMES.find((g) => g.id === tab)!;
 
   if (!session) {
     return (
@@ -44,7 +74,31 @@ export function ClassifiedGames() {
           open terminal
         </button>
       </p>
-      <BugSweeper />
+
+      <div role="tablist" aria-label="Classified games" className="mx-auto mb-4 flex max-w-xl flex-wrap justify-center gap-2">
+        {GAMES.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === g.id}
+            onClick={() => choose(g.id)}
+            className={cn(
+              "rounded-full border px-4 py-1.5 text-sm transition-colors",
+              tab === g.id ? "border-accent bg-accent/15 text-accent" : "border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {g.name}
+          </button>
+        ))}
+      </div>
+      <p className="mx-auto mb-6 max-w-xl text-center text-sm text-muted-foreground">{current.blurb}</p>
+
+      <div role="tabpanel" aria-label={current.name}>
+        {tab === "sweeper" && <BugSweeper />}
+        {tab === "merge" && <MergeConflict />}
+        {tab === "stack" && <StackOverflow />}
+      </div>
     </div>
   );
 }

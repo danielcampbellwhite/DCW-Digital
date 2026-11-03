@@ -94,8 +94,8 @@ export default function PlayPage() {
         <div className="container-px">
           <SectionHeading
             eyebrow="Classified"
-            title="Bug Sweeper"
-            description="Clear the codebase without opening a file that's hiding a bug. Numbers tell you how many bugs are in the files around them."
+            title="Classified games"
+            description="Root access only. Three extra games for anyone who's cracked the terminal password today."
           />
           <div className="mt-12">
             <ClassifiedGames />

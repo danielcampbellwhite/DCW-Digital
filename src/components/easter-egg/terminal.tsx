@@ -473,6 +473,126 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     return true;
   };
 
+  /* ── ./snake ─────────────────────────────────────────────────────────── */
+  const SNAKE_W = 22;
+  const SNAKE_H = 12;
+  const SNAKE_BEST = "dcw-snake-best";
+  type Pt = [number, number];
+  const snake = React.useRef<{ body: Pt[]; dir: Pt; queue: Pt[]; food: Pt; score: number; timer: number | null } | null>(null);
+  const [snakeView, setSnakeView] = React.useState<string[] | null>(null);
+  const touchStart = React.useRef<{ x: number; y: number } | null>(null);
+
+  const snakeBest = () => read<number>(SNAKE_BEST, 0);
+
+  const placeFood = (body: Pt[]): Pt => {
+    for (;;) {
+      const f: Pt = [Math.floor(Math.random() * SNAKE_W), Math.floor(Math.random() * SNAKE_H)];
+      if (!body.some(([x, y]) => x === f[0] && y === f[1])) return f;
+    }
+  };
+
+  const renderSnake = () => {
+    const sn = snake.current;
+    if (!sn) return;
+    const rows: string[] = ["+" + "-".repeat(SNAKE_W) + "+"];
+    for (let y = 0; y < SNAKE_H; y++) {
+      let row = "";
+      for (let x = 0; x < SNAKE_W; x++) {
+        const i = sn.body.findIndex(([bx, by]) => bx === x && by === y);
+        row += i === 0 ? "@" : i > 0 ? "o" : sn.food[0] === x && sn.food[1] === y ? "*" : " ";
+      }
+      rows.push("|" + row + "|");
+    }
+    rows.push("+" + "-".repeat(SNAKE_W) + "+");
+    rows.push(` score ${String(sn.score).padEnd(4)} best ${Math.max(snakeBest(), sn.score)}`);
+    setSnakeView(rows);
+  };
+
+  const endSnake = (quit: boolean) => {
+    const sn = snake.current;
+    if (!sn) return;
+    if (sn.timer !== null) window.clearTimeout(sn.timer);
+    const best = snakeBest();
+    const isBest = sn.score > best;
+    if (isBest) write(SNAKE_BEST, sn.score);
+    snake.current = null;
+    setSnakeView(null);
+    playSound(quit ? "select" : isBest ? "finish" : "gameOver");
+    print(
+      make(quit ? "dim" : "err", quit ? "snake: quit" : "snake: game over. you ran into something."),
+      make("out", `score: ${sn.score}${isBest ? "  (new best!)" : `   best: ${best}`}`),
+      make("dim", "run ./snake to play again"),
+      make("out", "")
+    );
+  };
+
+  const snakeTick = () => {
+    const sn = snake.current;
+    if (!sn) return;
+    const next = sn.queue.shift();
+    if (next) sn.dir = next;
+    const [hx, hy] = sn.body[0]!;
+    const head: Pt = [hx + sn.dir[0], hy + sn.dir[1]];
+    const eating = head[0] === sn.food[0] && head[1] === sn.food[1];
+    const body = eating ? sn.body : sn.body.slice(0, -1);
+    if (head[0] < 0 || head[1] < 0 || head[0] >= SNAKE_W || head[1] >= SNAKE_H || body.some(([x, y]) => x === head[0] && y === head[1])) {
+      return endSnake(false);
+    }
+    sn.body = [head, ...body];
+    if (eating) {
+      sn.score += 1;
+      sn.food = placeFood(sn.body);
+      playSound("coin");
+    }
+    renderSnake();
+    sn.timer = window.setTimeout(snakeTick, Math.max(65, 150 - sn.score * 5));
+  };
+
+  const startSnake = () => {
+    if (!root) return print(make("err", "sh: ./snake: Permission denied"));
+    stopAutoType();
+    const body: Pt[] = [[6, 6], [5, 6], [4, 6]];
+    snake.current = { body, dir: [1, 0], queue: [], food: placeFood(body), score: 0, timer: null };
+    playSound("start");
+    print(make("dim", "snake: arrow keys / WASD to move, q to quit. eat the bugs (*)."));
+    renderSnake();
+    snake.current.timer = window.setTimeout(snakeTick, 400);
+  };
+
+  const steer = (d: Pt) => {
+    const sn = snake.current;
+    if (!sn) return;
+    const last = sn.queue[sn.queue.length - 1] ?? sn.dir;
+    if (last[0] === -d[0] && last[1] === -d[1]) return; // no reversing into yourself
+    if (last[0] === d[0] && last[1] === d[1]) return;
+    if (sn.queue.length < 3) sn.queue.push(d);
+  };
+
+  // While snake runs, the keyboard steers it (captured before the prompt sees it).
+  React.useEffect(() => {
+    if (!snakeView) return;
+    const onKey = (e: KeyboardEvent) => {
+      const k = e.key.toLowerCase();
+      const dirs: Record<string, Pt> = { arrowup: [0, -1], w: [0, -1], arrowdown: [0, 1], s: [0, 1], arrowleft: [-1, 0], a: [-1, 0], arrowright: [1, 0], d: [1, 0] };
+      if (dirs[k]) steer(dirs[k]!);
+      else if (k === "q" || k === "escape") endSnake(true);
+      else if (e.ctrlKey || e.metaKey || e.altKey) return;
+      // Everything else is swallowed so it can't reach the hidden prompt.
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!snakeView]);
+
+  React.useEffect(
+    () => () => {
+      if (snake.current?.timer != null) window.clearTimeout(snake.current.timer);
+    },
+    []
+  );
+
   const runMatrix = () => {
     if (!root) return print(make("err", "sh: matrix.sh: Permission denied"));
     playSound("start");
@@ -594,6 +714,16 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           `${"deploy-dash".padEnd(16)}endless runner`,
           `${"whack-a-bug".padEnd(16)}30-second reflex game`,
           `${"crack".padEnd(16)}password recovery (this terminal)`,
+          ...(root
+            ? [
+                "",
+                "CLASSIFIED (root)",
+                `${"bug-sweeper".padEnd(16)}minesweeper for codebases`,
+                `${"merge-conflict".padEnd(16)}memory game`,
+                `${"stack-overflow".padEnd(16)}one-tap block stacker`,
+                `${"snake".padEnd(16)}in this terminal: cd vault && ./snake`,
+              ]
+            : []),
           "",
           "run 'open play' to launch."
         );
@@ -666,6 +796,12 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         );
       case "fortune":
         return print(...randomJoke().map((l) => make("out", l)));
+      case "./snake":
+      case "./vault/snake":
+      case "snake":
+        if (cmd === "./snake" && cwd !== "vault") return print(make("err", "sh: ./snake: No such file or directory"));
+        if (cmd === "snake" && !root) return print(make("err", `dcwsh: command not found: ${cmd}`));
+        return startSnake();
       case "./matrix.sh":
       case "./vault/matrix.sh":
         if (cmd === "./matrix.sh" && cwd !== "vault") return print(make("err", "sh: ./matrix.sh: No such file or directory"));
@@ -673,6 +809,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
       case "sh":
       case "bash":
         if (/^(\.\/)?(vault\/)?matrix\.sh$/.test(arg) && (cwd === "vault" || arg.includes("vault/"))) return runMatrix();
+        if (/^(\.\/)?(vault\/)?snake$/.test(arg) && (cwd === "vault" || arg.includes("vault/"))) return startSnake();
         return print(make("err", `${cmd}: ${arg || "(no file)"}: No such file or directory`));
       case "cat":
       case "less":
@@ -1078,9 +1215,32 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
             {lines.map(renderLine)}
           </div>
 
+          {/* ./snake board */}
+          {snakeView && (
+            <div
+              className="my-2 inline-block touch-none whitespace-pre text-[15px] leading-[1.05] sm:text-lg"
+              role="img"
+              aria-label={`Snake. ${snakeView[snakeView.length - 1]?.trim()}`}
+              onPointerDown={(e) => {
+                touchStart.current = { x: e.clientX, y: e.clientY };
+              }}
+              onPointerUp={(e) => {
+                const s0 = touchStart.current;
+                touchStart.current = null;
+                if (!s0) return;
+                const dx = e.clientX - s0.x;
+                const dy = e.clientY - s0.y;
+                if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+                steer(Math.abs(dx) > Math.abs(dy) ? [Math.sign(dx), 0] : [0, Math.sign(dy)]);
+              }}
+            >
+              {snakeView.join("\n")}
+            </div>
+          )}
+
           {/* Prompt */}
           {!booting && (
-            <label className={`flex items-center gap-2 transition-opacity duration-75 ${typing ? "opacity-0" : "opacity-100"}`}>
+            <label className={`flex items-center gap-2 transition-opacity duration-75 ${typing || snakeView ? "opacity-0" : "opacity-100"}`}>
               <span className="shrink-0">{prompt}</span>
               <span className="relative flex min-w-0 flex-1 items-center">
                 <input
@@ -1112,12 +1272,14 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
         </div>
 
         {/* Quick commands for touch screens */}
-        {touch && !booting && (
+        {touch && !booting && !snakeView && (
           <div className="flex gap-2 overflow-x-auto border-t px-3 py-2 text-xs" style={{ borderColor: t.dim }}>
-            {(game
+            {(snakeView
+              ? []
+              : game
               ? ["quit"]
               : cwd === "vault"
-                ? ["ls -a", ...VAULT.filter((f) => !f.exec).map((f) => `cat ${f.name}`), "./matrix.sh", "cd .."]
+                ? ["./snake", "ls -a", ...VAULT.filter((f) => !f.exec).map((f) => `cat ${f.name}`), "./matrix.sh", "cd .."]
                 : root
                   ? ["help", "cd vault", "settings", "session", "logout", `theme ${nextTheme}`, "exit"]
                   : ["help", "about", "crack", "ls", "blog", `theme ${nextTheme}`, "exit"]
@@ -1138,8 +1300,42 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           </div>
         )}
 
+        {/* D-pad while ./snake is running */}
+        {snakeView && touch && (
+          <div className="grid select-none grid-cols-3 gap-2 border-t px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 touch-manipulation" style={{ borderColor: t.dim }}>
+            {([
+              ["", null],
+              ["↑", [0, -1]],
+              ["quit", "quit"],
+              ["←", [-1, 0]],
+              ["↓", [0, 1]],
+              ["→", [1, 0]],
+            ] as [string, Pt | "quit" | null][]).map(([label, act], i) =>
+              act === null ? (
+                <span key={i} />
+              ) : (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={act === "quit" ? "Quit snake" : `Move ${label}`}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (act === "quit") endSnake(true);
+                    else steer(act);
+                  }}
+                  className="dcwt-key h-14 rounded border text-xl"
+                  style={{ borderColor: t.dim }}
+                >
+                  {label}
+                </button>
+              )
+            )}
+          </div>
+        )}
+
         {/* On-screen keyboard */}
-        {showKeys && !booting && (
+        {showKeys && !booting && !snakeView && (
           <div
             className="select-none border-t px-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 touch-manipulation sm:px-3"
             style={{ borderColor: t.dim }}

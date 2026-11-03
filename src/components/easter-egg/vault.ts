@@ -42,6 +42,7 @@ WELCOME TO THE VAULT
 Everything in here is classified.
 (It isn't.)
 
+  ./snake        play snake. eat the bugs.
   cat <file>     open a file
   ls -a          show hidden files
   ./matrix.sh    you know you want to
@@ -66,25 +67,6 @@ Everything in here is classified.
 `),
   },
   {
-    name: "coffee.txt",
-    size: 388,
-    lines: art(String.raw`
-       (  )   (   )  )
-        ) (   )  (  (
-        ( )  (    ) )
-       _____________
-      <_____________> ___
-      |             |/ _ \
-      |  DEV  FUEL  | | | |
-      |             |_| |_|
-   ___|             |\___/
-  /    \___________/    \
-  \_____________________/
-
-  caffeine: 87%    status: coding
-`),
-  },
-  {
     name: "rubber-duck.txt",
     size: 356,
     lines: art(String.raw`
@@ -100,23 +82,6 @@ Everything in here is classified.
   2. the duck says nothing
   3. you find the bug
   4. the duck takes the credit
-`),
-  },
-  {
-    name: "keyboard-cat.txt",
-    size: 341,
-    lines: art(String.raw`
-     /\_/\
-    ( -.- )   zzz
-     > ^ <
-   __/   \______________________
-  |qwertyuiopasdfghjjjjjjjjjjjjj|
-  |_____________________________|
-
-  $ git log -1
-  commit 9f3a2c1 (HEAD -> main)
-  Author: the cat
-      jjjjjjjjjjjjjjjjjjjjjjjjjj
 `),
   },
   {
@@ -139,45 +104,6 @@ Everything in here is classified.
 `),
   },
   {
-    name: "deploy-bot.txt",
-    size: 298,
-    lines: art(String.raw`
-          o
-          |
-       .-----.
-       | o o |    beep boop.
-       |  _  |    shipping to
-       '-----'    production.
-       /|   |\
-        |   |
-       _|   |_
-
-  DEPLOY-BOT v1.0
-  status: running. always running.
-  (catch it on /play: Deploy Dash)
-`),
-  },
-  {
-    name: "friday.txt",
-    size: 365,
-    lines: art(String.raw`
-  FRIDAY 16:59
-  .-------------------------.
-  | $ git push origin main  |
-  |   are you sure? [y/N] y |
-  '-------------------------'
-               |
-         \  \  |  /  /
-          .---------.
-          |  PROD   |
-          | (fire)  |
-          '---------'
-
-  rule #1: never deploy on a Friday.
-  rule #2: see rule #1.
-`),
-  },
-  {
     name: "jokes.txt",
     size: 1024,
     lines: () => ["$ fortune --dev", "", ...randomJoke(), "", "(cat it again for another)"],
@@ -190,6 +116,16 @@ Everything in here is classified.
 You opened it anyway.
 
 That's exactly why you're in here.
+`),
+  },
+  {
+    name: "snake",
+    size: 18432,
+    exec: true,
+    lines: art(`
+^?ELF^B^A^A^@^@^@  >  @  8  @  ^@^@^@
+...binary file. you can't read it.
+run it instead: ./snake
 `),
   },
   {
