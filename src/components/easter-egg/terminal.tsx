@@ -106,7 +106,6 @@ const SHELL_ROWS = [
   ["tab", ..."zxcvbnm".split(""), "back"],
   ["up", "-", ".", "space", "enter"],
 ];
-const GAME_ROWS = ["qwertyuiop".split(""), "asdfghjkl".split(""), ["enter", ..."zxcvbnm".split(""), "back"]];
 const KEY_TEXT: Record<string, string> = { tab: "TAB", back: "⌫", up: "↑", space: "SPACE", enter: "ENTER" };
 /** Line kinds that type themselves out; the rest appear instantly. */
 const TYPED = new Set<string>(["out", "ok", "dim", "head", "err", "art"]);
@@ -768,6 +767,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
   }
 
   const submit = () => {
+    stopAutoType();
     flushOutput();
     const value = input;
     setInput("");
@@ -856,6 +856,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
 
   /* On-screen keyboard. */
   const pressKey = (key: string) => {
+    if (key !== "enter") stopAutoType();
     playSound("click");
     histIdx.current = -1;
     const max = game ? 12 : 120;
@@ -875,13 +876,33 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
     }
   };
 
+  /** Quick commands type themselves into the prompt; Enter runs them. */
+  const autoType = React.useRef<number | null>(null);
+  const stopAutoType = () => {
+    if (autoType.current !== null) window.clearInterval(autoType.current);
+    autoType.current = null;
+  };
+  React.useEffect(() => stopAutoType, []);
+
   const tap = (cmd: string) => {
     if (game && cmd !== "quit") return;
+    stopAutoType();
     flushOutput();
-    print(make("in", `${game ? "crack>" : shellPrompt} ${cmd}`));
-    if (game) guess(cmd);
-    else run(cmd);
+    histIdx.current = -1;
+    const text = game ? cmd.toUpperCase() : cmd;
     inputRef.current?.focus();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInput(text);
+      return;
+    }
+    let i = 0;
+    setInput("");
+    autoType.current = window.setInterval(() => {
+      i += 1;
+      setInput(text.slice(0, i));
+      playSound("click");
+      if (i >= text.length) stopAutoType();
+    }, 38);
   };
 
   const t = THEMES[theme];
@@ -1065,7 +1086,10 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
                 <input
                   ref={inputRef}
                   value={input}
-                  onChange={(e) => setInput(game ? e.target.value.toUpperCase() : e.target.value)}
+                  onChange={(e) => {
+                    stopAutoType();
+                    setInput(game ? e.target.value.toUpperCase() : e.target.value);
+                  }}
                   onKeyDown={onKeyDown}
                   autoCapitalize="off"
                   autoCorrect="off"
@@ -1122,7 +1146,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className="mx-auto flex max-w-2xl flex-col gap-1.5">
-              {(game ? GAME_ROWS : SHELL_ROWS).map((row, r) => (
+              {SHELL_ROWS.map((row, r) => (
                 <div key={r} className="flex justify-center gap-1">
                   {row.map((k) => {
                     const st = game && k.length === 1 ? game.keys[k.toUpperCase()] : undefined;
