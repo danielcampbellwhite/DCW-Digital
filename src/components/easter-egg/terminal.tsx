@@ -727,6 +727,7 @@ export function Terminal({ posts, onClose }: { posts: TerminalPost[]; onClose: (
           `${"deploy-dash".padEnd(16)}endless runner`,
           `${"load-balancer".padEnd(16)}keep the servers up`,
           `${"whack-a-bug".padEnd(16)}30-second reflex game`,
+          `${"hangman".padEnd(16)}guess the word before the bug ships`,
           `${"startup-tycoon".padEnd(16)}idle game: grow a startup to IPO`,
           `${"crack".padEnd(16)}password recovery (this terminal)`,
           ...(root

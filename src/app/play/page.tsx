@@ -13,11 +13,12 @@ import { RootOnly } from "@/components/play/hard-mode";
 import { DevGames } from "@/components/play/dev-games/dev-games";
 import { LoadBalancer } from "@/components/play/load-balancer";
 import { StartupTycoon } from "@/components/play/startup-tycoon";
+import { Hangman } from "@/components/play/hangman";
 
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Dev Games, Spot the Bug & More",
   description:
-    "Free browser games for developers and the curious: a five-event sports day with all-time world records, spot the bug, a typing shooter, a load balancer and an idle startup game.",
+    "Free browser games for developers and the curious: a five-event sports day with all-time world records, spot the bug, hangman, a typing shooter, a load balancer and an idle startup game.",
   path: "/play",
 });
 
@@ -128,8 +129,23 @@ export default function PlayPage() {
         </div>
       </section>
 
+      {/* Word game */}
+      <section id="hangman" className="scroll-mt-24 py-20">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Word Game"
+            title="Hangman"
+            description="The classic, developer edition. Guess the coding term one letter at a time before the bug ships to production. There's an easy word list for younger players too."
+          />
+          <div className="mt-12">
+            <Hangman />
+          </div>
+          <WeeklyLeaderboard game="hangman" className="mt-6" />
+        </div>
+      </section>
+
       {/* Idle game */}
-      <section id="startup-tycoon" className="scroll-mt-24 py-20">
+      <section id="startup-tycoon" className="scroll-mt-24 bg-surface/30 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Idle Game"
@@ -143,7 +159,7 @@ export default function PlayPage() {
       </section>
 
       {/* Root-only games, unlocked via the secret terminal */}
-      <section id="classified" className="scroll-mt-24 bg-surface/30 py-20">
+      <section id="classified" className="scroll-mt-24 py-20">
         <div className="container-px">
           <SectionHeading
             eyebrow="Classified"

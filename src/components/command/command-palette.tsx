@@ -44,6 +44,7 @@ const COMMANDS: CommandItem[] = [
   { id: "play", label: "Play a game", group: "Pages", icon: Gamepad2, href: "/play", keywords: "games fun quiz spot the bug invaders typing whack squash deploy dash runner jump" },
   { id: "dev-games", label: "The Dev Games (world records)", group: "Pages", icon: Gamepad2, href: "/play#dev-games", keywords: "sports olympics athletics sprint 100m hurdles long jump javelin archery championship world record" },
   { id: "load-balancer", label: "Load Balancer game", group: "Pages", icon: Gamepad2, href: "/play#load-balancer", keywords: "servers traffic ops devops router game" },
+  { id: "hangman", label: "Hangman", group: "Pages", icon: Gamepad2, href: "/play#hangman", keywords: "word game guess letters hangman spelling" },
   { id: "startup-tycoon", label: "Startup Tycoon", group: "Pages", icon: Gamepad2, href: "/play#startup-tycoon", keywords: "idle clicker startup business tycoon game" },
   { id: "blog", label: "Blog", group: "Pages", icon: Newspaper, href: "/blog", keywords: "articles insights writing" },
   { id: "contact", label: "Contact", group: "Pages", icon: Mail, href: "/contact", keywords: "email quote enquiry" },
