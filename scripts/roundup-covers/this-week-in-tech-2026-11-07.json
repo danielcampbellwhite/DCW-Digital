@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-07",
+  "stories": [
+    { "label": "WordPress", "tag": "Security", "icon": "ShieldAlert", "tone": "security" },
+    { "label": "Next.js", "tag": "Web", "icon": "CodeXml", "tone": "web" },
+    { "label": "GPT-6 Cyber", "tag": "AI", "icon": "BrainCircuit", "tone": "ai" },
+    { "label": "NCSC Review", "tag": "UK", "icon": "Landmark", "tone": "policy" }
+  ],
+  "extras": ["Ivanti", "Node.js", "Chrome 157"]
+}

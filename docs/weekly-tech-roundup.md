@@ -127,9 +127,53 @@ category: "Tech News"
 tags: ["Weekly Roundup", "<4-6 topical tags, such as Security, AI, JavaScript>"]
 author: "Daniel Campbell-White"
 featured: false
-cover: "<cyan | violet | emerald - a different one from the last roundup>"
+cover: "/blog/this-week-in-tech-YYYY-MM-DD.png"
 ---
 ```
+
+## Featured image
+
+Every roundup gets its own generated featured image, built from that week's stories in
+the site's style. It's drawn by a script, not an AI image model, so it always looks on
+brand and never shows anything made up.
+
+1. Write the spec to `scripts/roundup-covers/this-week-in-tech-YYYY-MM-DD.json`:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "stories": [
+    { "label": "WordPress", "tag": "Security", "icon": "ShieldAlert", "tone": "security" },
+    { "label": "Next.js", "tag": "Web", "icon": "CodeXml", "tone": "web" },
+    { "label": "GPT-6 Cyber", "tag": "AI", "icon": "BrainCircuit", "tone": "ai" }
+  ],
+  "extras": ["Ivanti", "Node.js", "Chrome 157"]
+}
+```
+
+   - `stories`: the 2-4 main stories, in the same order as the post. `label` names the
+     story in a few words (no more than about 18 characters). `tag` is a one-word
+     category, such as Security, AI, Web, Cloud, UK or Policy.
+   - `icon`: a [Lucide](https://lucide.dev/icons) icon name in PascalCase that fits the
+     story, for example ShieldAlert, Bug, Siren, Lock, Bot, BrainCircuit, CodeXml,
+     Server, Cloud, CloudAlert, Database, Cpu, Package, GitBranch, Landmark, Scale or
+     Rocket. If the name is wrong, the script stops and suggests close matches.
+   - `tone` sets the colour: `security` (rose), `ai` (violet), `web` (cyan), `cloud`
+     (green), `policy` (amber), `hardware` (orange) or `trend` (blue).
+   - `extras` (optional): up to 4 quick hits, as one or two words each.
+   - Labels must be accurate and neutral. Don't name a company as "hacked" unless the
+     post confirms it.
+
+2. Render it:
+   `node scripts/roundup-cover.cjs scripts/roundup-covers/this-week-in-tech-YYYY-MM-DD.json public/blog/this-week-in-tech-YYYY-MM-DD.png`
+
+3. Open the PNG and look at it. Check that the labels fit and nothing overlaps or gets
+   cut off. If it does, shorten the labels and render it again.
+
+4. Set `cover: "/blog/this-week-in-tech-YYYY-MM-DD.png"` in the frontmatter.
+
+If the script can't run (for example, Playwright isn't available), use a preset cover
+instead (`cyan`, `violet` or `emerald`) and say so in your report.
 
 ## MDX gotchas
 
@@ -141,13 +185,13 @@ backticks. Use standard Markdown links only, with no raw HTML.
 
 1. Install dependencies if `node_modules` is missing (`npm ci`).
 2. `npm run build` must succeed.
-3. Start the built site (`npx next start -p 3999`). Check that `/blog/<slug>` returns 200
-   and shows the title, and that `/blog` lists the new post. Then stop the server you
-   started.
+3. Start the built site (`npx next start -p 3999`). Check that `/blog/<slug>` returns 200,
+   shows the title and loads the cover image, and that `/blog` lists the new post. Then
+   stop the server you started.
 4. Re-read the post once against the accuracy rules. Check that every link is one you
    actually opened, every date falls inside the window, and there are no em dashes
    (search the file for `—` and `–`).
-5. Commit just the new post (plus any image you deliberately added) with the message
+5. Commit just the new post, its cover PNG and its cover spec JSON with the message
    `This Week in Tech: <date>`, then push straight to `main`. Vercel deploys it
    automatically.
 6. Finish with a short report: the post title, its URL
