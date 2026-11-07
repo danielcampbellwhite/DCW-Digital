@@ -123,6 +123,7 @@ export type PostCategory =
   | "SEO"
   | "Performance"
   | "Technology"
+  | "Tech News"
   | "Business Growth";
 
 /** Blog post frontmatter, parsed from MDX. */

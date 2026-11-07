@@ -10,5 +10,6 @@ export const postCategories: PostCategory[] = [
   "SEO",
   "Performance",
   "Technology",
+  "Tech News",
   "Business Growth",
 ];
