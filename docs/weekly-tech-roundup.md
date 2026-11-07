@@ -1,7 +1,7 @@
 # Weekly tech roundup: editorial brief
 
 This is the brief for the scheduled weekly post, **"This Week in Tech"**, on the DCW
-Digital blog. A scheduled session reads this file every Friday, researches the news,
+Digital blog. A scheduled session reads this file every Sunday evening, researches the news,
 writes one post, checks it builds, and publishes it by pushing to `main`. Edit this file
 to change how the posts are written. The schedule itself lives in Claude's scheduled
 tasks.
