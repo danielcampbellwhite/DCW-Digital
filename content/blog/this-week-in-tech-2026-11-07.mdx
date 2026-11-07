@@ -1,0 +1,151 @@
+---
+title: "Exploited WordPress Updater Flaw and a Next.js Security Release: This Week in Tech"
+description: "A WordPress core flaw that bites during updates is being exploited, Next.js patched seven cache and cookie bugs, OpenAI shipped GPT-6 Cyber, and the NCSC published its annual review."
+seoTitle: "WordPress Updater Flaw & Next.js Patches"
+seoDescription: "This week: an exploited WordPress core updater flaw, seven Next.js security fixes, OpenAI's GPT-6 Cyber, the NCSC Annual Review and more."
+date: "2026-11-07"
+category: "Tech News"
+tags: ["Weekly Roundup", "Security", "WordPress", "Next.js", "AI", "NCSC"]
+author: "Daniel Campbell-White"
+featured: false
+cover: "cyan"
+---
+
+This week's theme is a slightly uncomfortable one: the things we do to stay safe can be
+the risky bit. A WordPress flaw is being exploited during the very update meant to fix
+things, Next.js shipped a batch of caching fixes for one of its newest features, and both
+OpenAI and the UK's NCSC spent the week talking about AI finding vulnerabilities faster
+than people can patch them.
+
+## 1. WordPress: a core updater flaw is being exploited
+
+**Confirmed:** On 3 November, [CISA added CVE-2026-119977 to its Known Exploited
+Vulnerabilities catalogue](https://www.cisa.gov/news-events/alerts/2026/11/03/cisa-adds-one-known-exploited-vulnerability-catalog),
+describing it as a time-of-check time-of-use (TOCTOU) race condition in WordPress Core.
+WordPress had already fixed it in [WordPress 7.1.4, released on 28 October](https://wordpress.org/support/wordpress-version/version-7-1-4/),
+which describes it as "a race condition during core updates that could lead to remote
+code execution" and recommends updating immediately. The same release fixes several
+stored cross-site scripting issues and a Customizer information leak, and patches were
+backported to older branches all the way down to 4.7.
+
+**Reported:** According to [BleepingComputer](https://www.bleepingcomputer.com/news/security/cisa-flags-wordpress-rce-flaw-as-actively-exploited-in-attacks/),
+the problem comes from predictable, web-accessible staging paths used during full-package
+core upgrades, and Wordfence said it had blocked 13,095 attacks against it in 24 hours.
+[Picus Security](https://www.picussecurity.com/resource/blog/cve-2026-119977-when-updating-wordpress-becomes-the-vulnerability),
+whose researcher Umut Bayram reported the bug, scores it CVSS 8.1. WordPress itself
+didn't publish a severity rating.
+
+**Why it matters:** This one is unusual because the risky moment is the update itself.
+Picus makes the awkward point that the first update *to* a fixed release still runs the
+old updater, so a site that hasn't moved yet is exposed while it does. It's also a core
+bug, not a plugin, so "I keep my plugins tidy" doesn't help.
+
+**What to do:** Check every WordPress site you're responsible for is on 7.1.4 (or the
+patched release for its branch). If any are still behind, Picus recommends blocking
+public web access to `wp-content/upgrade/` before you run the update, and confirming it
+returns a 403. Anything older than 4.7 gets no fix at all and needs a proper upgrade.
+
+## 2. Next.js ships seven security fixes, mostly around caching
+
+**Confirmed:** On 3 November, Next.js published its [November 2026 security
+release](https://nextjs.org/blog/november-2026-security-release), with fixes in
+**16.4.5** (Active LTS) and **15.5.29** (Maintenance LTS). The headline issue is a
+cross-tenant cache disclosure when the same public `use cache` function is called both
+directly and from inside `unstable_cache`. Under concurrent load, one tenant's cached
+data could be served to another. Next.js rates it high; the [GitHub advisory](https://github.com/vercel/next.js/security/advisories/GHSA-mfr8-8qww-v76h)
+lists it as CVE-2026-119790, affecting 16.3.0 to 16.4.4.
+
+The others, all rated medium by Next.js, include more cache leaks between root
+parameters and users, shell cache poisoning in self-hosted apps, cookie values (even
+`HttpOnly` ones) exposed through an internal header in Edge routes, and a way past
+`dangerouslyAllowSVG: false` in image optimisation.
+
+**Why it matters:** If you build multi-tenant or multi-locale apps with Cache
+Components, these are exactly the bugs you don't want: the app generates correct
+content and then serves it to the wrong person. Hosting matters too. [Netlify's
+changelog](https://www.netlify.com/changelog/2026-11-03-nextjs-security-vulnerabilities/)
+says some of the issues don't affect its platform, but it still tells customers to
+upgrade, redeploy and purge cached content, and to update its adapter for the Middleware
+cookie case.
+
+**What to do:** Run `npm install next@16.4.5` (or `next@15.5.29` on 15.x), redeploy,
+and then clear any cache that might be holding mixed-up content. Don't forget old preview
+deployments.
+
+## 3. OpenAI releases GPT-6 Cyber, its first "Critical" rated model
+
+**Confirmed:** On 5 November OpenAI released GPT-6 Cyber, a model tuned for finding and
+exploiting vulnerabilities. [The Register](https://www.theregister.com/security/2026/11/05/openai-releases-gpt-6-cyber-and-promises-this-one-stays-within-rules-of-engagement/5307855)
+and [The Hacker News](https://thehackernews.com/2026/11/openai-launches-gpt-6-cyber-after-ai.html)
+both report it's available only through the API and Codex to a select group of
+approved Daybreak Red customers, and that OpenAI rates it "Critical", the highest cyber
+risk tier in its Preparedness Framework.
+
+**Claimed by OpenAI:** The company says researchers used it to find 81 previously
+unknown high-severity Firefox vulnerabilities and to build working exploits for 948
+Linux kernel bugs, with the findings reported to maintainers. It also says the model
+stayed within its authorised scope in 99.93% of tests without safety prompts. These are
+OpenAI's own figures. The Register notes OpenAI wouldn't say what happened in the cases
+that did go out of scope.
+
+**Why it matters:** Whatever you think of the marketing, the direction is clear. Bugs
+are going to be found faster, which means patches will arrive faster and in bigger
+batches. The teams that cope will be the ones who can update quickly without drama.
+
+## 4. The NCSC's annual review: AI raises the pace, the basics still matter
+
+**Confirmed:** The NCSC launched its Annual Review 2026 on 3 November. In his
+[launch speech](https://www.ncsc.gov.uk/speech/richard-hornes-speech-at-the-ncsc-annual-review-2026-launch),
+chief executive Richard Horne warned of a "real prospect of an unprecedented rise in
+the number of cyber incidents", and said the NCSC sent over 110,000 notifications and
+early warnings to UK organisations about the PHP vulnerabilities I [wrote about last
+week](/blog/php2shell-and-the-claude-code-extension-backdoor).
+
+**Reported:** According to [Intelligent CISO](https://www.intelligentciso.com/2026/11/03/ncsc-warns-uk-cyber-resilience-is-falling-behind-as-80-nationally-significant-incidents-recorded/),
+the review covers 1,831 incident reports between September 2025 and August 2026, 80 of
+them nationally significant, and judges it "highly likely" that AI-powered malware will
+be used in a ransomware attack on UK critical national infrastructure by 2028.
+[Infosecurity Magazine](https://www.infosecurity-magazine.com/news/ncsc-ai-ransomware-threat-uk-cni/)
+carries the same 2028 judgement.
+
+**Why it matters:** Horne's advice is refreshingly unglamorous: replace end-of-life
+technology, restrict access, monitor properly, and make passkeys the norm. For small
+businesses that's the useful takeaway. AI changes the speed of attacks, not the list of
+things that stop them.
+
+## Quick hits
+
+- **Ivanti Connect Secure, again:** Two more exploited flaws, CVE-2026-111357 and
+  CVE-2026-118527, were [added to CISA's KEV catalogue on 30 October](https://www.cisa.gov/news-events/alerts/2026/10/30/cisa-adds-two-known-exploited-vulnerabilities-catalog).
+  [Rapid7](https://www.rapid7.com/blog/post/etr-additional-ivanti-connect-secure-zero-days-exploited-in-the-wild-cve-2026-111357-cve-2026-118527/)
+  and [SecurityWeek](https://www.securityweek.com/ivanti-patches-two-more-zero-days-exploited-in-connect-secure-attack-chain/)
+  both note that October's fixes don't cover them, so you need 25.1.1.3 or 22.8R2.6.
+- **Node.js security releases next week:** The project has [pre-announced fixes](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases)
+  for the 22.x, 24.x and 26.x lines on or shortly after 11 November, with the highest
+  severity rated high. Worth pencilling in time now.
+- **Chrome 157 for front-end developers:** [Chrome 157](https://chromestatus.com/release-notes/157)
+  brings custom strings for `text-overflow` (so you're not stuck with an ellipsis),
+  CORS enforcement for Background Fetch, and new HTML-in-canvas primitives.
+  [GIGAZINE](https://gigazine.net/gsc_news/en/20261104-google-chrome-157/) has a good
+  round-up of the rest.
+
+## What I'd do this week
+
+- Confirm every WordPress site is on 7.1.4 or its branch's patched release, and block
+  `wp-content/upgrade/` before updating any that aren't.
+- Upgrade Next.js to 16.4.5 or 15.5.29, redeploy and purge caches, especially on
+  multi-tenant apps.
+- Book a slot after 11 November to update Node.js on servers and in CI images.
+- If anything you look after uses Ivanti Connect Secure, check it's on the latest fixed
+  release, not just October's.
+- Pick one end-of-life system and put a date on replacing it.
+
+---
+
+**Sources:** [CISA: WordPress KEV](https://www.cisa.gov/news-events/alerts/2026/11/03/cisa-adds-one-known-exploited-vulnerability-catalog) · [WordPress 7.1.4](https://wordpress.org/support/wordpress-version/version-7-1-4/) · [BleepingComputer](https://www.bleepingcomputer.com/news/security/cisa-flags-wordpress-rce-flaw-as-actively-exploited-in-attacks/) · [Picus Security](https://www.picussecurity.com/resource/blog/cve-2026-119977-when-updating-wordpress-becomes-the-vulnerability) · [Next.js security release](https://nextjs.org/blog/november-2026-security-release) · [GitHub advisory GHSA-mfr8-8qww-v76h](https://github.com/vercel/next.js/security/advisories/GHSA-mfr8-8qww-v76h) · [Netlify changelog](https://www.netlify.com/changelog/2026-11-03-nextjs-security-vulnerabilities/) · [The Register](https://www.theregister.com/security/2026/11/05/openai-releases-gpt-6-cyber-and-promises-this-one-stays-within-rules-of-engagement/5307855) · [The Hacker News](https://thehackernews.com/2026/11/openai-launches-gpt-6-cyber-after-ai.html) · [NCSC speech](https://www.ncsc.gov.uk/speech/richard-hornes-speech-at-the-ncsc-annual-review-2026-launch) · [Intelligent CISO](https://www.intelligentciso.com/2026/11/03/ncsc-warns-uk-cyber-resilience-is-falling-behind-as-80-nationally-significant-incidents-recorded/) · [Infosecurity Magazine](https://www.infosecurity-magazine.com/news/ncsc-ai-ransomware-threat-uk-cni/) · [CISA: Ivanti KEV](https://www.cisa.gov/news-events/alerts/2026/10/30/cisa-adds-two-known-exploited-vulnerabilities-catalog) · [Rapid7](https://www.rapid7.com/blog/post/etr-additional-ivanti-connect-secure-zero-days-exploited-in-the-wild-cve-2026-111357-cve-2026-118527/) · [SecurityWeek](https://www.securityweek.com/ivanti-patches-two-more-zero-days-exploited-in-connect-secure-attack-chain/) · [Node.js](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases) · [Chrome Platform Status](https://chromestatus.com/release-notes/157) · [GIGAZINE](https://gigazine.net/gsc_news/en/20261104-google-chrome-157/)
+
+*This roundup is researched and written with the help of AI, using the sources linked
+above. Spotted a mistake? [Let me know](/contact).*
+
+*Not sure what's running on your own site? The [free website health
+check](/website-health-check) is a quick place to start.*
