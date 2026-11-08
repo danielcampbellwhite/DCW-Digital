@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-08",
+  "stories": [
+    { "label": "SonicWall VPN", "tag": "Security", "icon": "ShieldAlert", "tone": "security" },
+    { "label": "Hijacked npm", "tag": "Security", "icon": "Package", "tone": "security" },
+    { "label": "Claude API", "tag": "AI", "icon": "Bot", "tone": "ai" },
+    { "label": "AI Act in NI", "tag": "Policy", "icon": "Scale", "tone": "policy" }
+  ],
+  "extras": ["Android", "Cloudflare"]
+}

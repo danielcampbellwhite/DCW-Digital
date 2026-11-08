@@ -1,0 +1,143 @@
+---
+title: "SonicWall VPN Flaw Exploited and Hijacked npm Packages: This Week in Tech"
+description: "An exploited SonicWall VPN flaw that sidesteps SAML MFA, hijacked npm packages hiding behind Ethereum, new Claude API controls, and the EU AI Act reaching Northern Ireland."
+seoTitle: "SonicWall VPN Flaw & Hijacked npm Packages"
+seoDescription: "This week: an exploited SonicWall SSLVPN flaw, hijacked npm packages using Ethereum to hide malware, new Claude API features and the EU AI Act in NI."
+date: "2026-11-08"
+category: "Tech News"
+tags: ["Weekly Roundup", "Security", "Supply Chain", "npm", "AI", "Regulation"]
+author: "Daniel Campbell-White"
+featured: false
+cover: "/blog/this-week-in-tech-2026-11-08.png"
+---
+
+[Yesterday's roundup](/blog/this-week-in-tech-2026-11-07) covered the exploited
+WordPress updater flaw, the Next.js security release, GPT-6 Cyber and the NCSC's
+annual review, so this one picks up the stories that didn't fit. The common thread is
+trust in the things that sit quietly in the background: the VPN login, the npm package
+you've used for years, and the API key in your config file.
+
+## 1. SonicWall SSLVPN flaw lets attackers get past SAML MFA
+
+**Confirmed:** On 6 November, CISA added CVE-2026-19868, a flaw in the SSLVPN service in
+SonicWall's SonicOS, to its Known Exploited Vulnerabilities catalogue. [Security
+Affairs](https://securityaffairs.com/202581/security/u-s-cisa-adds-sonicwall-sonicos-sslvpn-flaw-to-its-known-exploited-vulnerabilities-catalog.html)
+reports it as a failure to properly enforce SAML authentication: someone with valid
+credentials for a *different* login method can sidestep the SAML controls, including
+SAML-enforced multi-factor authentication. It isn't an unauthenticated bug, but it does
+undo the MFA you thought you had. US federal agencies have until 20 November to fix it.
+
+Canada's Cyber Centre published its [own advisory the same day](https://www.cyber.gc.ca/en/alerts-advisories/sonicwall-security-advisory-av26-1133),
+listing affected SonicOS versions as those before 7.3.4-7013 and before 8.2.2-8015,
+and quoting SonicWall as saying the flaw "is being exploited".
+
+**Why it matters:** VPN appliances keep turning up in these roundups (Ivanti featured
+yesterday) because they sit on the edge of the network and hold the keys to everything
+behind it. A flaw that weakens MFA is especially nasty, because MFA is usually the thing
+we point to when someone asks "what if a password leaks?"
+
+**What to do:** If you or a client run a SonicWall firewall with SSLVPN and SAML, update
+SonicOS to a fixed release from [SonicWall's advisory](https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014)
+now, then review recent VPN logins for anything that didn't come through your identity
+provider.
+
+## 2. Hijacked npm packages hide their command server on Ethereum
+
+**Confirmed:** [Sonatype](https://www.sonatype.com/blog/polinrider-loader-reappears-in-hijacked-npm-packages)
+reported on 4 November that it had found 12 malicious releases across 10 hijacked npm
+packages, mostly under the `@adminide-stack` scope, plus `server-hemera-mongo`, `cdeops`
+and a couple of others. Independent researchers at [Greenflagged](https://blog.greenflagged.dev/posts/2026-11-03-adminide-stack-eth-dead-drop)
+documented the same releases, published on 3 and 4 November by accounts that weren't the
+previous maintainers, and say npm had removed all twelve by the evening of 4 November.
+
+The interesting (and worrying) part is how the hidden loader finds its server. Rather
+than hard-coding an address, it reads a transaction from a particular Ethereum wallet
+to learn where to fetch the next stage. That means the operator can move servers
+without publishing a new package, and blocking one address doesn't stop it. Sonatype
+links the activity to the PolinRider malware family.
+
+**Why it matters:** Two details stand out. First, there's no install script, so
+`--ignore-scripts` doesn't help; the code runs when the module is loaded. Second,
+according to Greenflagged, some malicious versions were briefly tagged `latest`, so an
+ordinary unpinned install could have pulled them in. Greenflagged also says the second
+stage sets up persistence, so removing the package doesn't clean the machine.
+
+**What to do:** Search your lockfiles for the packages Sonatype lists. If you find one,
+treat the machine or build runner as compromised: rebuild it and rotate every credential
+it could reach. More generally, commit lockfiles and pin exact versions.
+
+## 3. Claude API: message threads, IP allowlists and watermarking
+
+**Confirmed:** Anthropic's [developer platform release notes](https://platform.claude.com/docs/en/release-notes/overview)
+had a busy week:
+
+- **2 November:** [Message threads](https://platform.claude.com/docs/en/build-with-claude/message-threads)
+  arrived in beta. The API keeps the conversation on the server, so each later request
+  only sends the new messages. Anthropic says this means smaller requests and a lower
+  time to first token for long conversations and agent loops. Threads expire five
+  minutes after the last request.
+- **3 November:** Text generated by Claude Mythos 5, Claude Opus 4.7 and Claude Sonnet
+  4.6 now carries Anthropic's [text watermark](https://platform.claude.com/docs/en/build-with-claude/text-watermark).
+- **5 November:** Organisations can now set an [IP allowlist](https://platform.claude.com/docs/en/manage-claude/ip-allowlist)
+  in the Claude Console (beta), so requests from addresses not on the list are refused.
+- **Heads-up:** Fast mode for Claude Opus 4.8 was deprecated on 30 October and will be
+  removed on 30 November. After that, those requests will return an error.
+
+**Why it matters:** The IP allowlist is the one I'd act on. A leaked API key is one of
+the most common ways AI bills and data get out of hand, and limiting where a key can be
+used from takes a lot of the sting out of a leak. Message threads matter if you're
+building agents, where resending a long history on every turn adds up.
+
+**What to do:** If your app calls the API from fixed server addresses, try the
+allowlist. If anything uses Opus 4.8 fast mode, plan the move before 30 November.
+
+## 4. The EU AI Act starts to apply in Northern Ireland, but only to physical products
+
+**Confirmed:** On 4 November the government published [guidance on the partial
+application of the EU AI Act in Northern Ireland](https://www.gov.uk/government/publications/partial-application-of-the-eu-ai-act-in-northern-ireland)
+under the Windsor Framework. The [guidance document](https://assets.publishing.service.gov.uk/media/6ae8acf96861d7adfda2726a/guidance-on-the-eu-ai-act-in-northern-ireland.pdf)
+says the Act applies only where an AI system is closely integrated with a physical
+product placed on the NI market, such as a smart speaker with a built-in voice
+assistant. Standalone software and AI used through a browser, app or API is generally
+out of scope, and so is a business simply *using* online AI tools.
+
+The first duties, including the bans on prohibited practices, AI literacy and telling
+people they're interacting with AI, apply from 10 November 2026. Marking AI-generated
+content follows on 2 December 2026, and high-risk duties come in 2027 and 2028.
+[Resultsense](https://www.resultsense.com/news/2026-11-05-eu-ai-act-northern-ireland-embedded-products/)
+reports that Cabinet Office minister Hamish Falconer said it wouldn't create "a new
+regulatory border" within the UK.
+
+**Why it matters:** For most web developers and small businesses, the answer is
+"probably not you", and it's good to have that in writing. It matters if you build
+software for connected devices, toys or wearables sold in Northern Ireland.
+
+## Quick hits
+
+- **Android November bulletin:** Google's [November security bulletin](https://source.android.com/docs/security/bulletin/2026/2026-11-01)
+  fixes a critical remote code execution flaw in the Framework component
+  (CVE-2026-58868), among others. It doesn't flag any issue as exploited. Patch level
+  2026-11-05 covers the lot.
+- **Passkeys for Cloudflare Access:** Since 6 November, [Cloudflare Access supports
+  passkeys](https://developers.cloudflare.com/changelog/post/2026-11-06-access-passkeys/)
+  as a login method for protected apps, without needing a one-time PIN or identity
+  provider. A nice fit with the NCSC's call yesterday to make passkeys the norm.
+
+## What I'd do this week
+
+- Update any SonicWall firewall running SSLVPN with SAML, and check recent VPN logins.
+- Search lockfiles for the hijacked npm packages, and make sure lockfiles are committed
+  and versions pinned.
+- If you use the Claude API from fixed servers, set up an IP allowlist, and move off
+  Opus 4.8 fast mode before 30 November.
+- Nudge staff and family to install the November Android update.
+
+---
+
+**Sources:** [Security Affairs](https://securityaffairs.com/202581/security/u-s-cisa-adds-sonicwall-sonicos-sslvpn-flaw-to-its-known-exploited-vulnerabilities-catalog.html) · [Canadian Centre for Cyber Security](https://www.cyber.gc.ca/en/alerts-advisories/sonicwall-security-advisory-av26-1133) · [Sonatype](https://www.sonatype.com/blog/polinrider-loader-reappears-in-hijacked-npm-packages) · [Greenflagged](https://blog.greenflagged.dev/posts/2026-11-03-adminide-stack-eth-dead-drop) · [Claude release notes](https://platform.claude.com/docs/en/release-notes/overview) · [GOV.UK: EU AI Act in Northern Ireland](https://www.gov.uk/government/publications/partial-application-of-the-eu-ai-act-in-northern-ireland) · [Guidance document (PDF)](https://assets.publishing.service.gov.uk/media/6ae8acf96861d7adfda2726a/guidance-on-the-eu-ai-act-in-northern-ireland.pdf) · [Resultsense](https://www.resultsense.com/news/2026-11-05-eu-ai-act-northern-ireland-embedded-products/) · [Android Security Bulletin](https://source.android.com/docs/security/bulletin/2026/2026-11-01) · [Cloudflare changelog](https://developers.cloudflare.com/changelog/post/2026-11-06-access-passkeys/)
+
+*This roundup is researched and written with the help of AI, using the sources linked
+above. Spotted a mistake? [Let me know](/contact).*
+
+*If you'd like a second pair of eyes on your site's setup, a [website
+audit](/services/website-auditing) is a good place to start.*
