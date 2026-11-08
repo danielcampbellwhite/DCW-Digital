@@ -58,12 +58,13 @@ export function ClientsWall({ clients }: { clients: ClientWithLogo[] }) {
           {visible.map((client) => (
             <motion.article
               key={client.slug}
+              id={client.slug}
               layout
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="h-full"
+              className="h-full scroll-mt-28 rounded-2xl target:ring-2 target:ring-primary/60"
             >
               <ClientCard client={client} />
             </motion.article>

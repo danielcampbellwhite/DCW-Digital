@@ -20,6 +20,9 @@ import {
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { OPEN_TERMINAL_EVENT } from "@/components/easter-egg/secret-terminal";
+import { searchDocs, type SearchDoc, type SearchResult } from "@/lib/search-core";
+import { Highlight } from "@/components/search/highlight";
+import { TYPE_META } from "@/components/search/type-meta";
 
 interface CommandItem {
   id: string;
@@ -72,26 +75,65 @@ export function useCommandPalette() {
   return ctx;
 }
 
+/* ── Site search index: loaded the first time the palette opens ─────────── */
+
+let indexPromise: Promise<SearchDoc[]> | null = null;
+function loadSearchIndex(): Promise<SearchDoc[]> {
+  indexPromise ??= fetch("/search-index.json")
+    .then((r) => (r.ok ? (r.json() as Promise<SearchDoc[]>) : Promise.reject(new Error(String(r.status)))))
+    .catch(() => {
+      indexPromise = null; // try again next time
+      return [];
+    });
+  return indexPromise;
+}
+
+const PREVIEW = 5;
+
+type Item =
+  | { kind: "cmd"; cmd: CommandItem }
+  | { kind: "result"; result: SearchResult }
+  | { kind: "more" };
+
 export function CommandProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [docs, setDocs] = React.useState<SearchDoc[] | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const listRef = React.useRef<HTMLDivElement>(null);
 
   const open = React.useCallback(() => setIsOpen(true), []);
   const close = React.useCallback(() => setIsOpen(false), []);
   const toggle = React.useCallback(() => setIsOpen((v) => !v), []);
 
-  const filtered = React.useMemo(() => {
-    const q = query.trim().toLowerCase();
+  const q = query.trim();
+  const secret = SECRET_WORDS.includes(q.toLowerCase());
+
+  const search = React.useMemo(
+    () => (q && docs && !secret ? searchDocs(docs, q, { limit: PREVIEW }) : null),
+    [q, docs, secret]
+  );
+
+  const commands = React.useMemo(() => {
     if (!q) return COMMANDS;
     // A hidden entry for anyone who goes looking.
-    if (SECRET_WORDS.includes(q)) return [SECRET_COMMAND];
-    return COMMANDS.filter((c) =>
-      `${c.label} ${c.keywords ?? ""} ${c.group}`.toLowerCase().includes(q)
-    );
-  }, [query]);
+    if (secret) return [SECRET_COMMAND];
+    // Once the search index is loaded, pages come from the search results instead.
+    const pool = docs ? COMMANDS.filter((c) => c.group !== "Pages") : COMMANDS;
+    const lower = q.toLowerCase();
+    return pool.filter((c) => `${c.label} ${c.keywords ?? ""} ${c.group}`.toLowerCase().includes(lower));
+  }, [q, docs, secret]);
+
+  const items: Item[] = React.useMemo(
+    () => [
+      ...(search?.results.map((result) => ({ kind: "result" as const, result })) ?? []),
+      ...(search && search.total > PREVIEW ? [{ kind: "more" as const }] : []),
+      ...commands.map((cmd) => ({ kind: "cmd" as const, cmd })),
+    ],
+    [search, commands]
+  );
 
   // Global keyboard shortcut: ⌘K / Ctrl+K
   React.useEffect(() => {
@@ -106,52 +148,88 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [toggle, close]);
 
-  // Reset state when opening; focus the input.
+  // Reset state when opening; focus the input; load the search index.
   React.useEffect(() => {
     if (isOpen) {
       setQuery("");
       setActiveIndex(0);
+      void loadSearchIndex().then((d) => setDocs(d.length ? d : null));
       const t = setTimeout(() => inputRef.current?.focus(), 30);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
+  // While typing, nothing is selected, so Enter opens the full results page.
   React.useEffect(() => {
-    if (activeIndex >= filtered.length) setActiveIndex(0);
-  }, [filtered.length, activeIndex]);
+    setActiveIndex(q ? -1 : 0);
+  }, [q]);
+
+  React.useEffect(() => {
+    if (activeIndex >= items.length) setActiveIndex(q ? -1 : 0);
+  }, [items.length, activeIndex, q]);
+
+  // Keep the highlighted row in view when moving with the arrow keys.
+  React.useEffect(() => {
+    if (activeIndex < 0) return;
+    listRef.current?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`)?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex]);
+
+  const go = React.useCallback(
+    (href: string) => {
+      close();
+      router.push(href);
+    },
+    [close, router]
+  );
+
+  const searchAll = React.useCallback(() => {
+    if (q) go(`/search?q=${encodeURIComponent(q)}`);
+  }, [q, go]);
 
   const run = React.useCallback(
-    (cmd: CommandItem) => {
-      close();
+    (item: Item) => {
+      if (item.kind === "more") return searchAll();
+      if (item.kind === "result") return go(item.result.url);
+      const cmd = item.cmd;
       if (cmd.id === "terminal") {
+        close();
         window.setTimeout(() => window.dispatchEvent(new Event(OPEN_TERMINAL_EVENT)), 50);
         return;
       }
       if (!cmd.href) return;
       if (cmd.external) {
+        close();
         window.open(cmd.href, "_blank", "noopener,noreferrer");
-      } else {
-        router.push(cmd.href);
-      }
+      } else go(cmd.href);
     },
-    [close, router]
+    [close, go, searchAll]
   );
 
   const onListKeyDown = (e: React.KeyboardEvent) => {
+    const n = items.length;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => (i + 1) % Math.max(filtered.length, 1));
+      if (n) setActiveIndex((i) => (i + 1) % n);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((i) => (i - 1 + filtered.length) % Math.max(filtered.length, 1));
+      if (n) setActiveIndex((i) => (i <= 0 ? n - 1 : i - 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const cmd = filtered[activeIndex];
-      if (cmd) run(cmd);
+      const item = items[activeIndex];
+      if (item) run(item);
+      else searchAll();
     }
   };
 
+  const rowClass = (active: boolean) =>
+    cn(
+      "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
+      active ? "bg-primary/10 text-foreground" : "text-muted-foreground hover:bg-surface"
+    );
+
   const groups = ["Pages", "Actions", "Social"] as const;
+  const resultCount = search?.results.length ?? 0;
+  const nothing = q && !secret && items.length === 0 && (docs !== null || commands.length === 0);
 
   return (
     <CommandContext.Provider value={{ open, close, toggle, isOpen }}>
@@ -173,7 +251,7 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Command palette"
+              aria-label="Search the site"
               initial={{ opacity: 0, scale: 0.97, y: -8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, y: -8 }}
@@ -185,54 +263,119 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
                 <Search className="size-4 text-muted-foreground" />
                 <input
                   ref={inputRef}
+                  autoFocus
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search pages and actions…"
-                  className="h-14 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-                  aria-label="Search commands"
+                  placeholder="Search the site…"
+                  enterKeyHint="search"
+                  maxLength={100}
+                  className="h-14 w-full bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 sm:text-sm"
+                  aria-label="Search the site"
                 />
                 <kbd className="hidden rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">
                   ESC
                 </kbd>
               </div>
 
-              <div className="max-h-[50vh] overflow-y-auto p-2">
-                {filtered.length === 0 && (
-                  <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-                    No results for “{query}”.
-                  </p>
+              <div ref={listRef} className="max-h-[55vh] overflow-y-auto p-2">
+                {nothing && (
+                  <div className="px-3 py-8 text-center text-sm text-muted-foreground">
+                    <p>No results for “{q}”.</p>
+                    <button type="button" onClick={searchAll} className="mt-2 text-primary underline-offset-2 hover:underline">
+                      Open the search page
+                    </button>
+                  </div>
                 )}
+
+                {q && !docs && !secret && (
+                  <p className="px-3 pb-1 pt-2 text-xs text-muted-foreground">Loading search…</p>
+                )}
+
+                {resultCount > 0 && search && (
+                  <div className="mb-2">
+                    <p className="flex items-center justify-between px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      <span>Results</span>
+                      <span className="font-mono normal-case tracking-normal">
+                        {search.total > PREVIEW ? `${PREVIEW} of ${search.total}` : `${search.total} found`}
+                      </span>
+                    </p>
+                    <ul>
+                      {search.results.map((r, i) => {
+                        const meta = TYPE_META[r.type];
+                        const active = i === activeIndex;
+                        return (
+                          <li key={r.id}>
+                            <button
+                              type="button"
+                              data-index={i}
+                              onMouseEnter={() => setActiveIndex(i)}
+                              onClick={() => run({ kind: "result", result: r })}
+                              className={cn(rowClass(active), "items-start")}
+                            >
+                              <meta.icon className="mt-0.5 size-4 shrink-0 text-primary" />
+                              <span className="min-w-0 flex-1">
+                                <span className="flex items-baseline gap-2">
+                                  <span className="truncate font-medium text-foreground">
+                                    <Highlight text={r.title} terms={search.terms} />
+                                  </span>
+                                  <span className="shrink-0 text-[10px] uppercase tracking-wider text-muted-foreground">{meta.label}</span>
+                                </span>
+                                <span className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                                  <Highlight text={r.snippet} terms={search.terms} />
+                                </span>
+                              </span>
+                              {active && <ArrowRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />}
+                            </button>
+                          </li>
+                        );
+                      })}
+                      {search.total > PREVIEW && (
+                        <li>
+                          <button
+                            type="button"
+                            data-index={resultCount}
+                            onMouseEnter={() => setActiveIndex(resultCount)}
+                            onClick={searchAll}
+                            className={cn(rowClass(activeIndex === resultCount), "justify-between")}
+                          >
+                            <span className="font-mono text-xs">
+                              {PREVIEW} of {search.total}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 font-medium text-primary">
+                              More results <ArrowRight className="size-3.5" />
+                            </span>
+                          </button>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+
                 {groups.map((group) => {
-                  const items = filtered.filter((c) => c.group === group);
-                  if (items.length === 0) return null;
+                  const groupItems = commands.filter((c) => c.group === group);
+                  if (groupItems.length === 0) return null;
                   return (
                     <div key={group} className="mb-2">
                       <p className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         {group}
                       </p>
                       <ul>
-                        {items.map((cmd) => {
-                          const globalIndex = filtered.indexOf(cmd);
+                        {groupItems.map((cmd) => {
+                          const globalIndex = items.findIndex((it) => it.kind === "cmd" && it.cmd === cmd);
                           const active = globalIndex === activeIndex;
                           const Icon = cmd.icon;
                           return (
                             <li key={cmd.id}>
                               <button
                                 type="button"
+                                data-index={globalIndex}
                                 onMouseEnter={() => setActiveIndex(globalIndex)}
-                                onClick={() => run(cmd)}
-                                className={cn(
-                                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
-                                  active
-                                    ? "bg-primary/10 text-foreground"
-                                    : "text-muted-foreground hover:bg-surface"
-                                )}
+                                onClick={() => run({ kind: "cmd", cmd })}
+                                className={rowClass(active)}
                               >
                                 <Icon className="size-4 shrink-0 text-primary" />
                                 <span className="flex-1">{cmd.label}</span>
-                                {active && (
-                                  <ArrowRight className="size-3.5 text-muted-foreground" />
-                                )}
+                                {active && <ArrowRight className="size-3.5 text-muted-foreground" />}
                               </button>
                             </li>
                           );
@@ -242,6 +385,18 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
                   );
                 })}
               </div>
+
+              {q && !secret && (
+                <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+                  <button type="button" onClick={searchAll} className="inline-flex items-center gap-1.5 hover:text-foreground">
+                    <kbd className="rounded border border-border px-1 font-mono">↵</kbd> All results
+                  </button>
+                  <span className="hidden items-center gap-1.5 sm:inline-flex">
+                    <kbd className="rounded border border-border px-1 font-mono">↑↓</kbd> Choose
+                    <kbd className="ml-2 rounded border border-border px-1 font-mono">esc</kbd> Close
+                  </span>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

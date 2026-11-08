@@ -2,9 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // The chat assistant reads blog post titles at runtime.
+  // These routes read blog posts at request time.
   outputFileTracingIncludes: {
     "/api/assistant": ["./content/blog/**/*"],
+    "/search": ["./content/blog/**/*"],
   },
   images: {
     formats: ["image/avif", "image/webp"],
