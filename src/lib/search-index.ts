@@ -107,7 +107,7 @@ function buildDocuments(): SearchDoc[] {
     "services",
     "Services",
     "/services",
-    "Website development, website audits, support and maintenance care plans, and ongoing digital partner work.",
+    "Website development, mobile app development, website audits, support and maintenance care plans, and ongoing digital partner work.",
     ["services", "pricing", "care plans", "packages"],
     [
       ...services.map((s) => `${s.title}: ${s.summary}`),

@@ -145,6 +145,7 @@ export function siteGraphSchema() {
         priceRange: "££",
         serviceType: [
           "Website development",
+          "Mobile app development",
           "Website auditing",
           "Website support and maintenance",
           "Digital partner and consultancy",

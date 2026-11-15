@@ -1,4 +1,4 @@
-import { Layout, Server, Boxes, Database, GitBranch, Gauge } from "lucide-react";
+import { Layout, Smartphone, Server, Boxes, Database, GitBranch, Gauge } from "lucide-react";
 import type { ExpertiseArea, ProcessStep, Metric } from "@/types";
 import {
   Compass,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 /** Core expertise cards for the homepage and About page. A broad, full-stack
- *  skill set spanning frontend, .NET & PHP backends, CMS platforms, databases,
+ *  skill set spanning web and mobile frontends, .NET & PHP backends, CMS platforms, databases,
  *  tooling and performance. */
 export const expertise: ExpertiseArea[] = [
   {
@@ -29,6 +29,21 @@ export const expertise: ExpertiseArea[] = [
       "Tailwind CSS",
       "Sass / LESS",
       "Responsive Design",
+    ],
+  },
+  {
+    title: "Mobile Apps",
+    icon: Smartphone,
+    description:
+      "Native-feeling iOS and Android apps - built from scratch or extended - and shipped through the app stores.",
+    skills: [
+      "iOS",
+      "Android",
+      "Cross-platform",
+      "App Store",
+      "Google Play",
+      "Push Notifications",
+      "API Integration",
     ],
   },
   {
@@ -165,6 +180,6 @@ export const metrics: Metric[] = [
     label: "Technologies Used",
     value: 30,
     suffix: "+",
-    description: "Across the full web stack",
+    description: "Across the full web & mobile stack",
   },
 ];

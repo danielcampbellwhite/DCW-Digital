@@ -104,6 +104,80 @@ export const servicePages: Record<string, ServicePageContent> = {
     ],
   },
 
+  "mobile-app-development": {
+    seoTitle: "Mobile App Development in Liverpool",
+    seoDescription:
+      "iOS and Android app development from a Liverpool developer. New apps, new features for existing ones, and App Store and Google Play publishing handled for you.",
+    headline: "Mobile apps that people actually keep using",
+    lede: "iOS and Android apps for businesses and public services, built new or extended, by the person you actually talk to.",
+    intro: [
+      "A good app puts your service in someone's pocket: reminders, progress tracking, bookings, support when they need it. A bad one gets deleted after a day. I build apps around the few things your users genuinely need to do, and make those things quick and easy.",
+      "I've worked on live apps in the App Store and Google Play, including the Stop For Life and Help Me Quit stop-smoking apps used by public health services. Whether you're starting from an idea or need new features in an app someone else built, I can pick it up.",
+    ],
+    whoFor: [
+      "Businesses and services that want to reach people on their phones",
+      "Organisations with an existing app that needs new features or a refresh",
+      "Teams whose app was built by someone who has since moved on",
+      "Anyone who wants their app and website to work together properly",
+    ],
+    sections: [
+      {
+        title: "New iOS and Android apps",
+        body: "From first sketch to launch. One codebase for both iPhone and Android where it makes sense, so you're not paying for everything twice, with the polish people expect from an app on their phone.",
+      },
+      {
+        title: "Extending an existing app",
+        body: "New features, design updates and bug fixes for apps that are already live. I get to know the codebase first, then add to it carefully so nothing your users rely on breaks.",
+      },
+      {
+        title: "App Store and Google Play publishing",
+        body: "Store listings, screenshots, privacy details, review submissions and updates. The fiddly admin that stops a lot of apps getting out of the door is handled for you.",
+      },
+      {
+        title: "Notifications, accounts and data",
+        body: "Push notifications, sign-in, offline support and syncing with your systems through secure APIs, so the app stays useful even with a patchy signal.",
+      },
+      {
+        title: "Joined up with your website",
+        body: "Because I build websites too, your app and site can share content, accounts and data rather than living separate lives. One person, one joined-up plan.",
+      },
+    ],
+    steps: [
+      { title: "A chat", body: "We talk about who the app is for, what they need to do in it and what you've got already." },
+      { title: "A plan", body: "I map out screens, features, platforms and timings, with a fixed quote so there are no surprises." },
+      { title: "Design", body: "You see the key screens and how they flow together, and we tweak them before I build." },
+      { title: "Build and test", body: "I build it, you try it on your own phone through a test release, and I test on real devices." },
+      { title: "Launch and support", body: "I submit it to the App Store and Google Play, see it through review, and I'm on hand for updates afterwards." },
+    ],
+    faqs: [
+      {
+        q: "Do I need an app, or would a website do?",
+        a: "Honestly, sometimes a fast mobile-friendly website is the better answer. An app earns its place when people will use it regularly, need notifications or offline access, or want it on their home screen. I'll tell you straight which suits you.",
+      },
+      {
+        q: "Will it work on both iPhone and Android?",
+        a: "Yes. I build for both platforms, usually from a single codebase, which keeps cost and maintenance down without cutting corners on either.",
+      },
+      {
+        q: "Can you work on an app someone else built?",
+        a: "Yes. I've extended live apps originally built by other developers. I'll review the code first and let you know of anything that needs attention before adding new features.",
+      },
+      {
+        q: "Do you handle the App Store and Google Play?",
+        a: "Yes, from developer accounts and store listings to submission, review and future updates. The app is published under your organisation's account, so you always own it.",
+      },
+      {
+        q: "How much does an app cost?",
+        a: "It depends on the features and whether we're starting from scratch or extending something existing. After a chat I'll give you a fixed quote, so you know where you stand before anything starts.",
+      },
+    ],
+    relatedPosts: [
+      "the-tools-i-actually-use",
+      "turn-your-website-into-a-lead-engine",
+      "why-your-business-website-should-be-fast",
+    ],
+  },
+
   "website-auditing": {
     seoTitle: "Website Audits: Speed, SEO & Security",
     seoDescription:

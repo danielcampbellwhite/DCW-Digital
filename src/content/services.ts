@@ -1,8 +1,8 @@
-import { Code2, ClipboardCheck, LifeBuoy, Handshake } from "lucide-react";
+import { Code2, Smartphone, ClipboardCheck, LifeBuoy, Handshake } from "lucide-react";
 import type { Service, SupportPackage } from "@/types";
 
 /**
- * Service catalogue - four core things Daniel can help with. These are framed
+ * Service catalogue - five core things Daniel can help with. These are framed
  * as pointers to what's possible rather than rigid, priced products: the call
  * to action is always "let's have a chat". The only place pricing is shown is
  * the Support & Maintenance packages below.
@@ -30,6 +30,29 @@ export const services: Service[] = [
       "SEO & performance built in",
     ],
     cta: { label: "Get in touch for a chat", href: "/contact?service=Website+development" },
+  },
+  {
+    slug: "mobile-app-development",
+    title: "Mobile App Development",
+    icon: Smartphone,
+    summary:
+      "iOS and Android apps, built new or extended, and published to the App Store and Google Play.",
+    description:
+      "I build and extend mobile apps for iOS and Android - from a brand-new idea to adding features to an app you already have. I handle the whole journey, including App Store and Google Play submission, and make sure your app and website work together.",
+    benefits: [
+      "One app for both iOS and Android",
+      "New builds or new features for an existing app",
+      "App Store & Google Play publishing handled",
+      "Connected to your website and systems",
+    ],
+    deliverables: [
+      "iOS & Android apps",
+      "Features for existing apps",
+      "App Store & Google Play publishing",
+      "Push notifications",
+      "API & backend integration",
+    ],
+    cta: { label: "Get in touch for a chat", href: "/contact?service=Mobile+app+development" },
   },
   {
     slug: "website-auditing",

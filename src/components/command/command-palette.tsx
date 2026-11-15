@@ -39,6 +39,7 @@ const COMMANDS: CommandItem[] = [
   { id: "about", label: "About Daniel", group: "Pages", icon: User, href: "/about", keywords: "story experience cv" },
   { id: "services", label: "Services", group: "Pages", icon: Layers, href: "/services", keywords: "seo development audit pricing" },
   { id: "svc-website-development", label: "Website Development", group: "Pages", icon: Layers, href: "/services/website-development", keywords: "build new site web app shop" },
+  { id: "svc-mobile-app-development", label: "Mobile App Development", group: "Pages", icon: Layers, href: "/services/mobile-app-development", keywords: "app ios android iphone mobile play store app store" },
   { id: "svc-website-auditing", label: "Website Audits", group: "Pages", icon: Layers, href: "/services/website-auditing", keywords: "audit seo speed security review" },
   { id: "svc-support-maintenance", label: "Support & Maintenance", group: "Pages", icon: Layers, href: "/services/support-maintenance", keywords: "care plan pricing updates backups" },
   { id: "svc-digital-partner", label: "Digital Partner", group: "Pages", icon: Layers, href: "/services/digital-partner", keywords: "advice ad hoc consultant" },

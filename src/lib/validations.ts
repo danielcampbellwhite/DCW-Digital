@@ -4,6 +4,7 @@ import { z } from "zod";
  *  Plain-language labels aimed at business owners, not jargon. */
 export const serviceOptions = [
   "Website development",
+  "Mobile app development",
   "Website audit",
   "Support & maintenance",
   "Digital partner",

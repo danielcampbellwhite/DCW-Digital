@@ -195,13 +195,13 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Technical Skills"
             title="The tools of the trade"
-            description="A modern, full-stack toolkit - chosen for speed, reliability and long-term maintainability."
+            description="A modern, full-stack web and mobile toolkit - chosen for speed, reliability and long-term maintainability."
           />
-          <StaggerGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerGroup className="mt-14 flex flex-wrap justify-center gap-5">
             {expertise.map((area) => {
               const Icon = area.icon;
               return (
-                <StaggerItem key={area.title}>
+                <StaggerItem key={area.title} className="w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)] xl:w-[calc((100%-3.75rem)/4)]">
                   <div className="card-surface h-full">
                     <Icon className="size-6 text-primary" />
                     <h3 className="mt-3 font-heading font-semibold">{area.title}</h3>
