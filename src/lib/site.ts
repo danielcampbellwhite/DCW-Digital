@@ -8,11 +8,11 @@ export const siteConfig = {
   name: "DCW Digital",
   owner: "Daniel Campbell-White",
   shortName: "DCW",
-  jobTitle: "Web & Mobile Developer · Digital Consultant",
-  tagline: "Building Modern Websites. Optimising Digital Growth.",
-  altTagline: "Web & Mobile Development, SEO & Digital Solutions.",
+  jobTitle: "Software Engineer · Web & Mobile Applications",
+  tagline: "Building Modern Web & Mobile Apps. Optimising Digital Growth.",
+  altTagline: "Software Engineering for Web & Mobile, SEO & Digital Solutions.",
   description:
-    "Daniel Campbell-White (DCW Digital) is a Liverpool web and mobile developer building fast websites and apps that bring UK businesses more enquiries.",
+    "Daniel Campbell-White (DCW Digital) is a Liverpool software engineer specialising in web and mobile application development for UK businesses.",
   // Must match the domain the site is actually served on. Vercel redirects the
   // bare domain to www, so canonicals, the sitemap and schema all use www.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.dcw-digital.co.uk",

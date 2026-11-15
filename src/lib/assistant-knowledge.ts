@@ -41,7 +41,7 @@ ${faqs}`;
     .join("\n");
 
   return `## About
-${siteConfig.owner} trades as ${siteConfig.name}. He is a web developer based in ${siteConfig.location}, working with businesses across the UK, mostly remotely. He builds websites and web apps with Next.js, React and TypeScript, audits existing sites, and looks after sites on monthly care plans. By day he is Digital Services Lead at a behaviour change organisation, leading a team of developers, and takes on freelance work as DCW Digital.
+${siteConfig.owner} trades as ${siteConfig.name}. He is a software engineer based in ${siteConfig.location}, specialising in web and mobile application development, working with businesses across the UK, mostly remotely. He builds websites, web apps and mobile apps, audits existing sites, and looks after sites on monthly care plans. By day he is Digital Services Lead at a behaviour change organisation, leading a team of developers, and takes on freelance work as DCW Digital.
 
 ## Career
 ${career}

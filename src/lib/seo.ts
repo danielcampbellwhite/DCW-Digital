@@ -17,7 +17,7 @@ interface PageMetaInput {
 const TITLE_LIMIT = 60;
 
 /** Homepage title: who, what and where people actually search for. */
-export const HOME_TITLE = "Liverpool Web & App Developer | Daniel Campbell-White";
+export const HOME_TITLE = "Liverpool Software Engineer | Daniel Campbell-White";
 
 const ID = {
   website: `${siteConfig.url}/#website`,
@@ -102,7 +102,7 @@ export function siteGraphSchema() {
         name: siteConfig.owner,
         url: abs("/about"),
         image: abs(siteConfig.headshot),
-        jobTitle: "Web Developer & Digital Services Lead",
+        jobTitle: "Software Engineer & Digital Services Lead",
         homeLocation: { "@type": "Place", name: "Liverpool, United Kingdom" },
         worksFor: { "@id": ID.business },
         sameAs: [siteConfig.links.facebook, siteConfig.links.instagram],

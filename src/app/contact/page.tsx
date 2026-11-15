@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/contact/contact-form";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Contact a Liverpool Web Developer",
+  title: "Contact a Liverpool Software Engineer",
   description:
     "Get in touch with Daniel Campbell-White at DCW Digital. Start a project, ask for a free website health check, or talk about a role.",
   path: "/contact",

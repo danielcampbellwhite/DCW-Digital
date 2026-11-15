@@ -13,7 +13,7 @@ export function GET() {
 
 > ${siteConfig.description}
 
-${siteConfig.owner} is a web developer and Digital Services Lead based in Liverpool, UK. He builds websites and web apps with Next.js, React and TypeScript, audits existing sites for speed, SEO and security, and offers monthly support and maintenance plans for businesses across the UK.
+${siteConfig.owner} is a software engineer and Digital Services Lead based in Liverpool, UK, specialising in web and mobile application development. He builds websites, web apps and mobile apps, audits existing sites for speed, SEO and security, and offers monthly support and maintenance plans for businesses across the UK.
 
 ## Pages
 

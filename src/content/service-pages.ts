@@ -250,7 +250,7 @@ export const servicePages: Record<string, ServicePageContent> = {
   "support-maintenance": {
     seoTitle: "Website Support & Maintenance Plans",
     seoDescription:
-      "Monthly website support and maintenance plans from £75. Updates, backups, monitoring and a real developer on hand for changes. Liverpool-based, UK-wide.",
+      "Monthly website support and maintenance plans from £75. Updates, backups, monitoring and a real engineer on hand for changes. Liverpool-based, UK-wide.",
     headline: "Website support and maintenance, sorted",
     lede: "Monthly care plans that keep your site secure, backed up and running, with a real person to call when you need a change.",
     intro: [
@@ -315,8 +315,8 @@ export const servicePages: Record<string, ServicePageContent> = {
   "digital-partner": {
     seoTitle: "Freelance Digital Partner for Businesses",
     seoDescription:
-      "An on-call web developer and digital adviser for your business. Advice, small jobs and tech decisions, charged only for the time you use and invoiced monthly.",
-    headline: "A developer in your corner, when you need one",
+      "An on-call software engineer and adviser for your business. Advice, small jobs and tech decisions, charged only for the time you use and invoiced monthly.",
+    headline: "An engineer in your corner, when you need one",
     lede: "Advice and ad-hoc web work without hiring anyone or committing to a big project. You only pay for the time you use.",
     intro: [
       "Lots of businesses don't need a full-time developer or a big project. They need someone reliable to ask: is this quote fair, which booking system should we use, can you just fix this form, why has our traffic dropped?",

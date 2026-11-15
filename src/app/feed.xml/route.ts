@@ -31,7 +31,7 @@ export function GET() {
   <channel>
     <title>${esc(siteConfig.name)} Blog</title>
     <link>${siteConfig.url}/blog</link>
-    <description>Web development, SEO and AI articles from ${esc(siteConfig.owner)}, a Liverpool web developer.</description>
+    <description>Web development, SEO and AI articles from ${esc(siteConfig.owner)}, a Liverpool software engineer.</description>
     <language>en-gb</language>
     <atom:link href="${siteConfig.url}/feed.xml" rel="self" type="application/rss+xml" />
 ${posts[0] ? `    <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>\n` : ""}${items}

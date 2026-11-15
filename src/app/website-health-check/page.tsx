@@ -9,7 +9,7 @@ import { HealthCheckTool } from "@/components/health-check/health-check-tool";
 export const metadata: Metadata = buildMetadata({
   title: "Free Website Health Check: Speed, SEO & Accessibility",
   description:
-    "Test your website for free in 30 seconds. See your speed, SEO and accessibility scores in plain English, plus what to fix first. From a Liverpool web developer.",
+    "Test your website free in 30 seconds. See your speed, SEO and accessibility scores in plain English, plus what to fix first. By a Liverpool software engineer.",
   path: "/website-health-check",
 });
 

@@ -7,7 +7,7 @@ import { BlogIndex } from "@/components/blog/blog-index";
 export const metadata: Metadata = buildMetadata({
   title: "Blog: Web Development, SEO & AI",
   description:
-    "Practical articles on web development, SEO, site speed, AI tooling and growing a business online, from a working Liverpool web developer.",
+    "Practical articles on web development, SEO, site speed, AI tooling and growing a business online, from a working Liverpool software engineer.",
   path: "/blog",
 });
 

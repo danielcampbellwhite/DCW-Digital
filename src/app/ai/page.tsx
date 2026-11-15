@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = buildMetadata({
   title: "How I Use AI in Software Development",
   description:
-    "How a Liverpool web developer uses AI properly: AI writes the routine code, while design, review, testing and security stay with a human.",
+    "How a Liverpool software engineer uses AI properly: AI writes the routine code, while design, review, testing and security stay with a human.",
   path: "/ai",
 });
 
@@ -100,7 +100,7 @@ export default function AiPage() {
             <span className="text-gradient">architecting</span>
           </>
         }
-        description="AI has changed how I build software. Not by replacing the developer, but by moving my time away from typing code and towards designing it, reviewing it and making sure it's right."
+        description="AI has changed how I build software. Not by replacing the engineer, but by moving my time away from typing code and towards designing it, reviewing it and making sure it's right."
       />
 
       {/* Intro */}

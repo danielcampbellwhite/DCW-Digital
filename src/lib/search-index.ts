@@ -90,12 +90,12 @@ function buildDocuments(): SearchDoc[] {
   const page = (id: string, title: string, url: string, description: string, keywords: string[], body = "", headings: string[] = []) =>
     docs.push({ id: `page:${id}`, type: "Page", title, url, description, keywords, headings, body });
 
-  page("home", "Home", "/", siteConfig.description, ["web developer", "Liverpool", "Next.js", "React", siteConfig.name], `${siteConfig.tagline} ${siteConfig.altTagline}`);
+  page("home", "Home", "/", siteConfig.description, ["software engineer", "web developer", "mobile apps", "Liverpool", "Next.js", "React", siteConfig.name], `${siteConfig.tagline} ${siteConfig.altTagline}`);
   page(
     "about",
     "About Daniel",
     "/about",
-    "Daniel Campbell-White is a Liverpool web developer and Digital Services Lead: his story, career timeline, skills and how he works.",
+    "Daniel Campbell-White is a Liverpool software engineer and Digital Services Lead: his story, career timeline, skills and how he works.",
     ["about", "Daniel Campbell-White", "career", "experience", "skills", "CV"],
     [
       ...careerTimeline.map((t) => `${t.period}: ${t.title}, ${t.organisation}. ${t.description}`),

@@ -43,6 +43,8 @@ export const metadata: Metadata = {
   keywords: [
     "Daniel Campbell-White",
     "DCW Digital",
+    "software engineer Liverpool",
+    "web and mobile application development",
     "web developer Liverpool",
     "Next.js developer",
     "React developer",

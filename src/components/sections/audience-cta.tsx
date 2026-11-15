@@ -19,7 +19,7 @@ export function AudienceCta() {
                 <Briefcase className="size-3.5" /> For employers & recruiters
               </span>
               <h3 className="mt-5 font-heading text-2xl font-bold sm:text-3xl">
-                Looking for a developer?
+                Looking for a software engineer?
               </h3>
               <p className="mt-3 text-muted-foreground">
                 I&apos;m open to permanent, contract and remote roles. Have a look

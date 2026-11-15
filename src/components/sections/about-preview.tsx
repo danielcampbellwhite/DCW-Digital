@@ -31,7 +31,7 @@ export function AboutPreview() {
                   {siteConfig.owner}
                 </div>
                 <div className="font-mono text-xs text-muted-foreground">
-                  Web Developer in Liverpool, UK
+                  Software Engineer in Liverpool, UK
                 </div>
               </div>
             </div>
@@ -42,12 +42,13 @@ export function AboutPreview() {
         <Reveal>
           <span className="eyebrow">About Daniel</span>
           <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-            A developer who actually cares{" "}
+            A software engineer who actually cares{" "}
             <span className="text-gradient">whether it works for you</span>
           </h2>
           <div className="mt-5 space-y-4 text-muted-foreground">
             <p>
-              I&apos;m Daniel, a web developer based in Liverpool. I&apos;ve spent
+              I&apos;m Daniel, a software engineer based in Liverpool,
+              specialising in web and mobile application development. I&apos;ve spent
               the last eight or so years building and looking after websites and
               apps at agencies, and I take on freelance work under my own name,
               DCW Digital, on the side.

@@ -28,7 +28,7 @@ export function Hero() {
             className="mt-6 animate-rise text-balance text-4xl font-bold leading-[1.05] sm:text-6xl md:text-7xl"
             style={rise(1)}
           >
-            Building Modern Websites{" "}
+            Building Web &amp; Mobile Apps{" "}
             <span className="text-gradient">That Help Businesses Grow</span>
           </h1>
 
@@ -36,9 +36,10 @@ export function Hero() {
             className="mt-6 max-w-2xl animate-rise text-pretty text-base text-muted-foreground sm:text-lg"
             style={rise(2)}
           >
-            I build fast, modern websites and web apps that do an actual job for
-            your business - bring in enquiries, rank on Google, and work properly
-            on a phone.
+            I&apos;m a software engineer specialising in web and mobile
+            application development. I build fast websites, web apps and mobile
+            apps that do an actual job for your business - bring in enquiries,
+            rank on Google, and work properly on a phone.
           </p>
 
           <div

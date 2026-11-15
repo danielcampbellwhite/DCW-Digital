@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = buildMetadata({
   title: "About Daniel Campbell-White",
   description:
-    "Daniel Campbell-White is a Liverpool web developer and Digital Services Lead. His story, career timeline, skills and how he works.",
+    "Daniel Campbell-White is a Liverpool software engineer and Digital Services Lead. His story, career timeline, skills and how he works.",
   path: "/about",
 });
 
@@ -79,10 +79,10 @@ export default function AboutPage() {
         title={
           <>
             Hi, I&apos;m Daniel - I build{" "}
-            <span className="text-gradient">websites that work</span>
+            <span className="text-gradient">software that works</span>
           </>
         }
-        description="Web developer and digital consultant based in Liverpool, UK. Here's my story, how I work, and what I'm looking for next."
+        description="Software engineer based in Liverpool, UK, specialising in web and mobile application development. Here's my story, how I work, and what I'm looking for next."
       >
         <div className="flex flex-wrap justify-center gap-3">
           <Button href="/contact" variant="primary">
@@ -124,7 +124,7 @@ export default function AboutPage() {
           <Reveal>
             <span className="eyebrow">My Story</span>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-              From curious tinkerer to trusted developer
+              From curious tinkerer to trusted software engineer
             </h2>
             <div className="mt-5 space-y-4 text-muted-foreground">
               <p>
