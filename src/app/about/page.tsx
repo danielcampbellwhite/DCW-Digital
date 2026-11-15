@@ -124,7 +124,7 @@ export default function AboutPage() {
           <Reveal>
             <span className="eyebrow">My Story</span>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-              From curious tinkerer to trusted software engineer
+              From curious tinkerer to trusted developer
             </h2>
             <div className="mt-5 space-y-4 text-muted-foreground">
               <p>

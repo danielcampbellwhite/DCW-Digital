@@ -316,7 +316,7 @@ export const servicePages: Record<string, ServicePageContent> = {
     seoTitle: "Freelance Digital Partner for Businesses",
     seoDescription:
       "An on-call software engineer and adviser for your business. Advice, small jobs and tech decisions, charged only for the time you use and invoiced monthly.",
-    headline: "An engineer in your corner, when you need one",
+    headline: "A developer in your corner, when you need one",
     lede: "Advice and ad-hoc web work without hiring anyone or committing to a big project. You only pay for the time you use.",
     intro: [
       "Lots of businesses don't need a full-time developer or a big project. They need someone reliable to ask: is this quote fair, which booking system should we use, can you just fix this form, why has our traffic dropped?",

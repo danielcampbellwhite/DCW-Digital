@@ -42,7 +42,7 @@ export function AboutPreview() {
         <Reveal>
           <span className="eyebrow">About Daniel</span>
           <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-            A software engineer who actually cares{" "}
+            A developer who actually cares{" "}
             <span className="text-gradient">whether it works for you</span>
           </h2>
           <div className="mt-5 space-y-4 text-muted-foreground">
