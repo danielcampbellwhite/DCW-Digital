@@ -1,0 +1,72 @@
+---
+title: "Hijacked GitHub Accounts and a Global Microsoft 365 Outage: This Week in Tech"
+description: "Thousands of hijacked GitHub accounts planted a CI secret stealer, Microsoft 365 went down worldwide, Outlook and Chrome zero-days got patched, and Anthropic shipped Claude Fable 5.2."
+seoTitle: "Hijacked GitHub Accounts & M365 Outage"
+seoDescription: "This week: a CI secret stealer pushed through hijacked GitHub accounts, a global Microsoft 365 outage, exploited Outlook and Chrome flaws, and Claude Fable 5.2."
+date: "2026-11-15"
+category: "Tech News"
+tags: ["Weekly Roundup", "Security", "GitHub Actions", "Supply Chain", "Microsoft 365", "AI"]
+author: "Daniel Campbell-White"
+featured: false
+cover: "/blog/this-week-in-tech-2026-11-15.png"
+---
+
+This week was about trust in the tools we lean on every day. Attackers used real, hijacked GitHub accounts to slip a secret stealer into thousands of repositories, Microsoft 365 fell over for the best part of a day, and both Outlook and Chrome needed urgent patches for flaws already being exploited. On the AI side, Anthropic released a new top-end model.
+
+## 1. Hijacked GitHub accounts push a CI secret stealer into thousands of repos
+
+From around 12:45 UTC on 10 November, an attacker started using stolen credentials for **4,837 GitHub accounts** to test which repositories those accounts could write to, then planted a credential stealer wherever they could. [Aikido Security, who named it wfx-loot](https://www.aikido.dev/blog/compromised-github-accounts-push-ci-secret-stealer-to-tens-of-thousands-of-repositories), counted probe pull requests in **61,764 repositories** and confirmed the stealer actually ran in **at least 1,806**. [The Hacker News](https://thehackernews.com/2026/11/4837-hijacked-github-accounts-ran-ci.html) reports that SafeDep separately found malicious commits in 8,093 public repositories, most added to existing workflows and 771 as npm `postinstall` hooks. How the attacker got the credentials hasn't been explained yet.
+
+The pattern is sneaky. A harmless-looking pull request called "docs: dependency audit notes" from a `wfx-docs` branch checks for write access. Where that works, the stealer is committed, usually reverted within minutes, and the workflow logs are often deleted. While it runs it grabs Actions secrets, `GITHUB_TOKEN`, OIDC tokens, cloud and npm credentials, SSH keys and AI provider API keys. Aikido says it also leaves backdoors behind: Azure federated credentials named `wfx-ci-...` and AWS role trust policies opened up to anyone, both of which survive a simple token rotation.
+
+**Why it matters:** These commits came from real accounts belonging to real maintainers, so the usual "is this a stranger?" check doesn't help. And because the `postinstall` variant runs on `npm install`, a developer's laptop can be hit as well as the CI runner.
+
+**What to do:** If you own repositories, search for `wfx-docs` or `chore/` branches, the commit messages "ci: refresh build cache" or "chore: add ci helper", and gaps in workflow run numbers, which Aikido calls the most reliable sign the payload ran. If you find anything, rotate every secret that workflow could read, remove any `wfx-ci-` credentials in Azure and check AWS trust policies. Turn on 2FA everywhere, and treat any account that opened one of the test PRs as compromised, even if nothing ran.
+
+## 2. Microsoft 365 goes down worldwide for most of a day
+
+On 12 November, Outlook, Teams, Copilot and a long list of other Microsoft 365 services started failing for users around the world. [TechCrunch](https://techcrunch.com/2026/11/13/microsoft-latest-email-outage-turned-into-a-full-blown-global-cloud-crisis/) reports that the outage spread to email, files and documents for both consumers and businesses, and cites network monitoring firm Kentik putting the downtime at about 18 hours. According to [Wikipedia's summary of the incident](https://en.wikipedia.org/wiki/2026_Microsoft_outage), problems were reported in more than 70 countries, Microsoft reported partial recovery early on 13 November, and services were fully back by the morning of 14 November.
+
+What's confirmed from Microsoft is limited: a large number of servers became unexpectedly unavailable, and the company said there was no evidence of malicious activity and that it was not related to cyber or AI agents. It also reportedly rolled back a recent network configuration change. At the time of writing, there's no full post-incident review.
+
+**Why it matters:** For a lot of small businesses, Microsoft 365 *is* the office. When it goes, so do email, calendars and shared documents, all at once.
+
+**What to do:** Make sure you have a way to reach your team and customers that doesn't depend on the same provider: a phone tree, a status page, or even a pinned social post. And bookmark Microsoft's service status page before you need it.
+
+## 3. Outlook and Chrome both needed urgent fixes for exploited flaws
+
+Two zero-days landed in the same week, and [CISA added both to its Known Exploited Vulnerabilities catalogue](https://www.cisa.gov/news-events/alerts/2026/11/10/cisa-adds-six-known-exploited-vulnerabilities-catalog) on 10 November.
+
+- **Outlook (CVE-2026-124194):** Fixed in Microsoft's November Patch Tuesday on 10 November. [Qualys explains](https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review) that a crafted message file can make Outlook connect to an attacker's server without the usual external-content warning, which can leak authentication details that could be used to impersonate the user. The victim has to open the file. [eSecurity Planet](https://www.esecurityplanet.com/news/news-microsoft-november-2026-patch-tuesday-outlook-zero-day/) notes that the Windows cumulative update alone doesn't fix it: you need the Office update too. The same release fixed over 1,000 other issues, 63 of them rated Critical, though outlets disagree on the exact total.
+- **Chrome (CVE-2026-125350):** A use-after-free in Chrome's XML handling, fixed in Chrome 157.0.8103.50/.51 on 9 November. Google says it is aware an exploit exists in the wild, and [The Hacker News](https://thehackernews.com/2026/11/google-issues-chrome-security-update.html) counts it as the eighth exploited Chrome zero-day of 2026.
+
+**What to do:** Check that Office has actually updated, not just Windows, and restart Chrome so the update applies. Edge and other Chromium browsers will need their own updates.
+
+## 4. Anthropic releases Claude Fable 5.2
+
+On 9 November, [Anthropic introduced Claude Fable 5.2 and Claude Mythos 5.2](https://www.anthropic.com/news/claude-fable-and-mythos-5-2). Fable 5.2 is available to everyone through the Claude API, Amazon Web Services, Google Cloud and Microsoft Azure. Mythos 5.2 is the same model with fewer cyber and biology safeguards, limited to organisations vetted through Anthropic's verification programmes. Anthropic claims it leads on agentic coding, reporting 49.1% on its FrontierCode 2.0 benchmark against 45.5% for Opus 5.5. Those are vendor numbers, so wait for independent testing before reading too much into them.
+
+There are a few practical changes for developers in the [Claude Platform release notes](https://platform.claude.com/docs/en/release-notes/overview). Both models have a 1M-token context window. Computer use needs the new `computer_toolset_20260801` tool, and the older one now returns an error. Both also require 30-day data retention unless Anthropic agrees otherwise.
+
+**Why it matters:** If you build on Claude, this is a meaningful upgrade, but test before you switch. The tool and retention changes could break existing integrations or clash with your data policies.
+
+## Quick hits
+
+- **Node.js security releases:** As pre-announced, [Node.js 22.23.5, 24.22.3 and 26.13.1](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases) shipped on 11 November with 16 fixes, seven rated High. Most are in HTTP/2 and TLS, including one that can leak server memory into HTTPS request bodies. End-of-life versions get no fixes.
+- **Self-hosted Claude Managed Agents:** Since 12 November, organisations can [run Anthropic's Managed Agents service on their own infrastructure](https://platform.claude.com/docs/en/release-notes/overview), keeping agents and session history in-house. Access is by request through Anthropic.
+
+## What I'd do this week
+
+- Search your GitHub repos for `wfx-docs` branches and gaps in workflow run numbers, and rotate any secrets that might have been exposed.
+- Make sure 2FA is on for every GitHub account that can push to your repos, including old collaborators and bots.
+- Check that Office (not just Windows) has updated, and relaunch Chrome.
+- Upgrade Node.js to the latest patch release on your line, and plan a move off anything end-of-life.
+- Write down how you'd keep in touch with customers if your email provider went down tomorrow.
+
+---
+
+**Sources:** [Aikido Security](https://www.aikido.dev/blog/compromised-github-accounts-push-ci-secret-stealer-to-tens-of-thousands-of-repositories) · [The Hacker News: GitHub accounts](https://thehackernews.com/2026/11/4837-hijacked-github-accounts-ran-ci.html) · [TechCrunch](https://techcrunch.com/2026/11/13/microsoft-latest-email-outage-turned-into-a-full-blown-global-cloud-crisis/) · [Wikipedia: 2026 Microsoft outage](https://en.wikipedia.org/wiki/2026_Microsoft_outage) · [CISA](https://www.cisa.gov/news-events/alerts/2026/11/10/cisa-adds-six-known-exploited-vulnerabilities-catalog) · [Qualys](https://blog.qualys.com/vulnerabilities-threat-research/2026/11/10/microsoft-patch-tuesday-november-2026-security-update-review) · [eSecurity Planet](https://www.esecurityplanet.com/news/news-microsoft-november-2026-patch-tuesday-outlook-zero-day/) · [The Hacker News: Chrome](https://thehackernews.com/2026/11/google-issues-chrome-security-update.html) · [Anthropic](https://www.anthropic.com/news/claude-fable-and-mythos-5-2) · [Claude Platform release notes](https://platform.claude.com/docs/en/release-notes/overview) · [Node.js](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases)
+
+*This roundup is researched and written with the help of AI, using the sources linked above. Spotted a mistake? [Let me know](/contact).*
+
+*Not sure whether your own site is up to date? The [free website health check](/website-health-check) is a quick place to start.*

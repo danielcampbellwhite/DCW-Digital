@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-15",
+  "stories": [
+    { "label": "GitHub accounts", "tag": "Security", "icon": "GitBranch", "tone": "security" },
+    { "label": "Microsoft 365", "tag": "Cloud", "icon": "CloudAlert", "tone": "cloud" },
+    { "label": "Outlook & Chrome", "tag": "Security", "icon": "ShieldAlert", "tone": "security" },
+    { "label": "Claude Fable 5.2", "tag": "AI", "icon": "BrainCircuit", "tone": "ai" }
+  ],
+  "extras": ["Node.js", "Managed Agents"]
+}
