@@ -6,6 +6,10 @@ import { services } from "@/content/services";
 /**
  * Dynamic sitemap.
  *
+ * Only blog posts carry <lastmod>, using their real published date. Static
+ * pages leave it out: stamping them with "now" on every request teaches
+ * Google to ignore lastmod across the whole sitemap.
+ *
  * Served at `/sitemap.xml`. Static routes are listed once; every blog post is
  * pulled automatically from the `content/blog` collection (with its real
  * published date as <lastmod>), so adding/removing a post updates the sitemap
@@ -15,7 +19,6 @@ export const revalidate = 3600; // refresh at most once an hour
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
-  const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = (
     [
@@ -32,14 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ] as const
   ).map((route) => ({
     url: `${base}${route.path}`,
-    lastModified: now,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
 
   const serviceRoutes: MetadataRoute.Sitemap = services.map((s) => ({
     url: `${base}/services/${s.slug}`,
-    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.9,
   }));

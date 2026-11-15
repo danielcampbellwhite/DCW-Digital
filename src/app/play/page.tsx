@@ -18,7 +18,7 @@ import { Hangman } from "@/components/play/hangman";
 export const metadata: Metadata = buildMetadata({
   title: "Developer Games: Dev Games, Spot the Bug & More",
   description:
-    "Free browser games for developers and the curious: a five-event sports day with all-time world records, spot the bug, hangman, a typing shooter, a load balancer and an idle startup game.",
+    "Free browser games for developers: a five-event sports day with world records, spot the bug, hangman, a typing shooter, a load balancer and more.",
   path: "/play",
 });
 

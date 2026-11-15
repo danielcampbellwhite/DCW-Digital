@@ -12,8 +12,10 @@ export const siteConfig = {
   tagline: "Building Modern Websites. Optimising Digital Growth.",
   altTagline: "Web & Mobile Development, SEO & Digital Solutions.",
   description:
-    "Daniel Campbell-White (DCW Digital) is a Liverpool web and mobile developer building fast, modern websites and mobile apps that bring UK businesses more enquiries.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dcw-digital.co.uk",
+    "Daniel Campbell-White (DCW Digital) is a Liverpool web and mobile developer building fast websites and apps that bring UK businesses more enquiries.",
+  // Must match the domain the site is actually served on. Vercel redirects the
+  // bare domain to www, so canonicals, the sitemap and schema all use www.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.dcw-digital.co.uk",
   bookingUrl:
     process.env.NEXT_PUBLIC_BOOKING_URL ??
     "https://cal.com/danielcampbellwhite/discovery",

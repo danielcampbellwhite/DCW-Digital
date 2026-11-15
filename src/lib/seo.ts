@@ -17,7 +17,7 @@ interface PageMetaInput {
 const TITLE_LIMIT = 60;
 
 /** Homepage title: who, what and where people actually search for. */
-export const HOME_TITLE = "Liverpool Web Developer | Daniel Campbell-White, DCW Digital";
+export const HOME_TITLE = "Liverpool Web & App Developer | Daniel Campbell-White";
 
 const ID = {
   website: `${siteConfig.url}/#website`,
