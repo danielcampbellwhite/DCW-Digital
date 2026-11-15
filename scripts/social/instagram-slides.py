@@ -97,6 +97,20 @@ def render(spec, out):
             pg.set_content(frame(inner, i, total, spec["date_label"], i == total))
             pg.wait_for_timeout(150)
             f = out / f"slide-{i}.png"; pg.screenshot(path=str(f)); files.append(str(f))
+        # Facebook image: the cover slide with a "read the full roundup" footer instead of "swipe".
+        cov = next((s for s in slides if s["kind"] == "cover"), None)
+        if cov:
+            items = "".join(f'<li><span class="n" style="background:{COLOURS[j % 5]}">{j+1}</span>{e(t)}</li>'
+                            for j, t in enumerate(cov["items"]))
+            pg.set_content(f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>{CSS}
+.cover h1{{margin-top:130px}} .read{{position:absolute;left:90px;right:90px;bottom:70px;display:flex;justify-content:space-between;align-items:center}}
+.read .pill{{margin:0;font-size:30px}} .read span.u{{font-size:26px;color:#94A3B8}}</style></head><body>
+<div class="grid"></div><div class="rel"><div class="top"><div class="brand"><div class="mono">D</div><div class="name">DCW Digital</div></div>
+<div class="tag">Weekly roundup</div></div><div class="cover"><h1>This week<br><span class="grad">in tech</span></h1>
+<div class="date">{e(spec["date_label"])}</div><ul>{items}</ul></div></div>
+<div class="read"><span class="u">dcw-digital.co.uk/blog</span><span class="pill">Read the full roundup →</span></div></body></html>""")
+            pg.wait_for_timeout(150)
+            f = out / "facebook.png"; pg.screenshot(path=str(f)); files.append(str(f))
         b.close()
     print("\n".join(files))
 
