@@ -1,0 +1,36 @@
+{
+  "date_label": "15 November 2026",
+  "slides": [
+    {"kind": "cover", "items": [
+      "Hijacked GitHub accounts plant a secret stealer",
+      "Microsoft 365 down worldwide",
+      "Urgent Outlook and Chrome fixes",
+      "Anthropic releases Claude Fable 5.2"
+    ]},
+    {"kind": "story", "num": "01 · SECURITY",
+     "title": "Hijacked GitHub accounts plant a secret stealer",
+     "body": "Stolen logins for 4,837 real GitHub accounts were used to slip a credential stealer into thousands of repositories. It grabs API keys, cloud and npm credentials, then often deletes its tracks.",
+     "box": "Check repos for wfx-docs branches and gaps in workflow run numbers. If in doubt, rotate your secrets and turn on 2FA."},
+    {"kind": "story", "num": "02 · OUTAGE",
+     "title": "Microsoft 365 goes down for most of a day",
+     "body": "On 12 November, Outlook, Teams, Copilot and more failed around the world for about 18 hours. Microsoft says it wasn't an attack.",
+     "box": "Have a way to reach your team and customers that doesn't rely on the same provider, and bookmark Microsoft's status page."},
+    {"kind": "story", "num": "03 · PATCH NOW",
+     "title": "Outlook and Chrome both had exploited flaws",
+     "body": "A crafted file could make Outlook leak login details, and Chrome had its eighth exploited zero-day of 2026. Both are fixed.",
+     "box": "Make sure Office has updated, not just Windows, then restart Chrome so its update applies."},
+    {"kind": "story", "num": "04 · AI",
+     "title": "Anthropic releases Claude Fable 5.2",
+     "body": "A new top-end model with a 1M-token context window, available through the Claude API and the big cloud platforms.",
+     "box_label": "Worth knowing",
+     "box": "If you build on Claude, test before switching: some tool and data-retention changes could break existing setups."},
+    {"kind": "list", "title": "What I'd do this week", "items": [
+      "Search GitHub repos for wfx-docs branches and rotate any exposed secrets",
+      "Turn on 2FA for every account that can push to your repos",
+      "Check Office (not just Windows) has updated, and relaunch Chrome",
+      "Update Node.js to the latest patch release",
+      "Plan how you'd reach customers if your email went down tomorrow"
+    ]},
+    {"kind": "cta", "body": "The full write-up, with sources, is on my blog. New roundup every Sunday."}
+  ]
+}
