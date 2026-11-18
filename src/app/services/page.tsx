@@ -47,17 +47,17 @@ export default function ServicesPage() {
                   id={service.slug}
                   className="scroll-mt-24 overflow-hidden rounded-3xl border border-border bg-card"
                 >
-                  <div className="grid gap-8 p-8 lg:grid-cols-[1.4fr_1fr] sm:p-10">
-                    <div>
+                  <div className="grid grid-cols-1 gap-8 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+                    <div className="min-w-0">
                       <div className="flex items-center gap-4">
-                        <span className="grid size-12 place-items-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                        <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
                           <Icon className="size-6" />
                         </span>
-                        <div>
+                        <div className="min-w-0">
                           <span className="font-mono text-xs text-primary">
                             Service {String(i + 1).padStart(2, "0")}
                           </span>
-                          <h2 className="font-heading text-2xl font-bold">
+                          <h2 className="text-balance break-words font-heading text-2xl font-bold">
                             <Link
                               href={`/services/${service.slug}`}
                               className="transition-colors hover:text-primary"
@@ -79,7 +79,7 @@ export default function ServicesPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col rounded-2xl border border-border bg-surface/50 p-6">
+                    <div className="flex min-w-0 flex-col rounded-2xl border border-border bg-surface/50 p-5 sm:p-6">
                       <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                         What&apos;s included
                       </h3>
@@ -92,11 +92,11 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                       <div className="mt-6 space-y-3 border-t border-border pt-5">
-                        <Button href={`/services/${service.slug}`} variant="primary" className="w-full">
+                        <Button href={`/services/${service.slug}`} variant="primary" className="h-auto min-h-11 w-full whitespace-normal py-2.5 text-center">
                           More about {service.title.toLowerCase()}
                           <ArrowRight className="size-4" />
                         </Button>
-                        <Button href={service.cta.href} variant="outline" className="w-full">
+                        <Button href={service.cta.href} variant="outline" className="h-auto min-h-11 w-full whitespace-normal py-2.5 text-center">
                           {service.cta.label}
                         </Button>
                       </div>
