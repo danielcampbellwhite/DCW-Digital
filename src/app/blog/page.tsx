@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
-import { getAllPostsMeta, getFeaturedPosts } from "@/lib/blog";
+import { getAllPostsMeta } from "@/lib/blog";
 import { PageHeader } from "@/components/sections/page-header";
 import { BlogIndex } from "@/components/blog/blog-index";
 
@@ -13,7 +13,6 @@ export const metadata: Metadata = buildMetadata({
 
 export default function BlogPage() {
   const posts = getAllPostsMeta();
-  const featured = getFeaturedPosts();
 
   return (
     <>
@@ -29,7 +28,7 @@ export default function BlogPage() {
 
       <section className="py-16">
         <div className="container-px">
-          <BlogIndex posts={posts} featured={featured} />
+          <BlogIndex posts={posts} />
         </div>
       </section>
     </>

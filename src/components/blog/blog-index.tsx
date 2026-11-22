@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Search, Clock, ArrowUpRight } from "lucide-react";
+import { Search, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { PostMeta, PostCategory } from "@/types";
 import { postCategories } from "@/lib/constants";
@@ -13,14 +13,8 @@ import { Input } from "@/components/ui/input";
 
 type Filter = PostCategory | "All";
 
-/** Client-side searchable, filterable blog index. */
-export function BlogIndex({
-  posts,
-  featured,
-}: {
-  posts: PostMeta[];
-  featured: PostMeta[];
-}) {
+/** Client-side searchable, filterable blog index, newest posts first. */
+export function BlogIndex({ posts }: { posts: PostMeta[] }) {
   const [query, setQuery] = React.useState("");
   const [filter, setFilter] = React.useState<Filter>("All");
 
@@ -37,40 +31,8 @@ export function BlogIndex({
     });
   }, [posts, query, filter]);
 
-  const lead = featured[0];
-
   return (
     <div className="space-y-16">
-      {/* Featured post */}
-      {lead && !query && filter === "All" && (
-        <Link
-          href={`/blog/${lead.slug}`}
-          className="group grid gap-6 overflow-hidden rounded-3xl border border-border bg-card p-3 transition-colors hover:border-primary/40 md:grid-cols-2 md:p-4"
-        >
-          <PostCover cover={lead.cover} alt={lead.title} priority />
-          <div className="flex flex-col justify-center p-4 md:p-8">
-            <div className="flex items-center gap-3">
-              <Badge variant="accent">Featured</Badge>
-              <Badge variant="primary">{lead.category}</Badge>
-            </div>
-            <h2 className="mt-4 font-heading text-2xl font-bold leading-tight sm:text-3xl">
-              {lead.title}
-            </h2>
-            <p className="mt-3 text-muted-foreground">{lead.description}</p>
-            <div className="mt-5 flex items-center gap-4 text-sm text-muted-foreground">
-              <span>{formatDate(lead.date)}</span>
-              <span className="inline-flex items-center gap-1">
-                <Clock className="size-3.5" /> {lead.readingTime} min read
-              </span>
-              <span className="inline-flex items-center gap-1 text-primary">
-                Read article
-                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-            </div>
-          </div>
-        </Link>
-      )}
-
       {/* Controls */}
       <div className="flex flex-col gap-5">
         <div className="relative max-w-md">
@@ -116,7 +78,7 @@ export function BlogIndex({
       ) : (
         <motion.div layout className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
-            {results.map((post) => (
+            {results.map((post, i) => (
               <motion.article
                 key={post.slug}
                 layout
@@ -130,7 +92,7 @@ export function BlogIndex({
                   href={`/blog/${post.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-3 transition-colors hover:border-primary/40"
                 >
-                  <PostCover cover={post.cover} alt={post.title} />
+                  <PostCover cover={post.cover} alt={post.title} priority={i === 0} />
                   <div className="flex flex-1 flex-col p-4">
                     <Badge variant="primary" className="w-fit">
                       {post.category}

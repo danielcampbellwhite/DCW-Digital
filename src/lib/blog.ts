@@ -55,12 +55,6 @@ export function getPostBySlug(slug: string): Post | undefined {
   return readAllPosts().find((p) => p.slug === slug);
 }
 
-export function getFeaturedPosts(): PostMeta[] {
-  const all = getAllPostsMeta();
-  const featured = all.filter((p) => p.featured);
-  return featured.length > 0 ? featured : all.slice(0, 1);
-}
-
 export function getRelatedPosts(slug: string, category: PostCategory): PostMeta[] {
   return getAllPostsMeta()
     .filter((p) => p.slug !== slug && p.category === category)
