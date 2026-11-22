@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-22",
+  "stories": [
+    { "label": "Optimizely", "tag": "Security", "icon": "Bug", "tone": "security" },
+    { "label": "VMware vCenter", "tag": "Security", "icon": "Server", "tone": "security" },
+    { "label": "AI gateways", "tag": "AI", "icon": "Bot", "tone": "ai" },
+    { "label": "GPT-6.2 & Gemini", "tag": "AI", "icon": "BrainCircuit", "tone": "trend" }
+  ],
+  "extras": ["Chrome 158", "AI web dev", "Entra Agent ID"]
+}
